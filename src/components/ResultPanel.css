@@ -1,0 +1,145 @@
+.result h2 {
+  margin: 0 0 12px;
+  color: #1e3a8a;
+}
+
+.result__score {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.result__big {
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: #2563eb;
+}
+
+.result__percent {
+  font-size: 1.1rem;
+  color: #4b5563;
+}
+
+.result__note {
+  font-size: 0.85rem;
+  color: #6b7280;
+  margin: 0 0 16px;
+}
+
+.result__list {
+  list-style: none;
+  padding: 0;
+  margin: 16px 0;
+}
+
+.result__item {
+  border: 1px solid #e5e7eb;
+  border-left-width: 5px;
+  border-radius: 8px;
+  padding: 12px 14px;
+  margin-bottom: 10px;
+}
+
+.result__item.ok { border-left-color: #16a34a; background: #f0fdf4; }
+.result__item.ng { border-left-color: #dc2626; background: #fef2f2; }
+.result__item.na { border-left-color: #9ca3af; background: #f9fafb; }
+
+.result__head {
+  display: flex;
+  justify-content: space-between;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.result__qtext {
+  white-space: pre-wrap;
+  font-size: 0.9rem;
+  color: #374151;
+  margin-bottom: 8px;
+}
+
+.result__row {
+  font-size: 0.9rem;
+  margin-top: 2px;
+}
+
+.result__label {
+  display: inline-block;
+  width: 110px;
+  color: #6b7280;
+}
+
+.result__restart {
+  margin-top: 16px;
+  padding: 12px 24px;
+  background: #2563eb;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+}
+
+.result__restart:hover {
+  background: #1d4ed8;
+}
+
+.result__imgs {
+  margin: 8px 0;
+}
+
+.result__imgs img {
+  max-width: 100%;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  margin-bottom: 6px;
+}
+
+.result__answer {
+  margin-top: 8px;
+}
+
+.result__answer summary {
+  cursor: pointer;
+  color: #2563eb;
+  font-size: 0.9rem;
+}
+
+.tag {
+  display: inline-block;
+  margin-left: 6px;
+  padding: 1px 6px;
+  background: #e0e7ff;
+  color: #3730a3;
+  font-size: 0.7rem;
+  border-radius: 4px;
+  font-weight: 600;
+}
+
+.result__ddtable {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 8px;
+  font-size: 0.88rem;
+}
+
+.result__ddtable th,
+.result__ddtable td {
+  border: 1px solid #e5e7eb;
+  padding: 6px 8px;
+  text-align: left;
+  vertical-align: top;
+}
+
+.result__ddtable th {
+  background: #f3f4f6;
+  font-weight: 600;
+}
+
+.result__ddtable tr.ok td {
+  background: #f0fdf4;
+}
+
+.result__ddtable tr.ng td {
+  background: #fef2f2;
+}

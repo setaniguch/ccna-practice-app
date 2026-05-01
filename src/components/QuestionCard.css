@@ -1,0 +1,282 @@
+.qcard__title {
+  margin: 0 0 8px;
+  font-size: 1.1rem;
+  color: #2563eb;
+}
+
+.qcard__text {
+  white-space: pre-wrap;
+  line-height: 1.7;
+  margin: 0 0 16px;
+}
+
+.qcard__images {
+  margin-bottom: 16px;
+}
+
+.qcard__images img {
+  max-width: 100%;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  margin-bottom: 8px;
+}
+
+.qcard__imgnote {
+  background: #fef3c7;
+  color: #78350f;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  margin: 0;
+}
+
+.qcard__choices {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.qcard__choices li {
+  margin-bottom: 10px;
+}
+
+.choice {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px 16px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.choice:hover {
+  background: #f9fafb;
+}
+
+.choice.checked {
+  background: #eff6ff;
+  border-color: #2563eb;
+}
+
+.choice input {
+  margin-top: 6px;
+}
+
+.choice__letter {
+  font-weight: 700;
+  color: #2563eb;
+  min-width: 22px;
+  font-size: 1rem;
+  line-height: 1.7;
+}
+
+.choice__text {
+  flex: 1;
+  min-width: 0;
+  white-space: pre-wrap;
+  font-family: inherit;
+  font-size: 1rem;
+  line-height: 1.75;
+  word-break: normal;
+  overflow-wrap: anywhere;
+  letter-spacing: 0.01em;
+}
+
+.qcard__hint {
+  color: #6b7280;
+  font-size: 0.85rem;
+  margin-top: 6px;
+}
+
+.qcard__unsupported {
+  background: #fef3c7;
+  color: #78350f;
+  padding: 12px 14px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+}
+
+.qcard__dragdrop {
+  border: 1px dashed #cbd5e1;
+  border-radius: 8px;
+  padding: 12px 14px;
+  background: #f8fafc;
+}
+
+.dd-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 8px;
+}
+
+.dd-table td {
+  padding: 8px 6px;
+  border-bottom: 1px solid #e5e7eb;
+  vertical-align: middle;
+}
+
+.dd-item {
+  font-size: 0.95rem;
+}
+
+.dd-arrow {
+  color: #6b7280;
+  font-weight: 700;
+  width: 32px;
+  text-align: center;
+}
+
+.dd-select {
+  width: 100%;
+  padding: 6px 10px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  background: #fff;
+}
+
+/* === ドラッグ＆ドロップ UI === */
+.dnd {
+  display: grid;
+  grid-template-columns: 1fr 1.4fr;
+  gap: 16px;
+  margin-top: 8px;
+}
+
+@media (max-width: 720px) {
+  .dnd {
+    grid-template-columns: 1fr;
+  }
+}
+
+.dnd__pane {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.dnd__paneTitle {
+  font-weight: 700;
+  color: #2563eb;
+  font-size: 0.9rem;
+  margin-bottom: 6px;
+}
+
+.dnd__palette {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 10px;
+  border: 1px dashed #94a3b8;
+  border-radius: 8px;
+  background: #f8fafc;
+  min-height: 60px;
+}
+
+.dnd__empty {
+  color: #9ca3af;
+  font-size: 0.85rem;
+  text-align: center;
+  padding: 10px 0;
+}
+
+.dnd__card {
+  padding: 8px 12px;
+  background: #dbeafe;
+  border: 1px solid #93c5fd;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  cursor: grab;
+  user-select: none;
+  word-break: break-word;
+}
+
+.dnd__card:active {
+  cursor: grabbing;
+}
+
+.dnd__card--dragging {
+  opacity: 0.4;
+}
+
+.dnd__card--placed {
+  background: #c7d2fe;
+  border-color: #6366f1;
+}
+
+.dnd__targets {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.dnd__target {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap: 8px;
+  align-items: stretch;
+  padding: 6px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  background: #fff;
+}
+
+.dnd__target--over {
+  border-color: #2563eb;
+  background: #eff6ff;
+}
+
+.dnd__targetLabel {
+  display: flex;
+  align-items: center;
+  padding: 6px 10px;
+  background: #fef3c7;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  color: #78350f;
+  font-weight: 600;
+  word-break: break-word;
+}
+
+.dnd__slot {
+  min-height: 38px;
+  border: 1px dashed #cbd5e1;
+  border-radius: 6px;
+  padding: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  background: #f8fafc;
+}
+
+/* Counts on DnD targets */
+.dnd__targetLabel { display:flex; align-items:center; justify-content:space-between; gap:8px; }
+.dnd__count { font-size:0.85rem; padding:2px 8px; border-radius:10px; background:#e5e7eb; color:#374151; font-weight:600; }
+.dnd__count--ok { background:#dcfce7; color:#166534; }
+.dnd__count--over { background:#fee2e2; color:#991b1b; }
+
+/* Warning */
+.qcard__warn { margin-top:12px; padding:8px 12px; border-radius:6px; background:#fef3c7; border:1px solid #f59e0b; color:#78350f; font-size:0.9rem; }
+.qcard__warn--li { list-style:none; margin-left:0; }
+
+.choice__images { display: block; margin-top: 6px; }
+.choice__images img { max-width: 100%; max-height: 240px; display: block; margin-top: 4px; border: 1px solid #ddd; }
+
+.choice__code {
+  display: block;
+  margin: 6px 0 0;
+  padding: 10px 12px;
+  background: #0f172a;
+  color: #e2e8f0;
+  border-radius: 6px;
+  font-family: 'Consolas', 'Menlo', 'Courier New', monospace;
+  font-size: 0.85rem;
+  line-height: 1.55;
+  white-space: pre-wrap;
+  word-break: break-all;
+  overflow-wrap: anywhere;
+  max-width: 100%;
+  border: 1px solid #1e293b;
+}

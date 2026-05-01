@@ -1,0 +1,115 @@
+.lab {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.lab__topology {
+  background: #f3f4f6;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 0.9rem;
+}
+.lab__topology pre {
+  margin: 4px 0 0;
+  white-space: pre-wrap;
+  font-family: 'Consolas', 'Menlo', monospace;
+  font-size: 0.85rem;
+}
+.lab__tasks {
+  background: #fffbeb;
+  border: 1px solid #fcd34d;
+  border-radius: 8px;
+  padding: 10px 14px;
+}
+.lab__tasks ol { margin: 4px 0 0 18px; padding: 0; }
+.lab__tasks li { margin-bottom: 6px; }
+.lab__taskDevice {
+  display: inline-block;
+  background: #2563eb;
+  color: #fff;
+  padding: 1px 6px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  margin-right: 6px;
+}
+.lab__taskDesc { color: #374151; font-size: 0.85rem; margin-top: 2px; }
+.lab__sectionTitle { font-weight: 700; margin-bottom: 4px; }
+
+.lab__topoImgs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.lab__topoImgs img {
+  max-width: 100%;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  background: #fff;
+}
+
+.lab__deviceTabs {
+  display: flex;
+  gap: 4px;
+  border-bottom: 2px solid #d1d5db;
+}
+.lab__deviceTab {
+  background: #f3f4f6;
+  border: 1px solid #d1d5db;
+  border-bottom: none;
+  padding: 6px 14px;
+  cursor: pointer;
+  font-family: 'Consolas', 'Menlo', monospace;
+  border-radius: 6px 6px 0 0;
+}
+.lab__deviceTab--active {
+  background: #fff;
+  border-color: #2563eb;
+  color: #2563eb;
+  font-weight: 700;
+}
+.lab__deviceTaskHint {
+  background: #eff6ff;
+  border: 1px solid #93c5fd;
+  border-radius: 6px;
+  padding: 6px 10px;
+  font-size: 0.85rem;
+}
+.lab__deviceTaskHint ul { margin: 4px 0 0 18px; padding: 0; }
+
+.lab__terminal {
+  background: #0b1020;
+  color: #e5e7eb;
+  border-radius: 8px;
+  padding: 12px;
+  font-family: 'Consolas', 'Menlo', monospace;
+  font-size: 0.9rem;
+  cursor: text;
+}
+.lab__screen {
+  max-height: 360px;
+  overflow-y: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+.lab__line { line-height: 1.4; }
+.lab__inputLine {
+  display: flex;
+  align-items: center;
+  margin-top: 2px;
+}
+.lab__prompt {
+  color: #34d399;
+  white-space: pre;
+  margin-right: 4px;
+}
+.lab__input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #e5e7eb;
+  font-family: inherit;
+  font-size: inherit;
+  caret-color: #34d399;
+}
