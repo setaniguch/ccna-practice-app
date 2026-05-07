@@ -13,6 +13,28 @@ const ALL_QUESTIONS = questionsData as Question[];
 const QUESTION_COUNT = 100;
 /** 制限時間（分）— 本番 CCNA 200-301 は 120 分 */
 const TIME_LIMIT_MIN = 120;
+/** ラボ問題の最低出題数 */
+const MIN_LAB_COUNT = 3;
+
+/**
+ * CCNA 200-301 公式ドメイン比率に基づくカテゴリ別出題重み
+ * 公式 6 ドメインを 7 カテゴリに按分:
+ *   Network Fundamentals 20% → 基礎 17% + ワイヤレス 8%（≈20+α）
+ *   Network Access 20% → 17%
+ *   IP Connectivity 25% → 25%
+ *   IP Services 10% → 10%
+ *   Security Fundamentals 15% → 13%
+ *   Automation 10% → 10%
+ */
+const CATEGORY_WEIGHTS: Record<string, number> = {
+  'ネットワーク基礎': 17,
+  'ネットワークアクセス': 17,
+  'IP接続': 25,
+  'IPサービス': 10,
+  'セキュリティ基礎': 13,
+  '自動化': 10,
+  'ワイヤレス': 8,
+};
 
 function shuffle<T>(arr: T[]): T[] {
   const a = [...arr];
@@ -24,7 +46,57 @@ function shuffle<T>(arr: T[]): T[] {
 }
 
 function pickQuestions(): Question[] {
-  return shuffle(ALL_QUESTIONS).slice(0, Math.min(QUESTION_COUNT, ALL_QUESTIONS.length));
+  const totalWeight = Object.values(CATEGORY_WEIGHTS).reduce((a, b) => a + b, 0);
+
+  // カテゴリ別にプールを作りシャッフル
+  const byCat: Record<string, Question[]> = {};
+  for (const q of ALL_QUESTIONS) {
+    const cat = q.category ?? 'ネットワーク基礎';
+    if (!byCat[cat]) byCat[cat] = [];
+    byCat[cat].push(q);
+  }
+  for (const cat of Object.keys(byCat)) {
+    byCat[cat] = shuffle(byCat[cat]);
+  }
+
+  // ラボ問題を先に確保
+  const allLabs = shuffle(ALL_QUESTIONS.filter((q) => q.type === 'lab'));
+  const labPicks = allLabs.slice(0, Math.min(MIN_LAB_COUNT, allLabs.length));
+  const selectedNums = new Set(labPicks.map((q) => q.number));
+  const selected: Question[] = [...labPicks];
+
+  // 残り枠をカテゴリ重みで配分
+  const remaining = QUESTION_COUNT - selected.length;
+  const cats = Object.keys(CATEGORY_WEIGHTS);
+  const catCounts: Record<string, number> = {};
+  let allocated = 0;
+  for (let i = 0; i < cats.length; i++) {
+    const cat = cats[i];
+    if (i === cats.length - 1) {
+      catCounts[cat] = remaining - allocated;
+    } else {
+      catCounts[cat] = Math.round((remaining * CATEGORY_WEIGHTS[cat]) / totalWeight);
+      allocated += catCounts[cat];
+    }
+  }
+
+  // ラボで既に確保した分をカテゴリ枠から差し引く
+  for (const q of labPicks) {
+    const cat = q.category ?? 'ネットワーク基礎';
+    if (catCounts[cat] > 0) catCounts[cat]--;
+  }
+
+  // 各カテゴリから枠数ぶんピック
+  for (const cat of cats) {
+    const pool = (byCat[cat] ?? []).filter((q) => !selectedNums.has(q.number));
+    const count = Math.min(catCounts[cat] ?? 0, pool.length);
+    for (let i = 0; i < count; i++) {
+      selected.push(pool[i]);
+      selectedNums.add(pool[i].number);
+    }
+  }
+
+  return shuffle(selected);
 }
 
 function formatTime(sec: number): string {

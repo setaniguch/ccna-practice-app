@@ -71,6 +71,18 @@ export default function ResultPanel({ questions, answers, ddAnswers, labAnswers,
   const correctCount = scorable.filter((r) => r.status === 'ok').length;
   const percent = scorable.length === 0 ? 0 : Math.round((correctCount / scorable.length) * 100);
 
+  const CATEGORIES = [
+    'ネットワーク基礎', 'ネットワークアクセス', 'IP接続',
+    'IPサービス', 'セキュリティ基礎', '自動化', 'ワイヤレス',
+  ];
+  const categoryStats = CATEGORIES.map((cat) => {
+    const catJudged = judged.filter((r) => (r.q.category ?? 'ネットワーク基礎') === cat);
+    const catScorable = catJudged.filter((r) => r.status !== 'na');
+    const catCorrect = catScorable.filter((r) => r.status === 'ok').length;
+    const pct = catScorable.length === 0 ? 0 : Math.round((catCorrect / catScorable.length) * 100);
+    return { cat, total: catJudged.length, scorable: catScorable.length, correct: catCorrect, pct };
+  }).filter((s) => s.total > 0);
+
   return (
     <div className="result">
       <h2>採点結果</h2>
@@ -83,6 +95,22 @@ export default function ResultPanel({ questions, answers, ddAnswers, labAnswers,
           ※ 採点不可の問題は対象外です
         </p>
       )}
+
+      <div className="result__catChart">
+        <h3>カテゴリ別正答率</h3>
+        {categoryStats.map((s) => {
+          const barColor = s.pct >= 80 ? '#16a34a' : s.pct >= 60 ? '#2563eb' : s.pct >= 40 ? '#f59e0b' : '#dc2626';
+          return (
+            <div key={s.cat} className="result__catRow">
+              <span className="result__catLabel">{s.cat}</span>
+              <div className="result__catBar">
+                <div className="result__catFill" style={{ width: `${s.pct}%`, background: barColor }} />
+              </div>
+              <span className="result__catPct">{s.pct}% ({s.correct}/{s.scorable})</span>
+            </div>
+          );
+        })}
+      </div>
 
       <ol className="result__list">
         {judged.map(({ q, status }) => {
