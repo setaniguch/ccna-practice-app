@@ -15690,10 +15690,10 @@
       }
     ],
     "dd_correct_mapping": {
-      "m252": "t1",
-      "m248": "t2",
-      "m224": "t3",
-      "m128": "t4"
+      "m128": "t1",
+      "m240": "t2",
+      "m248": "t3",
+      "m224": "t4"
     }
   },
   {
@@ -18564,7 +18564,7 @@
   },
   {
     "number": 571,
-    "question_text": "設定された最大帯域幅を超えた場合に余分なパケットをキューに保持し、後で再送信するようスケジュールするQoSトラフィック処理技術はどれですか？",
+    "question_text": "設定された最大帯域幅を超えた場合に余分なパケットを破棄せずキューに保持し、後で送信するようスケジュールするQoSトラフィック処理技術はどれですか？",
     "question_images": [],
     "type": "multiple_choice",
     "choices": [
@@ -19047,7 +19047,7 @@
     "dd_items": [
       {
         "id": "cbwfq",
-        "text": "cloud-based weighted fair queueing"
+        "text": "queueing"
       },
       {
         "id": "classification",
@@ -19090,10 +19090,10 @@
     ],
     "dd_correct_mapping": {
       "classification": "t1",
-      "policing": "t2",
+      "cbwfq": "t2",
       "shaping": "t3",
       "congestion": "t4",
-      "cbwfq": "t5"
+      "policing": "t5"
     }
   },
   {
@@ -20330,7 +20330,7 @@
   },
   {
     "number": 624,
-    "question_text": "図を参照してください。PC-1からRTR-1の任意のインターフェースへのSSHアクセスを拒否し、他のすべてのトラフィックを許可するRTR-1の設定はどれですか？\n\nA.\n\nB.\n\nC.\n\nD.",
+    "question_text": "図を参照してください。PC-1からRTR-1の任意のインターフェースへのSSHアクセスを拒否し、他のすべてのトラフィックを許可するRTR-1の設定はどれですか？",
     "question_images": [
       "0050900001.png"
     ],
@@ -20662,7 +20662,7 @@
   },
   {
     "number": 635,
-    "question_text": "図を参照してください。ネットワークエンジニアがVLAN 20のすべてのコンピューターからWebサーバーへのHTTPアクセスをブロックする必要があります。他のすべてのコンピューターはWebサーバーにアクセスできる必要があります。スイッチAに適用するとこのタスクを達成する設定はどれですか？\nA.\n\nB.\n\nC.\n\nD.",
+    "question_text": "図を参照してください。ネットワークエンジニアがVLAN 20のすべてのコンピューターからWebサーバーへのHTTPアクセスをブロックする必要があります。他のすべてのコンピューターはWebサーバーにアクセスできる必要があります。スイッチAに適用するとこのタスクを達成する設定はどれですか？",
     "question_images": [
       "0051900001.png"
     ],
@@ -22467,8 +22467,8 @@
     "dd_correct_mapping": {
       "policy": "goals",
       "standard": "tactical",
-      "awareness": "beyond",
-      "education": "all",
+      "education": "beyond",
+      "awareness": "all",
       "training": "jobs"
     }
   },
@@ -22843,10 +22843,10 @@
       }
     ],
     "dd_correct_mapping": {
-      "sg": "rogueip",
-      "dhcp": "cache",
+      "dhcp": "rogueip",
+      "dai": "cache",
       "storm": "flood",
-      "dai": "rogueclient"
+      "sg": "rogueclient"
     }
   },
   {
@@ -23804,8 +23804,8 @@
     "dd_correct_mapping": {
       "acct": "track",
       "coa": "update",
-      "authz": "rights",
-      "authn": "identity"
+      "authn": "rights",
+      "authz": "identity"
     }
   },
   {
@@ -23934,19 +23934,19 @@
     "choices": [
       {
         "letter": "A",
-        "text": "{ג€keyג€: ג€valueג€}"
+        "text": "{\"key\": \"value\"}"
       },
       {
         "letter": "B",
-        "text": "[ג€keyג€, ג€valueג€]"
+        "text": "[\"key\", \"value\"]"
       },
       {
         "letter": "C",
-        "text": "{ג€keyג€, ג€valueג€}"
+        "text": "{\"key\", \"value\"}"
       },
       {
         "letter": "D",
-        "text": "(ג€keyג€: ג€valueג€)"
+        "text": "(\"key\": \"value\")"
       }
     ],
     "answer": "A",
@@ -24004,7 +24004,7 @@
       },
       {
         "letter": "D",
-        "text": "It ׁreates security zones between trusted and untrusted networks."
+        "text": "信頼されたネットワークと信頼されていないネットワークの間にセキュリティゾーンを作成する。"
       }
     ],
     "answer": "B",
@@ -24702,9 +24702,9 @@
     ],
     "dd_correct_mapping": {
       "consist": "cb",
-      "distmp": "cb",
+      "south": "cb",
       "distcp": "tr",
-      "north": "tr"
+      "distmp": "tr"
     }
   },
   {
@@ -24853,10 +24853,10 @@
     ],
     "dd_correct_mapping": {
       "POST": "creates",
-      "PATCH": "replace",
+      "PUT": "replace",
       "DELETE": "remove",
       "GET": "list",
-      "PUT": "update"
+      "PATCH": "update"
     }
   },
   {
@@ -24911,9 +24911,9 @@
         "text": "マニフェストとモジュール"
       }
     ],
-    "answer": "D",
+    "answer": "C",
     "correct_choices": [
-      "D"
+      "C"
     ],
     "multi_select": false
   },
@@ -25479,11 +25479,11 @@
       }
     ],
     "dd_correct_mapping": {
-      "layered": "consumers",
-      "cache": "hier",
-      "uniform": "reuse",
+      "cs": "consumers",
+      "layered": "hier",
+      "cache": "reuse",
       "stateless": "nosess",
-      "cs": "simplify"
+      "uniform": "simplify"
     }
   },
   {
@@ -25548,8 +25548,8 @@
     ],
     "dd_correct_mapping": {
       "playbook": "yaml",
-      "managed": "manage",
-      "control": "netdev",
+      "control": "manage",
+      "managed": "netdev",
       "task": "specific",
       "module": "python",
       "inv": "file"
@@ -26193,11 +26193,11 @@
       }
     ],
     "dd_correct_mapping": {
-      "snr": "min",
+      "sens": "min",
       "noise": "unwanted",
-      "sens": "deviate",
-      "reflect": "reduce",
-      "absorb": "relative"
+      "reflect": "deviate",
+      "absorb": "reduce",
+      "snr": "relative"
     }
   },
   {
@@ -26284,9 +26284,9 @@
     "dd_correct_mapping": {
       "vm": "decoupled",
       "multi": "core",
-      "host": "phys",
-      "guest": "hwbasic",
-      "hyper": "vmbasic"
+      "hyper": "phys",
+      "host": "hwbasic",
+      "guest": "vmbasic"
     }
   },
   {
@@ -26680,10 +26680,10 @@
       }
     ],
     "dd_correct_mapping": {
-      "a": "few",
       "b": "few",
+      "g": "few",
       "n24": "few",
-      "g": "many",
+      "a": "many",
       "n5": "many"
     }
   },
@@ -26739,9 +26739,9 @@
         "text": "繰り返し発生する管理コストを抑えるため"
       }
     ],
-    "answer": "A",
+    "answer": "D",
     "correct_choices": [
-      "A"
+      "D"
     ],
     "multi_select": false
   },

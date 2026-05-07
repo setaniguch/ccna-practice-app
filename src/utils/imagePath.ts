@@ -5,5 +5,7 @@
  */
 export function resolveImageUrl(path: string): string {
   const fileName = path.split('/').pop();
-  return fileName ? `/images/${fileName}` : path;
+  if (!fileName) return path;
+  const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+  return `${base}/images/${fileName}`;
 }
