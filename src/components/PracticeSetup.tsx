@@ -5,6 +5,7 @@ import './PracticeMode.css';
 interface Props {
   allQuestions: Question[];
   onStart: (questions: Question[]) => void;
+  onStartList: (questions: Question[]) => void;
   onBack: () => void;
 }
 
@@ -20,7 +21,7 @@ const CATEGORIES = [
   '自動化',
 ] as const;
 
-export default function PracticeSetup({ allQuestions, onStart, onBack }: Props) {
+export default function PracticeSetup({ allQuestions, onStart, onStartList, onBack }: Props) {
   const [filterMode, setFilterMode] = useState<FilterMode>('category');
   const [selectedTypes, setSelectedTypes] = useState<Set<string>>(new Set(['multiple_choice', 'drag_and_drop', 'lab']));
   const [selectedCats, setSelectedCats] = useState<Set<string>>(new Set(CATEGORIES));
@@ -59,7 +60,7 @@ export default function PracticeSetup({ allQuestions, onStart, onBack }: Props) 
     });
   };
 
-  const handleStart = () => {
+  const getSelected = (): Question[] | null => {
     let selected: Question[] = [];
 
     if (filterMode === 'category') {
@@ -69,20 +70,20 @@ export default function PracticeSetup({ allQuestions, onStart, onBack }: Props) 
       });
       if (selected.length === 0) {
         setError('少なくとも1つのカテゴリを選択してください');
-        return;
+        return null;
       }
     } else if (filterMode === 'type') {
       selected = allQuestions.filter((q) => selectedTypes.has(q.type));
       if (selected.length === 0) {
         setError('少なくとも1つのタイプを選択してください');
-        return;
+        return null;
       }
     } else if (filterMode === 'range') {
       const from = Math.max(1, rangeFrom);
       const to = Math.min(maxNum, rangeTo);
       if (from > to) {
         setError('範囲が無効です（開始 ≤ 終了）');
-        return;
+        return null;
       }
       selected = allQuestions.filter((q) => q.number >= from && q.number <= to);
     } else {
@@ -93,15 +94,22 @@ export default function PracticeSetup({ allQuestions, onStart, onBack }: Props) 
         .filter((n) => !isNaN(n));
       if (nums.length === 0) {
         setError('問題番号を入力してください（カンマ区切り）');
-        return;
+        return null;
       }
       const numSet = new Set(nums);
       selected = allQuestions.filter((q) => numSet.has(q.number));
       if (selected.length === 0) {
         setError('指定した番号に該当する問題がありません');
-        return;
+        return null;
       }
     }
+
+    return selected;
+  };
+
+  const handleStart = () => {
+    const selected = getSelected();
+    if (!selected) return;
 
     if (shuffle) {
       for (let i = selected.length - 1; i > 0; i--) {
@@ -112,6 +120,15 @@ export default function PracticeSetup({ allQuestions, onStart, onBack }: Props) 
 
     setError('');
     onStart(selected);
+  };
+
+  const handleStartList = () => {
+    const selected = getSelected();
+    if (!selected) return;
+    // 一覧モードではシャッフルしない（番号順）
+    selected.sort((a, b) => a.number - b.number);
+    setError('');
+    onStartList(selected);
   };
 
   return (
@@ -205,7 +222,8 @@ export default function PracticeSetup({ allQuestions, onStart, onBack }: Props) 
 
       <div className="ps__actions">
         <button className="secondary" onClick={onBack}>← 戻る</button>
-        <button className="primary" onClick={handleStart}>練習を開始</button>
+        <button className="primary" onClick={handleStart}>1問ずつ練習</button>
+        <button className="primary" onClick={handleStartList}>一覧で閲覧</button>
       </div>
     </div>
   );

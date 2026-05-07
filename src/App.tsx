@@ -5,6 +5,7 @@ import QuestionCard from './components/QuestionCard';
 import ResultPanel from './components/ResultPanel';
 import PracticeSetup from './components/PracticeSetup';
 import PracticeMode from './components/PracticeMode';
+import PracticeListMode from './components/PracticeListMode';
 import { isAnswerFullyEntered } from './utils/answerStatus';
 import './App.css';
 
@@ -107,7 +108,7 @@ function formatTime(sec: number): string {
   return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
 }
 
-type Phase = 'home' | 'start' | 'exam' | 'result' | 'practice-setup' | 'practice';
+type Phase = 'home' | 'start' | 'exam' | 'result' | 'practice-setup' | 'practice' | 'practice-list';
 
 export default function App() {
   const [phase, setPhase] = useState<Phase>('home');
@@ -251,6 +252,10 @@ export default function App() {
               setPracticeQuestions(qs);
               setPhase('practice');
             }}
+            onStartList={(qs) => {
+              setPracticeQuestions(qs);
+              setPhase('practice-list');
+            }}
             onBack={() => setPhase('home')}
           />
         </main>
@@ -261,6 +266,11 @@ export default function App() {
   // ===== Practice mode =====
   if (phase === 'practice') {
     return <PracticeMode questions={practiceQuestions} onFinish={() => setPhase('home')} />;
+  }
+
+  // ===== Practice list mode =====
+  if (phase === 'practice-list') {
+    return <PracticeListMode questions={practiceQuestions} onFinish={() => setPhase('home')} />;
   }
 
   // ===== Start screen =====
