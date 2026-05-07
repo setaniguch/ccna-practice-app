@@ -8121,7 +8121,7 @@
     ],
     "multi_select": true,
     "category": "ネットワークアクセス",
-    "explanation": "show running-configの出力からVLAN、トランク、アクセスポートの設定内容を読み取り、構成の問題や意図した設定が正しく適用されているかを確認します。"
+    "explanation": "show spanning-tree出力からルートポート、指定ポート、ブロッキングポートを判断します。ルートポートはルートブリッジへの最低コストパスを持つポートで、各非ルートブリッジに1つ存在します。"
   },
   {
     "number": 230,
@@ -9631,7 +9631,7 @@
     ],
     "multi_select": false,
     "category": "ネットワークアクセス",
-    "explanation": "STPの動作を理解し、ルートブリッジの選出、ルートポート、指定ポート、ブロッキングポートの配置を分析します。トランクリンクのVLAN許可設定とポート状態を確認して問題を特定します。"
+    "explanation": "SW4のGi0/2をトランクモードに設定し、許可VLANを指定します。スイッチ間のトランクリンクでは802.1Qカプセル化とallowed VLANの設定が必要です。"
   },
   {
     "number": 275,
@@ -9845,7 +9845,7 @@
     ],
     "multi_select": false,
     "category": "ネットワークアクセス",
-    "explanation": "IPソースガードはDHCPスヌーピングバインディングテーブルに基づいて、不正なIPアドレスからのトラフィックをフィルタリングします。IP spoofing攻撃を防止するL2セキュリティ機能です。"
+    "explanation": "L2 LACP EtherChannel設定: interface rangeでメンバーポートを選択し、switchport mode trunk + channel-group [番号] mode activeを設定。両端の物理設定（速度、デュプレックス、VLAN）を一致させます。"
   },
   {
     "number": 281,
@@ -9876,7 +9876,7 @@
     ],
     "multi_select": false,
     "category": "ネットワークアクセス",
-    "explanation": "STPのパスコスト計算: 各リンクのコストを加算してルートブリッジまでの総コストを求めます。IEEE標準コスト: 10Gbps=2、1Gbps=4、100Mbps=19、10Mbps=100。"
+    "explanation": "VLAN（Virtual LAN）は個別のブロードキャストドメインを作成するスイッチング概念です。各VLANは独立したブロードキャストドメインとなり、異なるVLAN間の通信にはL3ルーティングが必要です。"
   },
   {
     "number": 282,
@@ -10055,7 +10055,7 @@
     ],
     "multi_select": false,
     "category": "ネットワークアクセス",
-    "explanation": "BPDUガードはPortFastが有効なポートでBPDUを受信した場合にポートをerr-disabledにする機能です。不正なスイッチの接続によるSTPトポロジの変更を防止します。"
+    "explanation": "LACP（Link Aggregation Control Protocol）はIEEE 802.3adで標準化されたプロトコルで、複数の物理ポートを1つの論理リンクに集約しネゴシエーションを行います。active/passiveモードで動作します。"
   },
   {
     "number": 287,
@@ -10088,7 +10088,7 @@
     ],
     "multi_select": false,
     "category": "ネットワークアクセス",
-    "explanation": "ルートガードは指定ポートで優位なBPDUを受信した場合にポートをroot-inconsistent状態にし、不正なルートブリッジの出現を防ぎます。既知のルートブリッジを保護します。"
+    "explanation": "LACP EtherChannelの問題: 両端のchannel-groupモードが互換性のある組み合わせ（active-active、active-passive）である必要があります。mode onはLACPネゴシエーションを使用しないため、LACP側とは互換性がありません。"
   },
   {
     "number": 288,
@@ -10440,7 +10440,7 @@
     ],
     "multi_select": false,
     "category": "ネットワークアクセス",
-    "explanation": "STPのBPDU（Bridge Protocol Data Unit）はルートブリッジID、パスコスト、送信側ブリッジIDなどの情報を含み、2秒間隔（デフォルト）で送信されてSTPトポロジを維持します。"
+    "explanation": "スイッチポートにアクセスVLANとボイスVLANを設定: switchport mode access + switchport access vlan [データVLAN] + switchport voice vlan [音声VLAN]。タグなしフレームはアクセスVLANに割り当てられます。"
   },
   {
     "number": 298,
@@ -10471,7 +10471,7 @@
     ],
     "multi_select": false,
     "category": "ネットワークアクセス",
-    "explanation": "LoopGuardはNon-Designatedポートでの一方向リンク障害を検出し、フォワーディングループを防止します。BPDUの受信が途絶えた場合にポートをloop-inconsistent状態にします。"
+    "explanation": "MACアドレステーブルの構築: スイッチは受信トラフィック（ingress）のフレームから送信元MACアドレスを学習し、受信ポートと関連付けてテーブルに登録します。これにより転送先ポートを決定できます。"
   },
   {
     "number": 299,
@@ -10535,7 +10535,7 @@
     ],
     "multi_select": false,
     "category": "ネットワークアクセス",
-    "explanation": "VLAN設計のベストプラクティス: 機能や部門ごとにVLANを分離、管理VLANをデータVLANと分離、ネイティブVLANをデフォルトVLAN 1から変更、未使用ポートを未使用VLANに割り当てます。"
+    "explanation": "spanning-tree vlan [ID] forward-time [秒] コマンドでリスニング→ラーニングの遷移時間を指定します。forward-timeはリスニング状態とラーニング状態それぞれの滞留時間（デフォルト15秒×2=30秒）を設定します。"
   },
   {
     "number": 301,
