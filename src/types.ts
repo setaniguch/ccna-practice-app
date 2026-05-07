@@ -46,6 +46,7 @@ export interface Question {
   question_images?: string[];
   question_text: string;
   type: 'multiple_choice' | 'drag_and_drop' | 'lab' | string;
+  category?: string;
   choices?: Choice[];
   answer: string;
   correct_choices?: string[];

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import type { Question } from '../types';
 import './PracticeMode.css';
 
@@ -8,11 +8,22 @@ interface Props {
   onBack: () => void;
 }
 
-type FilterMode = 'type' | 'range' | 'pick';
+type FilterMode = 'category' | 'type' | 'range' | 'pick';
+
+const CATEGORIES = [
+  'ネットワーク基礎',
+  'ネットワークアクセス',
+  'IP接続',
+  'IPサービス',
+  'セキュリティ基礎',
+  'ワイヤレス',
+  '自動化',
+] as const;
 
 export default function PracticeSetup({ allQuestions, onStart, onBack }: Props) {
-  const [filterMode, setFilterMode] = useState<FilterMode>('type');
+  const [filterMode, setFilterMode] = useState<FilterMode>('category');
   const [selectedTypes, setSelectedTypes] = useState<Set<string>>(new Set(['multiple_choice', 'drag_and_drop', 'lab']));
+  const [selectedCats, setSelectedCats] = useState<Set<string>>(new Set(CATEGORIES));
   const [rangeFrom, setRangeFrom] = useState(1);
   const [rangeTo, setRangeTo] = useState(50);
   const [pickText, setPickText] = useState('');
@@ -20,6 +31,15 @@ export default function PracticeSetup({ allQuestions, onStart, onBack }: Props) 
   const [error, setError] = useState('');
 
   const maxNum = allQuestions.length;
+
+  const catCounts = useMemo(() => {
+    const m: Record<string, number> = {};
+    allQuestions.forEach((q) => {
+      const c = q.category ?? 'ネットワーク基礎';
+      m[c] = (m[c] || 0) + 1;
+    });
+    return m;
+  }, [allQuestions]);
 
   const toggleType = (t: string) => {
     setSelectedTypes((prev) => {
@@ -30,10 +50,28 @@ export default function PracticeSetup({ allQuestions, onStart, onBack }: Props) 
     });
   };
 
+  const toggleCat = (c: string) => {
+    setSelectedCats((prev) => {
+      const s = new Set(prev);
+      if (s.has(c)) s.delete(c);
+      else s.add(c);
+      return s;
+    });
+  };
+
   const handleStart = () => {
     let selected: Question[] = [];
 
-    if (filterMode === 'type') {
+    if (filterMode === 'category') {
+      selected = allQuestions.filter((q) => {
+        const cat = q.category ?? 'ネットワーク基礎';
+        return selectedCats.has(cat);
+      });
+      if (selected.length === 0) {
+        setError('少なくとも1つのカテゴリを選択してください');
+        return;
+      }
+    } else if (filterMode === 'type') {
       selected = allQuestions.filter((q) => selectedTypes.has(q.type));
       if (selected.length === 0) {
         setError('少なくとも1つのタイプを選択してください');
@@ -83,6 +121,9 @@ export default function PracticeSetup({ allQuestions, onStart, onBack }: Props) 
       <div className="ps__section">
         <h3>出題方法</h3>
         <div className="ps__tabs">
+          <button className={filterMode === 'category' ? 'active' : ''} onClick={() => setFilterMode('category')}>
+            カテゴリ別
+          </button>
           <button className={filterMode === 'type' ? 'active' : ''} onClick={() => setFilterMode('type')}>
             タイプ別
           </button>
@@ -94,6 +135,17 @@ export default function PracticeSetup({ allQuestions, onStart, onBack }: Props) 
           </button>
         </div>
       </div>
+
+      {filterMode === 'category' && (
+        <div className="ps__section">
+          {CATEGORIES.map((cat) => (
+            <label key={cat} className="ps__check">
+              <input type="checkbox" checked={selectedCats.has(cat)} onChange={() => toggleCat(cat)} />
+              {cat}（{catCounts[cat] ?? 0} 問）
+            </label>
+          ))}
+        </div>
+      )}
 
       {filterMode === 'type' && (
         <div className="ps__section">
