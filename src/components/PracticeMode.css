@@ -176,3 +176,14 @@ button.small {
   padding: 0.3rem 0.8rem;
   font-size: 0.85rem;
 }
+
+.practice-answer__explanation {
+  margin-top: 0.75rem;
+  padding: 0.75rem;
+  background: #f0f9ff;
+  border-left: 4px solid #0ea5e9;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: #1e3a5f;
+}

@@ -230,6 +230,11 @@ export default function ResultPanel({ questions, answers, ddAnswers, labAnswers,
                   </div>
                 </details>
               )}
+              {q.explanation && (
+                <div className="practice-answer__explanation">
+                  <strong>解説:</strong> {q.explanation}
+                </div>
+              )}
             </li>
           );
         })}

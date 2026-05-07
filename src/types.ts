@@ -58,6 +58,8 @@ export interface Question {
   dd_correct_mapping?: Record<string, string>;
   /** ラボ問題（type==='lab'）の仕様 */
   lab?: LabSpec;
+  /** 解説（正解の理由など） */
+  explanation?: string;
 }
 
 export type AnswerMap = Record<number, string[]>;

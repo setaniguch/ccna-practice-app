@@ -182,6 +182,11 @@ export default function PracticeMode({ questions, onFinish }: Props) {
                   ))}
                 </div>
               )}
+              {current.explanation && (
+                <div className="practice-answer__explanation">
+                  <strong>解説:</strong> {current.explanation}
+                </div>
+              )}
             </div>
           </div>
         )}
