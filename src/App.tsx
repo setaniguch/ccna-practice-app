@@ -3,6 +3,8 @@ import questionsData from './data/questions.json';
 import type { Question, AnswerMap, DragDropAnswerMap, LabAnswerMap } from './types';
 import QuestionCard from './components/QuestionCard';
 import ResultPanel from './components/ResultPanel';
+import PracticeSetup from './components/PracticeSetup';
+import PracticeMode from './components/PracticeMode';
 import { isAnswerFullyEntered } from './utils/answerStatus';
 import './App.css';
 
@@ -33,10 +35,10 @@ function formatTime(sec: number): string {
   return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
 }
 
-type Phase = 'start' | 'exam' | 'result';
+type Phase = 'home' | 'start' | 'exam' | 'result' | 'practice-setup' | 'practice';
 
 export default function App() {
-  const [phase, setPhase] = useState<Phase>('start');
+  const [phase, setPhase] = useState<Phase>('home');
   const [sessionId, setSessionId] = useState(0);
   const questions = useMemo(() => pickQuestions(), [sessionId]);
   const [index, setIndex] = useState(0);
@@ -46,6 +48,7 @@ export default function App() {
   const [endsAt, setEndsAt] = useState<number>(0);
   const [now, setNow] = useState<number>(Date.now());
   const finishedRef = useRef(false);
+  const [practiceQuestions, setPracticeQuestions] = useState<Question[]>([]);
 
   // 1秒ごとに残り時間更新
   useEffect(() => {
@@ -129,8 +132,58 @@ export default function App() {
   };
 
   const handleRestart = () => {
-    setPhase('start');
+    setPhase('home');
   };
+
+  // ===== Home screen (mode selection) =====
+  if (phase === 'home') {
+    return (
+      <div className="app">
+        <header className="app__header">
+          <h1>CCNA 200-301 学習アプリ</h1>
+          <p className="app__subtitle">全 {ALL_QUESTIONS.length} 問収録</p>
+        </header>
+        <main className="app__main home">
+          <div className="home__cards">
+            <div className="home__card" onClick={() => setPhase('start')}>
+              <h2>📝 模擬試験モード</h2>
+              <p>本番同様に {Math.min(QUESTION_COUNT, ALL_QUESTIONS.length)} 問をランダム出題。制限時間 {TIME_LIMIT_MIN} 分。採点は最後にまとめて表示。</p>
+            </div>
+            <div className="home__card" onClick={() => setPhase('practice-setup')}>
+              <h2>📖 練習モード</h2>
+              <p>カテゴリ別・番号範囲・番号指定で問題を選択。1問ごとに答え合わせができます。</p>
+            </div>
+          </div>
+        </main>
+      </div>
+    );
+  }
+
+  // ===== Practice setup =====
+  if (phase === 'practice-setup') {
+    return (
+      <div className="app">
+        <header className="app__header">
+          <h1>CCNA 200-301 練習モード</h1>
+        </header>
+        <main className="app__main">
+          <PracticeSetup
+            allQuestions={ALL_QUESTIONS}
+            onStart={(qs) => {
+              setPracticeQuestions(qs);
+              setPhase('practice');
+            }}
+            onBack={() => setPhase('home')}
+          />
+        </main>
+      </div>
+    );
+  }
+
+  // ===== Practice mode =====
+  if (phase === 'practice') {
+    return <PracticeMode questions={practiceQuestions} onFinish={() => setPhase('home')} />;
+  }
 
   // ===== Start screen =====
   if (phase === 'start') {
