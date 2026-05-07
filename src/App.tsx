@@ -146,11 +146,13 @@ export default function App() {
         <main className="app__main home">
           <div className="home__cards">
             <div className="home__card" onClick={() => setPhase('start')}>
-              <h2>📝 模擬試験モード</h2>
+              <div className="home__icon">📝</div>
+              <h2>模擬試験モード</h2>
               <p>本番同様に {Math.min(QUESTION_COUNT, ALL_QUESTIONS.length)} 問をランダム出題。制限時間 {TIME_LIMIT_MIN} 分。採点は最後にまとめて表示。</p>
             </div>
             <div className="home__card" onClick={() => setPhase('practice-setup')}>
-              <h2>📖 練習モード</h2>
+              <div className="home__icon">📖</div>
+              <h2>練習モード</h2>
               <p>カテゴリ別・番号範囲・番号指定で問題を選択。1問ごとに答え合わせができます。</p>
             </div>
           </div>
