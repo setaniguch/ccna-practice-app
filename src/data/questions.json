@@ -2600,7 +2600,7 @@
     ],
     "multi_select": false,
     "category": "IPサービス",
-    "explanation": "802.1Qトランクは複数のVLANのトラフィックを1つのリンクで伝送します。フレームにVLANタグ（4バイト）を挿入してVLANを識別します。ネイティブVLANのフレームはタグなしで送信されます。"
+    "explanation": "TCPがUDPより適している条件: TCPはデータの信頼性が重要な場合に使用します。3ウェイハンドシェイクで接続を確立し、シーケンス番号、確認応答（ACK）、再送制御でデータの完全な配送を保証します。UDPは接続確立なしで高速にデータを送信しますが、配送保証がないため、パケットの欠落が許容できるリアルタイム通信（VoIP、動画ストリーミング等）に適しています。"
   },
   {
     "number": 75,
@@ -2726,7 +2726,7 @@
     ],
     "multi_select": false,
     "category": "セキュリティ基礎",
-    "explanation": "DHCPの4ステップ: Discover（クライアントがサーバーを探す）→ Offer（サーバーがIPを提案）→ Request（クライアントが要求）→ Acknowledge（サーバーが確認）。DORAプロセスと呼ばれます。"
+    "explanation": "アクセスポイント（AP）の役割は、無線デバイス（スマートフォン、ノートPC、タブレット等）を有線ネットワークに接続することです。APは802.11無線フレームをイーサネットフレームに変換し、無線クライアントとLAN間のブリッジとして機能します。"
   },
   {
     "number": 79,
@@ -2819,7 +2819,7 @@
     ],
     "multi_select": false,
     "category": "ネットワーク基礎",
-    "explanation": "STP（スパニングツリープロトコル）は、冗長リンクがあるL2ネットワークでブロードキャストストーム、MACアドレステーブルの不安定化、フレームの重複受信を防ぐために、論理的にループを排除します。"
+    "explanation": "RFC 1918プライベートIPv4アドレス（10.0.0.0/8、172.16.0.0/12、192.168.0.0/16）は、利用可能なパブリックアドレス空間が限られており、新しいサブネットのトラフィックが組織内に留まる（インターネットに直接出ない）場合に使用するのが適切です。外部通信が必要な場合はNATで変換します。"
   },
   {
     "number": 82,
@@ -2900,7 +2900,7 @@
     ],
     "multi_select": false,
     "category": "ネットワークアクセス",
-    "explanation": "SNMPはネットワークデバイスの監視・管理に使用されるプロトコルです。マネージャがエージェントにGet/Setリクエストを送り、エージェントはTrapで異常を通知します。ポート161/162（UDP）を使用します。"
+    "explanation": "802.11のプローブレスポンスは管理フレーム（Management Frame）に分類されます。802.11フレームタイプには管理フレーム（認証、アソシエーション、プローブ）、制御フレーム（RTS/CTS、ACK）、データフレームの3種類があり、プローブリクエスト/レスポンスは管理フレームです。"
   },
   {
     "number": 84,
@@ -2931,7 +2931,7 @@
     ],
     "multi_select": false,
     "category": "ネットワーク基礎",
-    "explanation": "EtherChannelは複数の物理リンクを1つの論理リンクに束ねて帯域幅を増加させ、冗長性を提供します。LACP（802.3ad）またはPAgPで構成され、メンバーリンクの1つが障害を起こしても残りで通信を継続します。"
+    "explanation": "TCPとUDPの違い: TCPはコネクション型プロトコルで、データ送信前に3ウェイハンドシェイク（SYN→SYN-ACK→ACK）による接続確立が必要です。シーケンス番号と確認応答で信頼性を確保します。UDPはコネクションレス型で接続確立不要、パケット配送の保証なしに高速送信が可能ですが、パケットの喪失や順序逆転が発生する可能性があります。"
   },
   {
     "number": 85,
@@ -3062,7 +3062,7 @@
     ],
     "multi_select": false,
     "category": "ネットワーク基礎",
-    "explanation": "SSHはTelnetの安全な代替として、暗号化されたリモートアクセスを提供します。Telnetは平文で通信するためセキュリティリスクがあります。SSHはポート22、Telnetはポート23を使用します。"
+    "explanation": "クラウドベースのネットワークトポロジの特徴: サービスはパブリック（一般利用）、プライベート（組織専用）、またはハイブリッド（両方の組み合わせ）のデプロイメントモデルで提供されます。物理インフラはプロバイダーが管理し、利用者はオンデマンドでリソースをスケーリングできます。"
   },
   {
     "number": 89,
@@ -3162,7 +3162,7 @@
     ],
     "multi_select": true,
     "category": "ネットワークアクセス",
-    "explanation": "CDP（Cisco Discovery Protocol）はCisco独自のL2プロトコルで、隣接するCiscoデバイスの情報（ホスト名、IPアドレス、プラットフォーム、インターフェース）を収集します。LLDPはCDPの業界標準版（IEEE 802.1AB）です。"
+    "explanation": "データプレーン（フォワーディングプレーン）で行われる動作: パケットの転送（ルーティングテーブルに基づく）、フレームのスイッチング（MACアドレステーブルに基づく）、カプセル化/デカプセル化、NAT変換、ACLによるフィルタリング実行。コントロールプレーン（ルーティングプロトコル計算、ARPテーブル構築等）やマネジメントプレーン（SSH、SNMP等）とは異なります。"
   },
   {
     "number": 92,
@@ -3193,7 +3193,7 @@
     ],
     "multi_select": false,
     "category": "ネットワークアクセス",
-    "explanation": "ルーティングテーブルのAD（アドミニストレーティブディスタンス）値は、ルート情報の信頼性を示します。値が小さいほど信頼性が高く、直接接続=0、スタティック=1、OSPF=110、RIP=120です。"
+    "explanation": "ネットワークエンドポイントとは、ネットワークに接続してデータを送受信するデバイス（PC、サーバー、スマートフォン、プリンタ、IoTデバイス等）のことです。エンドポイントは侵害された場合にネットワーク全体への脅威（マルウェア拡散、データ漏洩等）となるため、エンドポイントセキュリティが重要です。"
   },
   {
     "number": 93,
@@ -3257,7 +3257,7 @@
     ],
     "multi_select": false,
     "category": "ネットワーク基礎",
-    "explanation": "DNSはドメイン名をIPアドレスに変換する（名前解決）サービスです。通常のクエリはUDPポート53を使用し、ゾーン転送にはTCPポート53を使用します。階層的な名前空間構造を持ちます。"
+    "explanation": "RFC 1918プライベートアドレス空間（10.0.0.0/8、172.16.0.0/12、192.168.0.0/16）が定義された理由は、パブリックIPv4アドレスの枯渇を防ぐためです。内部ネットワークでプライベートアドレスを使用し、インターネットアクセスにはNATでパブリックアドレスに変換することで、限られたIPv4アドレス空間を節約できます。"
   },
   {
     "number": 95,
@@ -3347,7 +3347,7 @@
       "i4": "Unique Local"
     },
     "category": "ネットワーク基礎",
-    "explanation": "802.1Xはポートベースのネットワークアクセス制御です。サプリカント（クライアント）、オーセンティケーター（スイッチ）、認証サーバー（RADIUS）の3つのコンポーネントで構成され、認証前はポートが制限されます。"
+    "explanation": "IPv6アドレスタイプの分類: グローバルユニキャスト（2000::/3）=インターネットでルーティング可能、リンクローカル（FE80::/10）=同一リンク内のみ有効、ユニークローカル（FC00::/7, FD00::/8）=内部ネットワーク用、マルチキャスト（FF00::/8）=グループ宛通信。ループバック=::1、未指定=::。"
   },
   {
     "number": 97,
@@ -3409,7 +3409,7 @@
     ],
     "multi_select": false,
     "category": "ネットワーク基礎",
-    "explanation": "NTPはネットワーク上のデバイス間で時刻を同期するプロトコルです。UDPポート123を使用し、Stratum値で時刻源の精度を示します（Stratum 0が最も精度が高い原子時計等）。"
+    "explanation": "IPv6アドレスの圧縮規則: (1)各グループの先頭の0を省略可能（0001→1）、(2)連続する全0グループは::で1回だけ省略可能。2001:0EB8:00C1:2200:0001:0000:0000:0331を圧縮すると2001:EB8:C1:2200:1::331となります。選択肢Aは22を誤って圧縮（2200→22は不可）、Bは2001→21と不正、Cは完全に圧縮されていません。"
   },
   {
     "number": 99,
@@ -3458,7 +3458,7 @@
       "i4": "Global Unicast"
     },
     "category": "ネットワーク基礎",
-    "explanation": "Syslogはネットワークデバイスのログメッセージを一元的に収集・管理するプロトコルです。重大度レベルは0（Emergency）〜7（Debugging）で、数字が小さいほど重要度が高くなります。"
+    "explanation": "IPv6アドレスタイプの識別: 2000::/3で始まるアドレス=グローバルユニキャスト、FE80::/10=リンクローカル、FC00::/7（FD00::/8）=ユニークローカル、FF00::/8=マルチキャスト、::1=ループバック。プレフィックスの最初の数ビットでアドレスタイプが決まります。"
   },
   {
     "number": 100,
@@ -3960,7 +3960,7 @@
     ],
     "multi_select": false,
     "category": "ネットワーク基礎",
-    "explanation": "ユニークローカルアドレス（FD00::/8）はインターネットにアドバタイズされません。インターフェースにFDプレフィックスのIPv6アドレスを設定することで、内部通信のみに使用できます。"
+    "explanation": "ユニークローカルアドレス（FD00::/8）はインターネットにアドバタイズされないルーティング可能なローカルIPv6アドレスです。VLAN 2000インターフェースにfd00::1234:2343/64を設定することで、内部ネットワーク内でルーティング可能かつインターネットへのアドバタイズがブロックされる要件を満たします。ff00はマルチキャスト、fe80はリンクローカルのため不適切です。"
   },
   {
     "number": 116,
@@ -6340,7 +6340,7 @@
     ],
     "multi_select": false,
     "category": "ネットワークアクセス",
-    "explanation": "標準ACLは送信元IPアドレスのみに基づいてフィルタリングを行います。番号1-99または1300-1999を使用し、宛先に近い場所に配置するのがベストプラクティスです。"
+    "explanation": "spanning-tree portfastコマンドの主な効果は、STPのコンバージェンス時間を最小化することです。通常のSTPではポートがListening（15秒）→Learning（15秒）→Forwarding状態に移行するまで約30秒かかりますが、PortFastを有効にするとポートが即座にForwarding状態になり、エンドデバイスがすぐに通信を開始できます。"
   },
   {
     "number": 179,
@@ -6371,7 +6371,7 @@
     ],
     "multi_select": false,
     "category": "ネットワークアクセス",
-    "explanation": "拡張ACLは送信元IP、宛先IP、プロトコル、ポート番号など複数の条件でフィルタリングできます。番号100-199または2000-2699を使用し、送信元に近い場所に配置するのがベストプラクティスです。"
+    "explanation": "別のスイッチに接続されたインターフェースでPortFastが有効になると、STPがスイッチングループを検出できなくなり、ブロードキャストストームの可能性が高まります。PortFastはListening/Learning状態をスキップするため、ループ検出メカニズムが機能しません。PortFastはエンドデバイス接続ポートにのみ設定すべきです。"
   },
   {
     "number": 180,
@@ -6541,7 +6541,7 @@
     ],
     "multi_select": false,
     "category": "ネットワークアクセス",
-    "explanation": "IPv6 NDP（Neighbor Discovery Protocol）はIPv4のARPに相当し、近隣探索、アドレス解決、重複アドレス検出（DAD）、リダイレクト機能を提供します。ICMPv6を使用します。"
+    "explanation": "LLDPのポート記述TLV送信設定: インターフェースコンフィグモード（config-if）でlldp port-descriptionコマンドを実行します。LLDPはリンク層の近隣探索プロトコルで、TLV（Type-Length-Value）形式で情報を送信します。ポート記述TLVはインターフェース単位の設定のため、config-ifモードが正しいです。"
   },
   {
     "number": 184,
@@ -6574,7 +6574,7 @@
     ],
     "multi_select": false,
     "category": "ネットワークアクセス",
-    "explanation": "ワイヤレスLANコントローラ（WLC）はLightweight APの設定、RF管理、セキュリティ、ローミング管理を集中的に行います。CAPWAPプロトコルでAPと通信します。"
+    "explanation": "STPルートブリッジの選出: ブリッジIDが最小のスイッチがルートブリッジになります。ブリッジID=プライオリティ（デフォルト32768）+MACアドレス。プライオリティが同じ場合、MACアドレスが最も小さいスイッチがルートブリッジに選出されます。図からS2がルートブリッジとなる条件を読み取ります。"
   },
   {
     "number": 185,
@@ -6605,7 +6605,7 @@
     ],
     "multi_select": false,
     "category": "ネットワークアクセス",
-    "explanation": "802.11ac（Wi-Fi 5）は5GHz帯のみを使用し、最大6.93Gbps（理論値）の速度を提供します。MU-MIMOにより複数クライアントに同時送信が可能です。"
+    "explanation": "STPルートブリッジの選出はブリッジプライオリティ値で決定されます。spanning-tree vlan 750 priority 0はプライオリティを最小値（0）に設定し、そのスイッチが常にVLAN 750のルートブリッジになることを保証します。root primaryコマンドは現在のルートより低い値を設定しますが、将来他のスイッチがより低い値を設定する可能性があるため「常に」の保証にはなりません。"
   },
   {
     "number": 186,
@@ -6700,7 +6700,7 @@
       "i5": "dynamic interface"
     },
     "category": "ワイヤレス",
-    "explanation": "WPA3はSAE（Simultaneous Authentication of Equals）を使用し、オフライン辞書攻撃に対する耐性が向上しています。WPA2のPSKに比べてより安全な鍵交換を提供します。"
+    "explanation": "WLANコンポーネントの対応: アクセスポイント（AP）=無線クライアントと有線LANを接続、WLC（Wireless LAN Controller）=複数APの集中管理、SSID=無線ネットワークの識別子、認証サーバー（RADIUS）=ユーザー認証処理。各コンポーネントの役割を正確に理解することが重要です。"
   },
   {
     "number": 188,
@@ -6731,7 +6731,7 @@
     ],
     "multi_select": false,
     "category": "ワイヤレス",
-    "explanation": "IaaS（Infrastructure as a Service）は仮想マシン、ストレージ、ネットワークなどのインフラをクラウドで提供します。ユーザーはOSやアプリケーションを自身で管理します。例: AWS EC2。"
+    "explanation": "FlexConnectモードのAPは、WLC（Wireless LAN Controller）との接続が失われた後もワイヤレスクライアントへのサービスを継続できます。FlexConnect APはローカルでトラフィックのスイッチングと認証を行えるため、WAN障害時でもクライアントの通信を維持します。LocalモードではすべてのトラフィックがCAPWAPトンネルでWLCに転送されるため、WLC接続断で通信不可になります。"
   },
   {
     "number": 189,
@@ -6764,7 +6764,7 @@
     ],
     "multi_select": false,
     "category": "IP接続",
-    "explanation": "PaaS（Platform as a Service）は開発環境やランタイムをクラウドで提供し、開発者はアプリケーションのコードに集中できます。インフラやOS管理はプロバイダーが行います。"
+    "explanation": "show cdp neighborコマンドは直接接続された隣接デバイスの情報（デバイスID、ローカルインターフェース、ホールドタイム、機能、プラットフォーム、ポートID）を表形式で表示します。CDPはCisco独自のレイヤー2プロトコルで、隣接デバイスの検出に使用されます。"
   },
   {
     "number": 190,
@@ -6893,7 +6893,7 @@
     ],
     "multi_select": false,
     "category": "ネットワークアクセス",
-    "explanation": "トランクポートは複数のVLANのトラフィックを運ぶために使用されます。switchport mode trunkコマンドで設定し、802.1Qカプセル化が使用されます。"
+    "explanation": "lldp reinitコマンドはLLDPを初期化するための遅延時間（秒）を指定します。ポートがLLDPを再初期化する前の待機時間を設定し、リンクフラップ時の過剰なLLDPフレーム送信を防止します。lldp timerは送信間隔、lldp holdtimeは情報保持時間、lldp tlv-selectは送信するTLVの選択です。"
   },
   {
     "number": 194,
@@ -6926,7 +6926,7 @@
     ],
     "multi_select": false,
     "category": "ネットワークアクセス",
-    "explanation": "IPv6アドレスの短縮ルール: (1)各グループの先頭の0を省略可能、(2)連続する0のグループを::で1回だけ置換可能。2001:0DB8:0000:0000:0000:0000:0000:0001は2001:DB8::1と短縮できます。"
+    "explanation": "VTPトランスペアレントモード（D）のスイッチは、VTPアドバタイズメントを転送（リレー）しますが、受信したVTP情報をローカルVLANデータベースに反映しません。自身のVLAN設定変更もVTPアドバタイズメントとして送信しません。トランクポートで受信したVTPメッセージのみを隣接スイッチに転送する役割を持ちます。"
   },
   {
     "number": 195,
@@ -9779,7 +9779,7 @@
       "i5": "Lightweight Access Point (1)"
     },
     "category": "ワイヤレス",
-    "explanation": "DHCPスヌーピングはDHCPサーバーの偽装攻撃を防ぐセキュリティ機能です。信頼できるポート（DHCPサーバー接続ポート）と信頼できないポートを区別し、不正なDHCP応答をブロックします。"
+    "explanation": "無線APのアーキテクチャタイプ: Autonomous AP=独立動作、個別設定が必要。Lightweight AP=WLCで集中管理、CAPWAPトンネル使用。FlexConnect AP=WLC管理だがローカルスイッチング可能、WAN障害時も動作継続。Cloud-managed AP=クラウドベースの管理プラットフォーム経由で設定。"
   },
   {
     "number": 279,
@@ -9909,7 +9909,7 @@
     ],
     "multi_select": false,
     "category": "ネットワークアクセス",
-    "explanation": "ポートセキュリティはスイッチポートに接続できるMACアドレスの数を制限し、不正デバイスの接続を防止します。violation modeにはshutdown、restrict、protectがあります。"
+    "explanation": "CDPのタイマー設定: cdp timer 10コマンドはCDPアドバタイズメントの送信間隔を10秒に短縮します（デフォルト60秒）。送信間隔を短くすることで隣接デバイスがスイッチCat9300をより素早く検出できます。cdp holdtimeは情報の保持時間であり、検出速度には直接影響しません。また設定はCat9300側（送信側）で行います。"
   },
   {
     "number": 283,
@@ -10121,7 +10121,7 @@
     ],
     "multi_select": false,
     "category": "ネットワークアクセス",
-    "explanation": "RPVST+（Rapid Per-VLAN Spanning Tree Plus）はVLANごとにSTPインスタンスを実行し、各VLANで独立したルートブリッジ選出とトポロジ計算を行います。RSTPの高速収束機能を持ちます。"
+    "explanation": "インターフェースでCDPとLLDPの両方を無効にするには: no cdp enable（CDPをインターフェースで無効化）とno lldp transmit / no lldp receive（LLDPの送受信を無効化）を設定します。no cdp runはグローバルで全インターフェースのCDPを無効にするため、特定インターフェースのみの要件には不適切です。"
   },
   {
     "number": 289,
@@ -10157,7 +10157,7 @@
     ],
     "multi_select": true,
     "category": "ネットワークアクセス",
-    "explanation": "トランクリンクのDTP（Dynamic Trunking Protocol）ネゴシエーション: trunk+trunk=トランク、trunk+auto=トランク、desirable+desirable=トランク、auto+auto=アクセスです。"
+    "explanation": "PortFastが動作しているインターフェースでスキップされるSTP状態はListeningとLearningです。通常のSTPポート遷移はBlocking→Listening→Learning→Forwardingですが、PortFastはListeningとLearningをスキップして即座にForwarding状態に移行します。これによりエンドデバイスの接続遅延が解消されます。"
   },
   {
     "number": 290,
@@ -10274,7 +10274,7 @@
     ],
     "multi_select": false,
     "category": "ネットワークアクセス",
-    "explanation": "WPA2-Enterprise（802.1X + RADIUS）は企業環境で推奨される無線セキュリティ方式です。ユーザーごとの認証と動的な暗号鍵の生成を行い、PSKより安全です。"
+    "explanation": "EtherChannelのLACP設定: 一方がpassiveモードの場合、もう一方はactiveモードでなければネゴシエーションが確立しません（passive同士では確立不可）。Switch2のLACPモードをactiveに変更することで、相手のpassiveモードとネゴシエーションが成立し、EtherChannelが確立されます。"
   },
   {
     "number": 293,
@@ -10338,7 +10338,7 @@
     ],
     "multi_select": false,
     "category": "セキュリティ基礎",
-    "explanation": "STPのポートロール: ルートポート（ルートブリッジへの最短パス）、指定ポート（セグメントへのBPDU転送）、代替ポート（RSTPでルートポートのバックアップ）、バックアップポート（指定ポートのバックアップ）。"
+    "explanation": "TACACS+は認証（Authentication）と認可（Authorization）を個別のプロセスとして処理するため、APの認可と認証を分離して管理できます。RADIUSは認証と認可を1つのプロセスで処理するため分離できません。TACACS+はTCPポート49を使用し、パケット全体を暗号化する点でもセキュリティに優れています。"
   },
   {
     "number": 295,
@@ -10407,7 +10407,7 @@
     ],
     "multi_select": true,
     "category": "ネットワークアクセス",
-    "explanation": "CDP/LLDPのセキュリティリスク: デバイス情報（IPアドレス、モデル、IOSバージョン）が漏洩する可能性があります。不要なインターフェースでno cdp enable / no lldp transmitで無効化します。"
+    "explanation": "show spanning-treeの出力から読み取れる情報: STPモード（PVST+/Rapid PVST+）、ルートブリッジかどうか（This bridge is the root）、各ポートのロール（Root/Designated/Alternate）と状態（FWD/BLK）。Rapid PVST+はrstp compatible modeの表示で識別でき、ルートポートはルートブリッジへの最短パスのポートです。"
   },
   {
     "number": 297,
@@ -12081,7 +12081,7 @@
     ],
     "multi_select": false,
     "category": "IP接続",
-    "explanation": "ルーティングテーブルに宛先への具体的なルートがない場合、デフォルトルート（0.0.0.0/0）が使用されます。デフォルトルートも存在しない場合、パケットは破棄されます。"
+    "explanation": "ルーターはロンゲストプレフィックスマッチ（最長一致）に基づいてルートを選択します。192.168.12.16に対して、/28や/26などより長いプレフィックスを持つRIPルートが存在する場合、AD（アドミニストレーティブディスタンス）やメトリックに関係なく、そのRIPルートが選択されます。ロンゲストマッチは他のすべての選択基準に優先します。"
   },
   {
     "number": 348,
@@ -12150,7 +12150,7 @@
     ],
     "multi_select": false,
     "category": "IP接続",
-    "explanation": "ルーターはルーティングテーブルのロンゲストマッチに基づいてパケットを転送します。具体的なルートがない場合はデフォルトルートを使用し、それもなければ破棄します。"
+    "explanation": "ルーターはロンゲストプレフィックスマッチ（最長一致）に基づいてルートを選択します。192.168.10.16に対して最も長い（具体的な）プレフィックスを持つRIPルートがルーティングテーブルに存在するため、ADやメトリックに関係なくそのルートが優先されます。ロンゲストマッチはルート選択の最優先基準です。"
   },
   {
     "number": 350,
@@ -13183,7 +13183,7 @@
     ],
     "multi_select": true,
     "category": "IP接続",
-    "explanation": "show ip ospf neighborの出力から、ネイバーの状態（FULL/TWO-WAY）、ルーターID、インターフェース、DR/BDR情報を読み取り、OSPFの動作状態を評価します。"
+    "explanation": "EIGRPのルーティングテーブル出力を分析: 「D」コードはEIGRPで学習したルート、「D EX」は外部EIGRP。ADは90（内部）/170（外部）。等コストパスが存在する場合はロードバランシングが行われます。ネクストホップ情報とインターフェースからトラフィックの経路を判断します。"
   },
   {
     "number": 381,
@@ -14839,7 +14839,7 @@
     ],
     "multi_select": false,
     "category": "IP接続",
-    "explanation": "ip route 0.0.0.0 0.0.0.0 10.13.0.1 120 はAD=120のフローティングスタティックデフォルトルートです。AD=120はRIPと同じなので、RIPルートが存在する限りこのルートは使用されません。"
+    "explanation": "ip route 0.0.0.0 0.0.0.0 10.13.0.1 120はAD=120のフローティングスタティックデフォルトルートです。既存のOSPFデフォルトルート（AD=110）の方がADが低いため優先されます。OSPFデフォルトルートが削除（無効化）されるまで、このスタティックルートはルーティングテーブルにインストールされません。フローティングスタティックはバックアップルートとして機能します。"
   },
   {
     "number": 427,
@@ -16993,7 +16993,7 @@
     ],
     "multi_select": true,
     "category": "IP接続",
-    "explanation": "ルーティング要件を満たすコマンドの組み合わせ: スタティックルートやデフォルトルートを正しいネクストホップとAD値で設定し、トラフィックが要件通りに転送されるようにします。"
+    "explanation": "要件を満たす2つのコマンド: (B) ipv6 route 2001:db8:23::14/128 fd00:13::3 → ホスト2001:db8:23::14宛をR3（fd00:13::3）経由で優先転送（/128ホストルートが最長一致で優先）。(C) ipv6 route 2001:db8:23::/64 fd00:12::2 → ネットワーク2001:db8:23::/64全体をR2（fd00:12::2）経由で転送。この組み合わせで両方の要件を満たします。"
   },
   {
     "number": 491,
@@ -17607,7 +17607,7 @@
     ],
     "multi_select": false,
     "category": "IPサービス",
-    "explanation": "IP SLAでUDPジッターを測定するには、宛先デバイスにIP SLA Responderが設定されている必要があります。Responderはプローブパケットに応答してジッター計測を可能にします。"
+    "explanation": "IP SLAでUDPジッター測定にはNTP（Network Time Protocol）が必要です。ジッターはパケット到着時間のばらつきを測定するため、送信元と宛先の両デバイスで正確な時刻同期が不可欠です。NTPがないと正確なタイムスタンプ比較ができず、ジッター計算が不正確になります。"
   },
   {
     "number": 510,
@@ -19921,7 +19921,7 @@
     ],
     "multi_select": false,
     "category": "ネットワークアクセス",
-    "explanation": "DHCPアドレスを受信できない原因: DHCPサーバーのアドレスプール枯渇、ip helper-addressの設定漏れ、DHCPスヌーピングでの信頼ポート設定誤り、VLAN設定の問題などが考えられます。"
+    "explanation": "STP（スパニングツリープロトコル）が原因でDHCPアドレスを受信できなくなることがあります。STPのポート状態遷移（Listening→Learning→Forwarding）に最大50秒かかるため、PCが接続直後にDHCP Discoverを送信しても、ポートがまだForwarding状態になっておらずフレームが破棄されます。PortFastを設定することでアクセスポートを即座にForwarding状態にし、この問題を解決できます。"
   },
   {
     "number": 578,
@@ -20542,7 +20542,7 @@
     ],
     "multi_select": false,
     "category": "IPサービス",
-    "explanation": "インターネット接続のためのNAT設定: 送信元NATルールが正しく設定されているか確認。ACLが送信元サブネットを正しく許可し、ip nat inside sourceとoverloadが設定されている必要があります。"
+    "explanation": "正解はDNS Serversの設定変更です。PCがwww.cisco.comにアクセスする際、まずドメイン名をIPアドレスに解決する必要があります。DNSサーバーが正しく設定されていないと名前解決ができず、接続に失敗します。IPアドレス直接指定なら接続できる場合、DNS設定の問題です。"
   },
   {
     "number": 594,
@@ -21802,7 +21802,7 @@
     ],
     "multi_select": false,
     "category": "ネットワーク基礎",
-    "explanation": "ACLやポートセキュリティの設定効果を分析: どのトラフィックが許可/拒否されるか、どのインターフェースに適用されるか、方向（in/out）を考慮して動作を判断します。"
+    "explanation": "DAI（Dynamic ARP Inspection）の設定効果: スイッチはDHCPスヌーピングバインディングテーブルを参照し、無効なMAC-IPバインディングを持つARPパケットを破棄します。非信頼ポートで受信したARPパケットのMAC/IPアドレスの整合性を検証し、ARP spoofing攻撃を防止します。"
   },
   {
     "number": 631,
@@ -22566,7 +22566,7 @@
     ],
     "multi_select": false,
     "category": "セキュリティ基礎",
-    "explanation": "最強の暗号化: WPA3-Enterprise + AES-256-GCMP（Galois/Counter Mode Protocol）。WPA3はSAEによる認証強化とより長い暗号化鍵をサポートします。"
+    "explanation": "選択肢の中でWPA2 + AESが最強の暗号化の組み合わせです。WPA2はAES-CCMP暗号化を使用し、WPA1のTKIP（RC4ベース）より大幅にセキュリティが向上しています。AES（Advanced Encryption Standard）は128ビットブロック暗号で、現時点で実用的な攻撃方法がありません。WEPやTKIPは既に脆弱性が発見されているため不適切です。"
   },
   {
     "number": 654,
@@ -25576,7 +25576,7 @@
     ],
     "multi_select": false,
     "category": "自動化",
-    "explanation": "show running-configまたはJSON/YAML形式の出力から設定の種類（ルーティング、ACL、インターフェース等）を識別します。"
+    "explanation": "出力に表示されているのはPuppetの設定（マニフェスト）です。Puppetはリソースタイプ（file, package, service等）を宣言的に定義する独自のDSL（Domain Specific Language）を使用します。AnsibleはYAML形式のPlaybook、ChefはRubyベースのRecipe、JSONはデータ形式であり設定管理ツールではありません。"
   },
   {
     "number": 739,
@@ -28871,7 +28871,7 @@
     ],
     "multi_select": false,
     "category": "ネットワーク基礎",
-    "explanation": "インターフェース問題の調査: show interface FastEthernet0/13で速度/デュプレックスの不一致、CRCエラー、コリジョン数を確認し、ケーブルまたは設定の問題を特定します。"
+    "explanation": "正解は物理エラー（Physical errors）です。show interfaceの出力でCRCエラー、input errors、frame errors等のカウンターが増加している場合、ケーブルの損傷、コネクタの不良、EMI（電磁干渉）などの物理層の問題が根本原因です。これらのエラーにより再送が発生し、ネットワークの低速化を引き起こします。"
   },
   {
     "number": 830,
@@ -30531,7 +30531,7 @@
     ],
     "multi_select": false,
     "category": "セキュリティ基礎",
-    "explanation": "10.0.0.0/30サブネットの最後の使用可能アドレス: /30は4アドレス（ネットワーク+2ホスト+ブロードキャスト）。最後の使用可能アドレスはネットワーク+2です。"
+    "explanation": "特定のインターフェースでCDPを無効にするには、インターフェースコンフィグモードでno cdp enableコマンドを実行します。これにより該当インターフェースからのCDPアドバタイズメント送信と受信が停止され、隣接デバイスへの情報漏洩を防止できます。グローバルのno cdp runは全インターフェースに影響するため、特定インターフェースのみの無効化にはno cdp enableを使用します。"
   },
   {
     "number": 878,
@@ -31738,7 +31738,7 @@
     ],
     "multi_select": false,
     "category": "IPサービス",
-    "explanation": "IPv6アドレスの自動取得（SLAAC）: ipv6 address autoconfig コマンドでインターフェースがRAメッセージからプレフィックスを学習し、EUI-64でアドレスを生成します。"
+    "explanation": "正解はipv6 address dhcpです。このコマンドはDHCPv6クライアントとしてインターフェースを設定し、DHCPv6サーバーからIPv6アドレスを取得します。ipv6 address autoconfigはSLAAC（RA+EUI-64）による自動設定で、DHCPv6とは異なります。図の要件ではDHCPv6による取得が必要なため、dhcpオプションが正解です。"
   },
   {
     "number": 911,
@@ -32188,7 +32188,7 @@
     ],
     "multi_select": false,
     "category": "IP接続",
-    "explanation": "show ip routeの出力から検証: ルートのタイプ（C/S/O/D）、ネクストホップ、出力インターフェース、AD/メトリック値を確認してルーティングの正確性を検証します。"
+    "explanation": "show ip routeの出力から検証できるパラメータ: (1)「Gateway of last resort」行の有無でラストリゾートゲートウェイの存在を確認、(2)「D EX」コードはEIGRP外部ルート（再配布されたルート）を示す、(3)ルートのAD/メトリック値でルート優先度を判断。R7がEIGRP再配布ルートを受信している場合、D EXエントリが表示されます。"
   },
   {
     "number": 925,
@@ -32793,7 +32793,7 @@
     ],
     "multi_select": false,
     "category": "IP接続",
-    "explanation": "設定検証: pingやtracerouteで到達性をテスト、show ip routeで新しいルートがテーブルに反映されていることを確認します。"
+    "explanation": "フローティングスタティックデフォルトルートは、より低いADを持つ動的ルート（ここではeBGP、AD=20）が有効な間はルーティングテーブルにインストールされません。eBGPで学習したデフォルトルートが無効（ネイバーダウン等）になった時点で、スタティックルートのADが最小となりルーティングテーブルに挿入されます。"
   },
   {
     "number": 941,
@@ -33969,7 +33969,7 @@
     ],
     "multi_select": false,
     "category": "セキュリティ基礎",
-    "explanation": "HTTP（暗号化なし）でのWLC管理は中間者攻撃（MITM）に脆弱です。通信が平文のため傍受・改ざんが可能。HTTPS（SSL/TLS）を使用して暗号化すべきです。"
+    "explanation": "Telnetは通信を暗号化せず平文でデータを送信するため、中間者攻撃（MITM）に脆弱です。攻撃者がネットワーク上のトラフィックを傍受すると、認証情報や管理コマンドがすべて読み取られます。SSHやHTTPSは暗号化により保護され、コンソールは物理接続のためネットワーク経由の攻撃対象になりません。"
   },
   {
     "number": 972,
@@ -34414,7 +34414,7 @@
     ],
     "multi_select": false,
     "category": "セキュリティ基礎",
-    "explanation": "ローカルアクセス設定: line con 0 → password [パスワード] → login。VTY（Telnet）のアクセス制限にはACLとaccess-classを使用します。"
+    "explanation": "正解Aの設定: username test1 password testpass1（ローカルユーザー作成）、enable secret level 15 0 Test123（enableパスワードをプレーンテキストで入力しつつ安全に保存）。enable secretはパスワードをMD5/SHA256でハッシュ化して保存するため安全です。enable passwordは暗号化が弱いため要件を満たしません。level 15でフルアクセスを付与します。"
   },
   {
     "number": 985,
@@ -35391,7 +35391,7 @@
     ],
     "multi_select": false,
     "category": "IPサービス",
-    "explanation": "HTTP PUTは既存のリソースを完全に置き換える更新操作に使用されます。部分的な更新にはPATCHが使用されます。指定URIのリソース全体を新しいデータで上書きします。"
+    "explanation": "HTTP PUTメソッドは既存のリソースを完全に置き換える（更新する）ために使用されます。選択肢Aの「DNSサーバーを更新する場合」はリソースの更新操作に該当するためPUTが適切です。GETは読み取り専用（表示）、POSTはべき等でない新規作成に使用されます。PUTはべき等（同じリクエストを何度送っても同じ結果）です。"
   },
   {
     "number": 1013,
@@ -36261,7 +36261,7 @@
     ],
     "multi_select": false,
     "category": "ネットワークアクセス",
-    "explanation": "2台のスイッチのデフォルト設定からの構成: VLAN作成、ポートをアクセスモードに設定してVLAN割り当て、スイッチ間トランクリンクの設定が基本手順です。"
+    "explanation": "正解Cの設定: switchport trunk encapsulation dot1qで業界標準のトランクプロトコル（IEEE 802.1Q）を指定し、switchport mode trunkでトランクモードに設定、switchport trunk allowed vlan 1-10でVLAN 1-10のみ許可します。dot1qはISL（Cisco独自）と異なり業界標準であるため要件を満たします。"
   },
   {
     "number": 1037,
@@ -37064,7 +37064,7 @@
     ],
     "multi_select": false,
     "category": "ネットワークアクセス",
-    "explanation": "企業合併時のネットワーク統合: 異なるベンダー機器の相互接続にはIEEE標準プロトコル（802.1Q、LACP、LLDP等）を使用し、ベンダー固有プロトコルは避けます。"
+    "explanation": "異なるベンダー間のトランクリンク設定: switchport mode trunkでトランクモードを設定し、switchport trunk encapsulation dot1qでIEEE 802.1Q（業界標準）カプセル化を指定します。ISLはCisco独自のためマルチベンダー環境では使用不可。すべてのVLANを通過させるにはデフォルト設定（allowed vlan all）で十分なため、明示的に指定する必要はありません。"
   },
   {
     "number": 1057,
@@ -40891,7 +40891,7 @@
     ],
     "multi_select": false,
     "category": "ワイヤレス",
-    "explanation": "ライトウェイトAP: WLC（Wireless LAN Controller）から集中管理されます。設定変更はWLC経由で行い、APに直接CLI/GUIでログインして設定する必要はありません。"
+    "explanation": "ライトウェイトモードのAPはWLC（Wireless LAN Controller）によりCAPWAP（Control and Provisioning of Wireless Access Points）トンネルを通じて集中管理されます。設定変更はすべてWLCのGUI/CLIから行い、CAPWAPプロトコル経由でAPに配信されます。APに直接SSH/HTTPSでログインして設定することはできません。"
   },
   {
     "number": 1155,
@@ -46860,7 +46860,7 @@
     ],
     "multi_select": false,
     "category": "IP接続",
-    "explanation": "交換用ルーター設定: ホスト名、インターフェースIP、ルーティング設定、必要なサービスを既存ネットワークに合わせて設定し、隣接ルーターとの通信を確立します。"
+    "explanation": "OSPFネイバー関係を確立するには、両端でhello-intervalとdead-intervalが一致している必要があります。R1のhello-intervalがデフォルト（10秒）の場合、R2も同じ値に設定する必要があります。ip ospf hello-interval 10コマンドでR2のインターフェースg0/0/0のhello間隔を10秒に設定し、R1と一致させることでネイバー関係が確立されます。"
   },
   {
     "number": 1319,
@@ -47719,7 +47719,7 @@
     ],
     "multi_select": false,
     "category": "ネットワークアクセス",
-    "explanation": "帯域幅分析: 1800Mbpsのトラフィックに対してリンク容量を確認。1Gbpsリンクでは帯域幅不足が発生し、パケットロスや遅延の原因になります。"
+    "explanation": "EtherChannelのport-channel min-linksコマンドは、チャネルグループがアクティブであるために必要な最小リンク数を指定します。Ge0/0とGe0/1がダウンした場合にPort Channelを無効にするには、min-linksを適切な値に設定して、アクティブリンク数がその値を下回った時にポートチャネル全体を非アクティブにします。"
   },
   {
     "number": 1340,
@@ -48642,7 +48642,7 @@
     ],
     "multi_select": false,
     "category": "ネットワークアクセス",
-    "explanation": "インターフェースサービス有効化: ip routingやservice等の有効化が必要な場合、適切なグローバル/インターフェースコマンドを適用します。"
+    "explanation": "インターフェースGi1/0/34をアクセスポートとして設定: switchport mode accessでアクセスモードに設定し、switchport access vlan [番号]で適切なVLANに割り当てます。これによりエンドデバイスが指定されたVLANのネットワークサービスにアクセスできるようになります。"
   },
   {
     "number": 1360,
@@ -49001,7 +49001,7 @@
     ],
     "multi_select": false,
     "category": "ネットワーク基礎",
-    "explanation": "支店ルーター設定: 本社への接続に必要なIPアドレス設定、ルーティング（スタティック/ダイナミック）、必要なサービス設定を適用して支店-本社間通信を確立します。"
+    "explanation": "支店ルーターのNTP設定: ntp server 172.24.54.8コマンドで本社のNTPサーバー（172.24.54.8）から時刻を同期します。NTPはネットワーク全体の時刻を統一し、ログのタイムスタンプ整合性、証明書の有効性確認、スケジュールタスクの正確な実行に必要です。"
   },
   {
     "number": 1369,
