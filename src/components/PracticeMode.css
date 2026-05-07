@@ -18,15 +18,15 @@
 }
 .ps__tabs button {
   padding: 0.4rem 1rem;
-  border: 1px solid #666;
+  border: 1px solid var(--border, #d6dde5);
   border-radius: 4px;
   background: transparent;
-  color: #ddd;
+  color: var(--text, #1f2937);
   cursor: pointer;
 }
 .ps__tabs button.active {
-  background: #4a9eff;
-  border-color: #4a9eff;
+  background: var(--primary, #0b5ed7);
+  border-color: var(--primary, #0b5ed7);
   color: #fff;
 }
 .ps__check {
@@ -45,27 +45,27 @@
 .ps__range input[type="number"] {
   width: 80px;
   padding: 0.3rem 0.5rem;
-  border: 1px solid #555;
+  border: 1px solid var(--border, #d6dde5);
   border-radius: 4px;
-  background: #1e1e1e;
-  color: #eee;
+  background: #fff;
+  color: var(--text, #1f2937);
 }
 .ps__hint {
   font-size: 0.85rem;
-  color: #999;
+  color: var(--muted, #6b7280);
 }
 .ps__textarea {
   width: 100%;
   padding: 0.5rem;
-  border: 1px solid #555;
+  border: 1px solid var(--border, #d6dde5);
   border-radius: 4px;
-  background: #1e1e1e;
-  color: #eee;
+  background: #fff;
+  color: var(--text, #1f2937);
   font-size: 0.95rem;
   resize: vertical;
 }
 .ps__error {
-  color: #ff6b6b;
+  color: var(--danger, #dc2626);
   margin-bottom: 0.8rem;
 }
 .ps__actions {
@@ -132,17 +132,18 @@
   margin-top: 2rem;
 }
 .home__card {
-  background: #1e2a3a;
-  border: 1px solid #3a5070;
+  background: #ffffff;
+  border: 1px solid var(--border, #d6dde5);
   border-radius: 12px;
   padding: 2rem;
   width: 280px;
   cursor: pointer;
-  transition: transform 0.15s, border-color 0.15s;
+  transition: transform 0.15s, border-color 0.15s, box-shadow 0.15s;
 }
 .home__card:hover {
   transform: translateY(-3px);
-  border-color: #4a9eff;
+  border-color: var(--primary, #0b5ed7);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 .home__head {
   display: flex;
@@ -156,11 +157,12 @@
 .home__card h2 {
   margin: 0;
   font-size: 1.2rem;
+  color: var(--text, #1f2937);
 }
 .home__card p {
   margin: 0;
   font-size: 0.9rem;
-  color: #aaa;
+  color: var(--muted, #6b7280);
   line-height: 1.5;
 }
 
