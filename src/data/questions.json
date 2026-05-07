@@ -2788,7 +2788,7 @@
     ],
     "multi_select": false,
     "category": "ワイヤレス",
-    "explanation": "ACL（アクセスコントロールリスト）はトラフィックのフィルタリングに使用されます。標準ACLは送信元IPアドレスのみで判断し、拡張ACLは送信元/宛先IP、プロトコル、ポート番号で判断します。"
+    "explanation": "Cisco Unified Wireless Network（CUWN）はRRM（Radio Resource Management）機能により、クライアント負荷とバックグラウンドノイズを分析し、チャネルを動的に割り当てて干渉を最小化します。"
   },
   {
     "number": 81,
@@ -3126,7 +3126,7 @@
     ],
     "multi_select": false,
     "category": "IP接続",
-    "explanation": "ARPはIPアドレスからMACアドレスを解決するプロトコルです。ARP要求はブロードキャスト（ff:ff:ff:ff:ff:ff）で送信され、該当するIPアドレスを持つデバイスがユニキャストでARP応答を返します。"
+    "explanation": "ルーティングテーブルで10.10.13.0/25に一致するルートを確認します。最も低いAD（Administrative Distance）を持つルートが優先されます。[1/0]=直接接続、[108/0]=EIGRP内部、[110/2]=OSPF。"
   },
   {
     "number": 91,
@@ -3489,7 +3489,7 @@
     ],
     "multi_select": false,
     "category": "セキュリティ基礎",
-    "explanation": "HSRPはCisco独自のFHRP（First Hop Redundancy Protocol）で、複数のルーターが仮想IPアドレスを共有し、デフォルトゲートウェイの冗長性を提供します。Activeルーターが障害時にStandbyルーターが引き継ぎます。"
+    "explanation": "プライベートIPv4アドレスはインターネットにルーティングされないため、他の内部ホストとのみ通信するホストに最適です。外部と通信するにはNATが必要になります。"
   },
   {
     "number": 101,
@@ -5101,7 +5101,7 @@
     ],
     "multi_select": false,
     "category": "ネットワークアクセス",
-    "explanation": "L3スイッチのSVI（Switch Virtual Interface）設定では、no switchportコマンドでルーテッドポートに変更した後、IPアドレスを設定します。これによりVLAN間ルーティングが可能になります。"
+    "explanation": "この問題はレイヤー3スイッチのルーテッドポート設定です。no switchportでL3ポートに変更し、ip addressでIPアドレスを設定します。サブネット化とは別のトピックです。"
   },
   {
     "number": 146,
@@ -6402,7 +6402,7 @@
     ],
     "multi_select": false,
     "category": "IPサービス",
-    "explanation": "VLANトランクリンクは複数のVLANのトラフィックを1つの物理リンクで伝送します。802.1QタグによりフレームがどのVLANに属するかを識別します。ネイティブVLANのフレームはタグなしで送信されます。"
+    "explanation": "Voice over WLAN展開にはPlatinum QoSプロファイルを選択します。WLCのQoSプロファイル: Platinum=Voice（最高優先）、Gold=Video、Silver=Best Effort、Bronze=Background。"
   },
   {
     "number": 181,
@@ -6638,7 +6638,7 @@
     ],
     "multi_select": false,
     "category": "ネットワークアクセス",
-    "explanation": "コントロールプレーンはルーティングプロトコル（OSPF、BGP等）を実行し、ルーティングテーブルを構築・維持します。データプレーンは構築されたテーブルに基づいてパケットを転送します。"
+    "explanation": "ネイティブVLANの不一致: 2台のスイッチのトランクリンクでネイティブVLANが異なると、VLANタグの処理が不一致となりCDP警告が表示され通信が失敗します。switchport trunk native vlanを統一する必要があります。"
   },
   {
     "number": 187,
@@ -6795,7 +6795,7 @@
     ],
     "multi_select": false,
     "category": "ネットワークアクセス",
-    "explanation": "REST APIはHTTPメソッド（GET、POST、PUT、DELETE）を使用してリソースを操作します。SDNコントローラとの通信にも使用され、JSONやXML形式でデータを交換します。"
+    "explanation": "EtherChannelをネゴシエーションプロトコルなし（PAgP/LACPなし）で設定するにはmode onを使用します。両端をonに設定すると静的にEtherChannelが形成されますが、障害検知機能は失われます。"
   },
   {
     "number": 191,
@@ -6826,7 +6826,7 @@
     ],
     "multi_select": false,
     "category": "ワイヤレス",
-    "explanation": "マネジメントプレーンはデバイスへのアクセス（SSH、Console、SNMP）と設定管理を提供します。コントロールプレーンやデータプレーンとは独立して動作します。"
+    "explanation": "Lightweight（軽量）モードがWLCによるAP管理を可能にします。Lightweight APはCAPWAPトンネル経由でWLCと通信し、設定や制御をWLCから一元的に受け取ります。"
   },
   {
     "number": 192,
@@ -7021,7 +7021,7 @@
     ],
     "multi_select": false,
     "category": "ネットワークアクセス",
-    "explanation": "ルーティングプロトコルのメトリック: RIPはホップカウント、OSPFはコスト（帯域幅ベース）、EIGRPは帯域幅・遅延・信頼性・負荷の複合値を使用して最適経路を決定します。"
+    "explanation": "Cisco IP電話はPCからのタグなし（untagged）データトラフィックを変更せずにそのまま通過させます。電話機はPCのデータVLANトラフィックを透過的に転送し、自身の音声トラフィックのみVoice VLANでタグ付けします。"
   },
   {
     "number": 198,
@@ -7085,7 +7085,7 @@
     ],
     "multi_select": false,
     "category": "ネットワークアクセス",
-    "explanation": "WLCのGUIまたはCLIを使用して、WLAN設定（SSID、セキュリティ、QoS）を一括で管理できます。Lightweight APはCAPWAPトンネルを通じてWLCから設定を受け取ります。"
+    "explanation": "VLAN 67をネイティブVLAN（タグなし）として通信するには、switchport trunk native vlan 67を設定します。これによりVLAN 67のフレームはトランクリンク上でタグなしで送信されます。"
   },
   {
     "number": 200,
@@ -7121,7 +7121,7 @@
     ],
     "multi_select": true,
     "category": "ネットワークアクセス",
-    "explanation": "SNMPv3はSNMPの最新バージョンで、認証（MD5/SHA）と暗号化（DES/AES）によりセキュリティが大幅に向上しています。v1/v2cはコミュニティストリングによる簡易認証のみです。"
+    "explanation": "L3 EtherChannelをオープンスタンダード（LACP）で設定: (1)port-channelインターフェースにno switchport+IPアドレス設定、(2)物理インターフェースにchannel-group mode active（LACP）を設定。"
   },
   {
     "number": 201,
@@ -9812,7 +9812,7 @@
     ],
     "multi_select": false,
     "category": "ネットワークアクセス",
-    "explanation": "ダイナミックARPインスペクション（DAI）はARP spoofing/poisoning攻撃を防ぎます。DHCPスヌーピングバインディングテーブルと比較してARPパケットの正当性を検証します。"
+    "explanation": "LACP EtherChannelで静的設定（mode on）が一端にある場合、相手側もmode onでなければ不一致になります。LACPを使用する場合はactive/passiveに統一する必要があります。"
   },
   {
     "number": 280,
@@ -9940,7 +9940,7 @@
     ],
     "multi_select": false,
     "category": "自動化",
-    "explanation": "EtherChannelのロードバランシングは、送信元/宛先MACアドレス、IP、ポート番号のハッシュに基づいてメンバーリンク間でトラフィックを分散します。port-channel load-balanceで設定します。"
+    "explanation": "WLCでLAGを有効化または無効化した後、変更を反映するためにコントローラの再起動が必要です。LAG設定変更はリアルタイムには適用されません。"
   },
   {
     "number": 284,
@@ -10024,7 +10024,7 @@
     ],
     "multi_select": false,
     "category": "ネットワークアクセス",
-    "explanation": "STPのDesignatedポートはセグメントごとに1つ選出され、そのセグメントにBPDUを転送する役割を持ちます。ルートブリッジのすべてのポートはDesignatedポートです。"
+    "explanation": "自律APが複数のVLANをWLANにマッピングする場合、有線ネットワークへの接続にはトランクポート（trunk）が必要です。トランクポートは802.1Qタグで複数VLANのトラフィックを伝送します。"
   },
   {
     "number": 286,
@@ -10369,7 +10369,7 @@
     ],
     "multi_select": false,
     "category": "ネットワークアクセス",
-    "explanation": "EtherChannelの設定要件: メンバーポートの速度、デュプレックス、VLAN設定、トランクモード、ネイティブVLANがすべて一致している必要があります。不一致があるとチャネルが形成されません。"
+    "explanation": "PortFastはアクセスポートでのみ追加設定なしでサポートされます。エンドデバイス（PC、サーバー等）が接続されるアクセスポートでSTP収束待ち時間をスキップします。"
   },
   {
     "number": 296,
@@ -10504,7 +10504,7 @@
     ],
     "multi_select": false,
     "category": "ネットワークアクセス",
-    "explanation": "MSTp（Multiple Spanning Tree Protocol）は複数のVLANを少数のSTPインスタンスにマッピングし、STPの計算オーバーヘッドを削減します。IEEE 802.1sで定義されています。"
+    "explanation": "EtherChannelの設定: port-channelインターフェースに設定を適用し、物理メンバーインターフェースにchannel-groupコマンドでモード（on/active/passive等）を指定します。"
   },
   {
     "number": 300,
