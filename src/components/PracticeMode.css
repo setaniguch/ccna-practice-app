@@ -135,30 +135,33 @@
   background: #1e2a3a;
   border: 1px solid #3a5070;
   border-radius: 12px;
-  padding: 2.5rem 2rem;
-  width: 320px;
+  padding: 2rem;
+  width: 280px;
   cursor: pointer;
   transition: transform 0.15s, border-color 0.15s;
-  text-align: center;
 }
 .home__card:hover {
   transform: translateY(-3px);
   border-color: #4a9eff;
 }
-.home__icon {
-  font-size: 3.5rem;
+.home__head {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
   margin-bottom: 0.8rem;
 }
+.home__icon {
+  font-size: 1.4rem;
+}
 .home__card h2 {
-  margin: 0 0 1rem;
-  font-size: 1.5rem;
+  margin: 0;
+  font-size: 1.2rem;
 }
 .home__card p {
   margin: 0;
-  font-size: 0.95rem;
+  font-size: 0.9rem;
   color: #aaa;
-  line-height: 1.6;
-  text-align: left;
+  line-height: 1.5;
 }
 
 /* Practice header */
