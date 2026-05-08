@@ -72,11 +72,11 @@ export default function ResultPanel({ questions, answers, ddAnswers, labAnswers,
   const percent = scorable.length === 0 ? 0 : Math.round((correctCount / scorable.length) * 100);
 
   const CATEGORIES = [
-    'ネットワーク基礎', 'ネットワークアクセス', 'IP接続',
-    'IPサービス', 'セキュリティ基礎', '自動化', 'ワイヤレス',
+    'Network Fundamentals', 'Network Access', 'IP Connectivity',
+    'IP Services', 'Security Fundamentals', 'Automation and Programmability',
   ];
   const categoryStats = CATEGORIES.map((cat) => {
-    const catJudged = judged.filter((r) => (r.q.category ?? 'ネットワーク基礎') === cat);
+    const catJudged = judged.filter((r) => (r.q.category ?? 'Network Fundamentals') === cat);
     const catScorable = catJudged.filter((r) => r.status !== 'na');
     const catCorrect = catScorable.filter((r) => r.status === 'ok').length;
     const pct = catScorable.length === 0 ? 0 : Math.round((catCorrect / catScorable.length) * 100);

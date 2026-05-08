@@ -12,13 +12,12 @@ interface Props {
 type FilterMode = 'category' | 'type' | 'range' | 'pick';
 
 const CATEGORIES = [
-  'ネットワーク基礎',
-  'ネットワークアクセス',
-  'IP接続',
-  'IPサービス',
-  'セキュリティ基礎',
-  'ワイヤレス',
-  '自動化',
+  'Network Fundamentals',
+  'Network Access',
+  'IP Connectivity',
+  'IP Services',
+  'Security Fundamentals',
+  'Automation and Programmability',
 ] as const;
 
 export default function PracticeSetup({ allQuestions, onStart, onStartList, onBack }: Props) {
