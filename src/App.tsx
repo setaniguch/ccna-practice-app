@@ -11,7 +11,7 @@ import './App.css';
 
 const ALL_QUESTIONS = questionsData as Question[];
 /** 本番 CCNA に近い出題数 */
-const QUESTION_COUNT = 100;
+const QUESTION_COUNT = 85;
 /** 制限時間（分）— 本番 CCNA 200-301 は 120 分 */
 const TIME_LIMIT_MIN = 120;
 /** ラボ問題の最低出題数 */
