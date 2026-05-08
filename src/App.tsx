@@ -81,13 +81,7 @@ function pickQuestions(): Question[] {
     }
   }
 
-  // ラボで既に確保した分をカテゴリ枠から差し引く
-  for (const q of labPicks) {
-    const cat = q.category ?? 'ネットワーク基礎';
-    if (catCounts[cat] > 0) catCounts[cat]--;
-  }
-
-  // 各カテゴリから枠数ぶんピック
+  // 各カテゴリから枠数ぶんピック（ラボで確保済みの問題は selectedNums で除外される）
   for (const cat of cats) {
     const pool = (byCat[cat] ?? []).filter((q) => !selectedNums.has(q.number));
     const count = Math.min(catCounts[cat] ?? 0, pool.length);
