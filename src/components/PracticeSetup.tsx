@@ -36,7 +36,7 @@ export default function PracticeSetup({ allQuestions, onStart, onStartList, onBa
   const catCounts = useMemo(() => {
     const m: Record<string, number> = {};
     allQuestions.forEach((q) => {
-      const c = q.category ?? 'ネットワーク基礎';
+      const c = q.category ?? 'Network Fundamentals';
       m[c] = (m[c] || 0) + 1;
     });
     return m;
@@ -65,7 +65,7 @@ export default function PracticeSetup({ allQuestions, onStart, onStartList, onBa
 
     if (filterMode === 'category') {
       selected = allQuestions.filter((q) => {
-        const cat = q.category ?? 'ネットワーク基礎';
+        const cat = q.category ?? 'Network Fundamentals';
         return selectedCats.has(cat);
       });
       if (selected.length === 0) {

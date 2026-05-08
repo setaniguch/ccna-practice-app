@@ -19,22 +19,14 @@ const MIN_LAB_COUNT = 3;
 
 /**
  * CCNA 200-301 公式ドメイン比率に基づくカテゴリ別出題重み
- * 公式 6 ドメインを 7 カテゴリに按分:
- *   Network Fundamentals 20% → 基礎 17% + ワイヤレス 8%（≈20+α）
- *   Network Access 20% → 17%
- *   IP Connectivity 25% → 25%
- *   IP Services 10% → 10%
- *   Security Fundamentals 15% → 13%
- *   Automation 10% → 10%
  */
 const CATEGORY_WEIGHTS: Record<string, number> = {
-  'ネットワーク基礎': 17,
-  'ネットワークアクセス': 17,
-  'IP接続': 25,
-  'IPサービス': 10,
-  'セキュリティ基礎': 13,
-  '自動化': 10,
-  'ワイヤレス': 8,
+  'Network Fundamentals': 20,
+  'Network Access': 20,
+  'IP Connectivity': 25,
+  'IP Services': 10,
+  'Security Fundamentals': 15,
+  'Automation and Programmability': 10,
 };
 
 function shuffle<T>(arr: T[]): T[] {
@@ -52,7 +44,7 @@ function pickQuestions(): Question[] {
   // カテゴリ別にプールを作りシャッフル
   const byCat: Record<string, Question[]> = {};
   for (const q of ALL_QUESTIONS) {
-    const cat = q.category ?? 'ネットワーク基礎';
+    const cat = q.category ?? 'Network Fundamentals';
     if (!byCat[cat]) byCat[cat] = [];
     byCat[cat].push(q);
   }
