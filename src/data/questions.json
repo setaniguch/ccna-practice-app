@@ -5587,6 +5587,9 @@
       }
     ],
     "answer": "C",
+    "correct_choices": [
+      "C"
+    ],
     "multi_select": false,
     "category": "Network Fundamentals",
     "explanation": "必要なホスト数に10%の成長分を加え、十分なアドレスを提供する最小のサブネットマスクを選択します。ネットワークアドレスとブロードキャストアドレスを除いた使用可能ホスト数で計算します。"
@@ -11118,6 +11121,9 @@
     ],
     "type": "multiple_choice",
     "answer": "B",
+    "correct_choices": [
+      "B"
+    ],
     "multi_select": false,
     "choices": [
       {
@@ -11182,6 +11188,9 @@
     ],
     "type": "multiple_choice",
     "answer": "A",
+    "correct_choices": [
+      "A"
+    ],
     "multi_select": false,
     "choices": [
       {
@@ -17097,14 +17106,12 @@
   {
     "number": 494,
     "question_text": "図を参照してください。以下のガイドラインに従ってOSPFネイバー関係を設定する必要があります:\n R1はR2とのみネイバー関係を確立できる。\n R1はDR選出に参加しない。\n R1はルーターIDとして10.1.1.1を使用する。\nどの設定を使用すべきですか？",
-    "question_images": [
-      "0041100004.png",
-      "0041200001.png",
-      "0041300001.png",
-      "0041400001.png"
-    ],
+    "question_images": [],
     "type": "multiple_choice",
     "answer": "A",
+    "correct_choices": [
+      "A"
+    ],
     "multi_select": false,
     "choices": [
       {
@@ -35999,12 +36006,12 @@
     "dd_correct_mapping": {
       "agent": "daemon",
       "push": "asneeded",
-      "agentless": "easy",
-      "pull": "hw",
+      "agentless": "hw",
+      "pull": "easy",
       "provision": "auto"
     },
     "category": "Automation and Programmability",
-    "explanation": "構成管理用語: Playbook(Ansible)=手順定義、Recipe(Chef)=設定手順、Manifest(Puppet)=宣言的設定、Module=再利用可能コンポーネント。"
+    "explanation": "構成管理用語: agent=中央権威に更新があるかを判定するデーモン、push=中央サーバが必要に応じてノードへ更新を送るモデル、agentless=組み込みの管理機能なしで動作するデバイスハードウェア、pull=管理は容易だがスケーラビリティに欠ける可能性のあるデプロイオプション、provision=構成や更新を自動的にインストール・デプロイすること。"
   },
   {
     "number": 1029,
@@ -37719,14 +37726,14 @@
         "text": "phishing"
       }
     ],
-    "answer": "DE",
+    "answer": "AE",
     "correct_choices": [
-      "D",
+      "A",
       "E"
     ],
     "multi_select": true,
     "category": "Security Fundamentals",
-    "explanation": "ソーシャルエンジニアリング攻撃: フィッシング（偽メール/サイト）、プリテキスティング（偽の身元）、ベイティング（USBなど物理媒体）、テールゲーティング（物理的な追従入室）。"
+    "explanation": "ソーシャルエンジニアリング攻撃: phoning/vishing（電話を使った詐欺的手法）、phishing（偽メール/サイトで情報を騙し取る）。その他にプリテキスティング（偽の身元）、ベイティング（USBなど物理媒体）、テールゲーティング（物理的な追従入室）がある。"
   },
   {
     "number": 1072,
@@ -38648,13 +38655,13 @@
         "text": "ブロードキャストストーム"
       }
     ],
-    "answer": "A",
+    "answer": "C",
     "correct_choices": [
-      "A"
+      "C"
     ],
     "multi_select": false,
     "category": "Network Fundamentals",
-    "explanation": "インターフェース状態の分析: show interfaceの出力からline protocol status、physical status、エラーカウンターを確認して問題を特定します。"
+    "explanation": "インターフェース状態の分析: 出力にoutput dropsやqueue fullが表示されている場合、キューイング（queueing）の問題が発生しています。送信バッファが一杯になりフレームが破棄されている状態です。"
   },
   {
     "number": 1096,
@@ -39815,13 +39822,13 @@
       }
     ],
     "dd_correct_mapping": {
+      "multi_dev": "ac",
       "nearest": "ac",
-      "no_src": "ac",
-      "multi_dev": "mc",
+      "no_src": "mc",
       "one_many": "mc"
     },
     "category": "Network Fundamentals",
-    "explanation": "IPv6アドレスタイプ特徴: リンクローカル=自動設定/ルーター超え不可、グローバルユニキャスト=ISP割当/インターネットルーティング可能、マルチキャスト=グループ通信。"
+    "explanation": "IPv6アドレスタイプ特徴: Anycast=複数デバイスに同じアドレスを割り当て可能/最も近いインタフェースにルーティングされる、Multicast=送信元アドレスとして使用できない/1対多の通信を提供する。"
   },
   {
     "number": 1128,
@@ -40649,12 +40656,12 @@
     ],
     "dd_correct_mapping": {
       "web": "be",
-      "video": "policing",
-      "db": "pq",
-      "voip": "shaping"
+      "db": "policing",
+      "voip": "pq",
+      "video": "shaping"
     },
     "category": "IP Services",
-    "explanation": "QoS配信メカニズム: 音声=優先キューイング（低遅延保証）、ビデオ=CBWFQ+LLQ（帯域幅保証+低遅延）、ベストエフォートデータ=FIFO/WFQ（残り帯域使用）。"
+    "explanation": "QoS配信メカニズム: standard Web=best effort（ベストエフォート/特別な保証なし）、database=policing（ポリシング/超過トラフィックを制限）、VoIP=priority queue（優先キュー/低遅延保証）、video=shaping（シェーピング/トラフィックを平滑化して送出）。"
   },
   {
     "number": 1148,
@@ -42830,13 +42837,13 @@
         "text": "DHCPDISCOVER"
       }
     ],
-    "answer": "D",
+    "answer": "C",
     "correct_choices": [
-      "D"
+      "C"
     ],
     "multi_select": false,
     "category": "Security Fundamentals",
-    "explanation": "不正DHCPサーバーの識別: DHCPスヌーピング。Trusted/Untrustedポートを設定し、UntrustedポートからのDHCP応答（Offer/ACK）をブロックします。"
+    "explanation": "不正DHCPサーバーの識別: DHCPOFFERメッセージにより不正なDHCPサーバーを識別できます。正規でないサーバーからのOFFERが検出された場合、そのサーバーは不正（rogue）と判断されます。DHCPスヌーピングでUntrustedポートからのOFFERをブロックして防御します。"
   },
   {
     "number": 1209,
@@ -43277,13 +43284,13 @@
         "text": "router D"
       }
     ],
-    "answer": "D",
+    "answer": "B",
     "correct_choices": [
-      "D"
+      "B"
     ],
     "multi_select": false,
     "category": "Network Fundamentals",
-    "explanation": "サブネット分析: 10.227.151.255がブロードキャストアドレスかホストアドレスかを判断するために、サブネットマスクに基づいてネットワーク範囲を計算します。"
+    "explanation": "ルーティングテーブル分析: 宛先10.227.151.255に対してロンゲストマッチするルートを検索し、そのルートのネクストホップに対応するルーターBを経由してトラフィックを転送します。"
   },
   {
     "number": 1222,
@@ -43562,13 +43569,13 @@
         "text": "LAG"
       }
     ],
-    "answer": "A",
+    "answer": "C",
     "correct_choices": [
-      "A"
+      "C"
     ],
     "multi_select": false,
     "category": "Network Access",
-    "explanation": "自律型AP（Autonomous AP）: 1つのSSIDを提供し、クライアントデータと管理トラフィックを独立して処理。WLC不要で個別にCLI/Web管理が可能です。"
+    "explanation": "自律型AP（Autonomous AP）: 1つのSSIDのみを提供する場合、単一VLANで運用されるためアクセスポート（access port）で接続します。複数のSSID/VLANを使用する場合はトランクポートが必要です。"
   },
   {
     "number": 1231,
@@ -44042,13 +44049,13 @@
         "text": "インターフェースの出力キューがイーサネットフレームを処理できない。"
       }
     ],
-    "answer": "C",
+    "answer": "A",
     "correct_choices": [
-      "C"
+      "A"
     ],
     "multi_select": false,
     "category": "Security Fundamentals",
-    "explanation": "スイッチのアクセス制御: 802.1X認証、ポートセキュリティ、VLAN割り当てでユーザーアクセスを制御し、印刷サービスへの適切なアクセスを提供します。"
+    "explanation": "インターフェース問題の特定: show interfaceの出力でCRCエラーやFCSエラー（不正なチェックサム）のカウンターが増加している場合、イーサネットフレームのチェックサムが不正であるためフレームがドロップされています。ケーブル不良やNIC障害が原因の可能性があります。"
   },
   {
     "number": 1246,
@@ -45217,13 +45224,13 @@
       }
     ],
     "dd_correct_mapping": {
-      "lwap": "ap",
+      "fmt_eth": "ap",
       "both_std": "ap",
       "central": "wlc",
       "premise_cloud": "wlc"
     },
     "category": "Security Fundamentals",
-    "explanation": "デバイスタイプの特徴: ルーター=L3転送/ルーティング、スイッチ=L2転送/VLAN、AP=無線接続/802.11、ファイアウォール=セキュリティ/フィルタリング。"
+    "explanation": "AP vs WLCの特徴: AP=Ethernetフレームをフォーマットして転送/IEEE 802.11とEthernet両規格をサポート、WLC=集中管理とセキュリティを提供/オンプレミスおよびクラウドベースで使用可能。"
   },
   {
     "number": 1276,
@@ -47181,13 +47188,13 @@
       }
     ],
     "dd_correct_mapping": {
-      "qos_template": "ap",
-      "poe_adapter": "ap",
-      "user_conn": "wlc",
-      "boost": "wlc"
+      "boost": "ap",
+      "wgb": "ap",
+      "qos_template": "wlc",
+      "user_conn": "wlc"
     },
     "category": "Network Access",
-    "explanation": "コマンドと宛先デバイス: show/configure系コマンドを適切なデバイス（ルーター/スイッチ/WLC等）に分類します。"
+    "explanation": "AP vs WLCの特徴: AP=Wi-Fi信号を増幅する機能/ワークグループブリッジ（WGB）として設定可能、WLC=テンプレートを使用してQoS設定を実装/デバイスグループ内のユーザー接続データを提供。"
   },
   {
     "number": 1328,
