@@ -60,6 +60,8 @@ export interface Question {
   lab?: LabSpec;
   /** 解説（正解の理由など） */
   explanation?: string;
+  /** 詳細解説 */
+  detailed_explanation?: string;
 }
 
 export type AnswerMap = Record<number, string[]>;

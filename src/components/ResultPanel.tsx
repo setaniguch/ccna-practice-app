@@ -235,6 +235,16 @@ export default function ResultPanel({ questions, answers, ddAnswers, labAnswers,
                   <strong>解説:</strong> {q.explanation}
                 </div>
               )}
+              {q.detailed_explanation && (
+                <details className="practice-answer__detailed">
+                  <summary>詳細解説を表示</summary>
+                  <div className="practice-answer__detailed-content">
+                    {q.detailed_explanation.split('\n').map((line, i) => (
+                      <span key={i}>{line}<br /></span>
+                    ))}
+                  </div>
+                </details>
+              )}
             </li>
           );
         })}

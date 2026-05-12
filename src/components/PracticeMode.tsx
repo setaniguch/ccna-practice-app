@@ -187,6 +187,16 @@ export default function PracticeMode({ questions, onFinish }: Props) {
                   <strong>解説:</strong> {current.explanation}
                 </div>
               )}
+              {current.detailed_explanation && (
+                <details className="practice-answer__detailed">
+                  <summary>詳細解説を表示</summary>
+                  <div className="practice-answer__detailed-content">
+                    {current.detailed_explanation.split('\n').map((line, i) => (
+                      <span key={i}>{line}<br /></span>
+                    ))}
+                  </div>
+                </details>
+              )}
             </div>
           </div>
         )}
