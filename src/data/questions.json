@@ -12076,7 +12076,8 @@
       "i6": "t3"
     },
     "category": "Network Access",
-    "explanation": "APモード: ローカルモード（通常動作、データをWLCにトンネル）、FlexConnect（リモート拠点、ローカルスイッチング可能）、モニターモード（不正AP検出、クライアント接続なし）。"
+    "explanation": "APモード: ローカルモード（通常動作、データをWLCにトンネル）、FlexConnect（リモート拠点、ローカルスイッチング可能）、モニターモード（不正AP検出、クライアント接続なし）。",
+    "detailed_explanation": "【問題】\n\n左側のアクセスポイントモードに関する説明を右側の対応するモードにドラッグ＆ドロップしてください。\n\n【正解】\n\n◆ Monitor\n\n・It enables enhanced RFID-tag location tracking.\n\n・It provides air-quality data and interference detection across all enabled channels.\n\n◆ Sensor\n\n・It supports real-time Wi-Fi client troubleshooting when network engineers are offsite.\n\n・It supports analytics for wireless performance testing.\n\n◆ Sniffer\n\n・It captures and forwards packets on a specific wireless channel.\n\n・It supports software that analyzes wireless frames on a remote device.\n\n【コミュニティ回答との比較】\n\nこの問題はコミュニティでも大きく意見が割れています。\n\nコミュニティの正解表記は以下のようになっています：\n\nコミュニティ回答：\n\nMonitor → software that analyzes wireless frames / RFID-tag location tracking\n\nSensor → analytics for wireless performance testing / captures and forwards packets on a specific channel\n\nSniffer → real-time Wi-Fi troubleshooting (offsite) / air-quality data and interference detection (all channels)\n\nしかし、このコミュニティ回答には技術的に矛盾する点が複数あります。\n\n以下でその理由を詳しく解説します。\n\n【コミュニティ回答の矛盾点①】\n\n「air-quality data and interference detection across all enabled channels」→ Sniffer？\n\nSnifferモードは特定の1チャネル（a specific channel）に集中してキャプチャを行うモードです。\n\n「across all enabled channels（すべての有効チャネル）」という記述は、\n\nSnifferモードの動作原理と明らかに矛盾します。\n\n全チャネルをスキャンするのはMonitorモードの基本動作です。\n\n【コミュニティ回答の矛盾点②】\n\n「captures and forwards packets on a specific wireless channel」→ Sensor？\n\nパケットをキャプチャして転送するのはSnifferモードの教科書的な定義そのものです。\n\nSensorモードは合成テスト（DHCP応答、DNS解決、Web接続性テスト等）を実行するモードであり、\n\nパケットキャプチャ・転送を目的としたモードではありません。\n\n【コミュニティ回答の矛盾点③】\n\n「real-time Wi-Fi client troubleshooting when network engineers are offsite」→ Sniffer？\n\nSnifferモードはパケットをキャプチャして解析ソフトに転送するモードです。\n\n「エンジニアがオフサイト（現場不在）のときのリアルタイムトラブルシューティング」は、\n\nSensorモードの特徴です。Sensorモードでは、Cisco DNA Centerと連携して\n\nAPが自動的に合成テストを実行し、エンジニアが現場にいなくても\n\nリアルタイムにWi-Fiの問題を検出・診断できます。\n\n【各モードの技術的根拠（Cisco公式ベース）】\n\n■ Monitor モード = 全チャネルパッシブスキャン\n\nMonitorモードでは、APはクライアントにサービスを提供しません。\n\nその代わり、すべてのチャネルを約12秒ごとにスキャンします。\n\n主な機能は以下の通りです：\n\n・不正AP（Rogue AP）の検出\n\n・IDS/IPS（侵入検知・防止）\n\n・RFIDタグの位置追跡（enhanced RFID-tag location tracking）\n\n・CleanAir対応：電波品質（air-quality）データの収集と干渉検出\n\n「all enabled channels」「RFID-tag」の2つのキーワードは、\n\nMonitorモードの本質的な特徴を正確に表しています。\n\n■ Sensor モード = ネットワーク品質テスト・リモート診断\n\nSensorモードはCisco DNA Centerと連携して使用されるモードです。\n\nAPが実際のクライアントのように振る舞い、合成テストを自動実行します。\n\n主な機能は以下の通りです：\n\n・DHCP応答時間テスト\n\n・DNS解決テスト\n\n・Web接続性テスト\n\n・ワイヤレスパフォーマンスの分析（analytics for wireless performance testing）\n\n・エンジニアが現場不在でもリアルタイム診断が可能（real-time troubleshooting offsite）\n\nSensorモードのキーワードは「テスト」「分析」「リモート診断」です。\n\n■ Sniffer モード = 特定チャネルのパケットキャプチャ\n\nSnifferモードでは、APがパケットキャプチャ専用デバイスとして動作します。\n\nクライアントにサービスを提供せず、特定チャネルの無線フレームを収集します。\n\n主な機能は以下の通りです：\n\n・特定の1チャネル上のパケットをキャプチャして転送（captures and forwards packets on a specific channel）\n\n・リモートデバイス上のWireshark/OmniPeek等の解析ソフトウェアをサポート（software that analyzes wireless frames on a remote device）\n\nSnifferモードのキーワードは「specific channel」「キャプチャ・転送」「解析ソフト」です。\n\n【決定的な判断基準】\n\n「specific wireless channel（特定チャネル）」= Sniffer\n\n「all enabled channels（全チャネル）」= Monitor\n\nこの2つのキーワードが各モードの本質的な違いを示しています。\n\nコミュニティの配置ではこの対比が逆転してしまうため、技術的に正しくないと考えます。\n\n【まとめ】\n\nMonitor = 全チャネルパッシブスキャン（RFID追跡・CleanAir干渉検出）\n\nSensor = 合成テスト・リモートトラブルシューティング・パフォーマンス分析\n\nSniffer = 特定チャネルのパケットキャプチャ・リモート解析ソフトへの転送"
   },
   {
     "number": 337,
@@ -25690,7 +25691,8 @@
       "A"
     ],
     "category": "Automation and Programmability",
-    "explanation": "JSONデータ表現: オブジェクト（{}）はキー:値ペアの集合、配列（[]）は値のリスト。キーは文字列（ダブルクォート）、値は文字列、数値、ブール、null、オブジェクト、配列。"
+    "explanation": "JSONデータ表現: オブジェクト（{}）はキー:値ペアの集合、配列（[]）は値のリスト。キーは文字列（ダブルクォート）、値は文字列、数値、ブール、null、オブジェクト、配列。",
+    "detailed_explanation": "正解：C\n\n解説：\n\nJSON（JavaScript Object Notation）の正しい構文ルールに基づいているものを選択します。\n\nC. 正解： JSONの基本ルールをすべて満たしています。\n\n・データは名前（キー）と値のペアで構成される。\n\n・名前と値はコロン（:）で区切られる。\n\n・複数のペアはカンマ（,）で区切られる。\n\n・オブジェクト（データの塊）は中括弧 { } で囲まれる。\n\nその他の選択肢が誤りである理由：\n\nA. 誤り： 4行目の「taskId」の行末にカンマ（,）がありません。複数の要素を並べる場合はカンマが必要です。\n\nB. 誤り： キーと値を区切る記号にハイフン（-）が使われています。JSONでは必ずコロン（:）でなければなりません。\n\nD. 誤り： 2行目の「\"response\"」の後にコロン（:）ではなくカンマ（,）が使われています。これでは値が定義されていないことになり、構文エラーとなります。\n\nまとめ：\n\nJSONの試験問題では、「コロン（:）で区切られているか」「適切な場所にカンマ（,）があるか」という点に注目するのが正解への近道です。"
   },
   {
     "number": 723,
@@ -28693,7 +28695,8 @@
       "guest": "vmbasic"
     },
     "category": "Automation and Programmability",
-    "explanation": "仮想化の概念: ハイパーバイザー=VMを管理するソフトウェア層、VM=仮想マシン（独立したOS環境）、vSwitch=仮想スイッチ（VM間通信）、vNIC=仮想ネットワークインターフェース。"
+    "explanation": "仮想化の概念: ハイパーバイザー=VMを管理するソフトウェア層、VM=仮想マシン（独立したOS環境）、vSwitch=仮想スイッチ（VM間通信）、vNIC=仮想ネットワークインターフェース。",
+    "detailed_explanation": "【仮想化の概念と説明の正解ペア】\n\n1. virtual machine（仮想マシン）\n\n対応：An operating system instance that is decoupled from the server hardware.\n\n解説：物理的なサーバーハードウェアから切り離され、独立したOSとして動作するインスタンス（仮想的なコンピュータ）を指します。\n\n2. multithreading（マルチスレッディング）\n\n対応：Each core can run more than one process simultaneously.\n\n解説：CPUの1つのコアで、複数のプロセスやスレッドを同時に効率よく実行する技術のことです。\n\n3. hypervisor（ハイパーバイザ）\n\n対応：Runs on a physical server, manages, and allocates the physical resources.\n\n解説：物理サーバー上で動作し、仮想マシンに対してCPU、メモリ、ストレージなどの物理リソースを適切に割り当てて管理するソフトウェアです。\n\n4. host operating system（ホストOS）\n\n対応：The software that manages the basic functions of the physical hardware.\n\n解説：物理ハードウェアに直接インストールされ、そのハードウェアの基本機能やリソースを管理するOSです。\n\n5. guest operating system（ゲストOS）\n\n対応：The software that manages the basic functions of the vital machine.\n\n解説：ハイパーバイザ上の仮想マシン内で動作するOSです。※画像内の「vital machine」は「virtual machine（仮想マシン）」の誤記（タイポ）と判断されます。"
   },
   {
     "number": 802,
@@ -29000,7 +29003,8 @@
     "answer": "",
     "multi_select": false,
     "category": "Network Access",
-    "explanation": "ラボ問題では仮想デバイス上で実際のCisco IOS設定タスクを実行します。タスク要件に従ってコマンドを入力し、設定を保存します。"
+    "explanation": "ラボ問題では仮想デバイス上で実際のCisco IOS設定タスクを実行します。タスク要件に従ってコマンドを入力し、設定を保存します。",
+    "detailed_explanation": "【ラボ問題：スイッチ間のトランクおよびリンクアグリゲーション設定の解説】\n\n提示されたタスクに基づき、各スイッチで実行すべき設定コマンドを整理します。すべての物理ポートはあらかじめ 802.1qトランク として設定されている前提です。\n\n1. 特定のVLAN（56, 77）のみを通過させる設定\n\n各スイッチの該当ポートで、許可するVLANを制限します。\n\n【SW-1, SW-2：e0/1およびe0/2】 / 【SW-3, SW-4：e0/2】\n\ninterface [インターフェース名]\n\nswitchport trunk allowed vlan 56,77\n\n2. ネイティブVLAN（タグなしトラフィック）の設定\n\nVLAN 99をタグなしで送受信するように設定します。\n\n【SW-1, SW-2：e0/1】\n\ninterface e0/1\n\nswitchport trunk native vlan 99\n\n3. 業界標準プロトコル（LACP）によるリンクアグリゲーション\n\n「業界標準プロトコル（LACP）」を使用し、「即座にネゴシエーション」を行うため、モードは active を使用します。\n\n【SW-3, SW-4：e0/0およびe0/1】\n\ninterface range e0/0 - 1\n\nchannel-group [番号] mode active\n\n4. 新しいリンク（Po34）でのVLAN許可\n\n作成したポートチャネルインターフェースに対しても、VLAN許可設定を適用します。\n\n【SW-3, SW-4：Port-channel [番号]】\n\ninterface port-channel [番号]\n\nswitchport trunk allowed vlan 56,77\n\n【重要なポイント】\n\n設定後は必ず copy run start（または write）コマンドを実行し、設定をNVRAMに保存することを忘れないでください。"
   },
   {
     "number": 809,
@@ -29119,7 +29123,8 @@
       "n5": "many"
     },
     "category": "Network Access",
-    "explanation": "ワイヤレス規格の非オーバーラップチャネル: 802.11b/g（2.4GHz）=3チャネル（1,6,11）、802.11a/ac/ax（5GHz）=24以上の非オーバーラップチャネル。"
+    "explanation": "ワイヤレス規格の非オーバーラップチャネル: 802.11b/g（2.4GHz）=3チャネル（1,6,11）、802.11a/ac/ax（5GHz）=24以上の非オーバーラップチャネル。",
+    "detailed_explanation": "【ワイヤレス規格と非オーバーラップチャネル数の正解ペア】\n\n■ 3 Non-Overlapping Channels（3つの非重複チャネル）\n\n・802.11b\n\n・802.11g\n\n・802.11n 2.4 GHz\n\n解説：2.4GHz帯を使用するこれらの規格では、互いに干渉せずに利用できるチャネルは「1, 6, 11番」の計3つのみです。\n\n■ 23 Non-Overlapping Channels（23の非重複チャネル）\n\n・802.11a\n\n・802.11n 5 GHz\n\n解説：5GHz帯を使用する規格は、2.4GHz帯に比べて帯域が広く、20本以上の非重複チャネルを利用できるため、電波干渉の影響を非常に受けにくいのが特徴です。\n\n【補足】\n\n画像内の「3」が「J」、「23」が「2J」のように文字化け（OCRエラー）している箇所がありますが、ネットワーク試験の文脈では上記の組み合わせが正解となります。"
   },
   {
     "number": 812,
@@ -29829,7 +29834,8 @@
       "broad": "types"
     },
     "category": "Network Fundamentals",
-    "explanation": "クラウドコンポーネント: IaaS=インフラ提供（VM/ストレージ）、PaaS=開発プラットフォーム提供、SaaS=アプリケーション提供。パブリック/プライベート/ハイブリッドの展開モデル。"
+    "explanation": "クラウドコンポーネント: IaaS=インフラ提供（VM/ストレージ）、PaaS=開発プラットフォーム提供、SaaS=アプリケーション提供。パブリック/プライベート/ハイブリッドの展開モデル。",
+    "detailed_explanation": "【クラウドコンピューティングの特徴と説明の正解ペア】\n\n1. on-demand self-service\n\n対応：The consumer can choose when to start or stop using the service.\n\n解説：利用者がプロバイダと直接やり取りすることなく、必要な時に自分でサービスの開始や停止ができる仕組みです。\n\n2. measured service\n\n対応：The provider can bill the consumer in accordance with the level of usage.\n\n解説：リソースの使用量を計測し、使った分だけ料金を支払う「従量課金制」を可能にする特徴です。\n\n3. resource pooling\n\n対応：The provider allocates CPU, memory, and disk from its shared compute resources to multiple customers.\n\n解説：プロバイダが持つ膨大な計算リソースをプールし、複数の利用者に柔軟に割り当てる仕組みです。\n\n4. rapid elasticity\n\n対応：The resource pool can expand quickly to meet demand.\n\n解説：需要の増減に応じて、コンピューティング能力を素早く拡張したり縮小したりできる柔軟性のことです。\n\n5. broad network access\n\n対応：The service is available from many types of devices and networks.\n\n解説：スマートフォン、PC、タブレットなど、多様な端末からネットワークを通じてサービスを利用できることを指します。"
   },
   {
     "number": 833,
@@ -32117,7 +32123,8 @@
       "ip30": "mpls"
     },
     "category": "IP Connectivity",
-    "explanation": "ルーティングテーブルのエントリに基づいてロンゲストマッチルールで各宛先IPの到達パス（ネクストホップルーター）を決定します。"
+    "explanation": "ルーティングテーブルのエントリに基づいてロンゲストマッチルールで各宛先IPの到達パス（ネクストホップルーター）を決定します。",
+    "detailed_explanation": "【正解の振り分け】\n\n1.1.1.1 → Internet cloud\n\n10.10.13.126 → Router2\n\n10.10.13.129 → Router3\n\n10.10.13.150 → Router4\n\n10.10.13.209 → Router5\n\n209.165.200.30 → MPLS cloud\n\n【ネクストホップとインターフェースの対応】\n\nまずルーティングテーブルのネクストホップがどこに繋がるかを整理します：\n\n10.10.10.1 → GigabitEthernet0/0 → Router2\n\n10.10.10.5 → GigabitEthernet0/1 → Router3\n\n10.10.10.9 → GigabitEthernet0/2 → Router4\n\n10.10.10.13 → GigabitEthernet0/3 → Router5\n\n10.10.12.2 → MPLS cloud（BGPルート）\n\n10.10.11.2 → Internet cloud（デフォルトルート）\n\n【各宛先IPの解説】\n\n■ 1.1.1.1 → Internet cloud\n\nルーティングテーブルに1.1.1.1に一致するルートはありません。\n\nデフォルトルート S* 0.0.0.0/0 [1/0] via 10.10.11.2 が使用されます。\n\n10.10.11.2 = Internet cloud\n\n■ 10.10.13.126 → Router2\n\nO 10.10.13.0/25 [110/2] via 10.10.10.1\n\n/25 = 10.10.13.0 ～ 10.10.13.127\n\n10.10.13.126はこの範囲に含まれる → Router2\n\n■ 10.10.13.129 → Router3\n\nO 10.10.13.128/28 [110/2] via 10.10.10.5\n\n/28 = 10.10.13.128 ～ 10.10.13.143\n\n10.10.13.129はこの範囲に含まれる → Router3\n\n■ 10.10.13.150 → Router4\n\nO 10.10.13.144/28 [110/2] via 10.10.10.9\n\n/28 = 10.10.13.144 ～ 10.10.13.159\n\n10.10.13.150はこの範囲に含まれる → Router4\n\n■ 10.10.13.209 → Router5\n\nO 10.10.13.208/29 [110/2] via 10.10.10.13\n\n/29 = 10.10.13.208 ～ 10.10.13.215\n\n10.10.13.209はこの範囲に含まれる → Router5\n\n■ 209.165.200.30 → MPLS cloud\n\nB 209.165.200.x/27 [20/0] via 10.10.12.2\n\n209.165.200.0/27 = 209.165.200.0 ～ 209.165.200.31\n\n209.165.200.30はこの範囲に含まれる\n\n10.10.12.2 = MPLS cloud（BGPで学習したルート）\n\n【解き方のポイント】\n\n① ロンゲストプレフィックスマッチ\n\n宛先IPに最も長く一致するルートが優先されます。\n\n例：10.10.13.126は/25にも/28にもマッチしうるが、\n\n/25（10.10.13.0～127）に含まれ、/28（10.10.13.128～143）には含まれないため/25が選択。\n\n② ルートの種類を区別する\n\nO = OSPF（AD 110）→ 内部ルータ（Router2～5）向け\n\nB = BGP（AD 20）→ MPLS cloud向け\n\nS* = デフォルトスタティック（AD 1）→ Internet cloud向け\n\n③ デフォルトルートは最後の手段\n\nどのルートにも一致しないIPは、デフォルトルート（0.0.0.0/0）で処理されます。"
   },
   {
     "number": 898,
@@ -32452,7 +32459,8 @@
       "ready": "standby"
     },
     "category": "IP Connectivity",
-    "explanation": "HSRPステート: Initial=起動時、Learn=仮想IP未学習、Listen=Hello受信/送信待ち、Speak=Hello送信/選出参加、Standby=バックアップ、Active=トラフィック処理。"
+    "explanation": "HSRPステート: Initial=起動時、Learn=仮想IP未学習、Listen=Hello受信/送信待ち、Speak=Hello送信/選出参加、Standby=バックアップ、Active=トラフィック処理。",
+    "detailed_explanation": "正解は以下の通りです。\n\n【解答の組み合わせ】\n\nActive ―― is forwarding packets\n\n（パケットを転送している状態。仮想IPアドレス宛のトラフィックを処理します。）\n\nLearn ―― is waiting to hear from the neighbor device\n\n（仮想IPアドレスをまだ特定しておらず、ハローパケットを待っている初期の状態です。）\n\nListen ―― has heard from the neighbor device and is receiving hello packets\n\n（ハローパケットを受信しており、仮想IPアドレスも知っているが、Active/Standbyの選定には参加していない状態です。）\n\nSpeak ―― is transmitting and receiving hello packets\n\n（ハローパケットを送受信し、ActiveやStandbyの役割を決定するために選定に参加している状態です。）\n\nStandby ―― is ready to forward packets if the device that is currently forwarding packets fails\n\n（Activeルーターに障害が発生した際、すぐにパケット転送を引き継げるよう待機している状態です。）\n\n【解説のポイント】\n\nHSRP（Hot Standby Router Protocol）には、デバイスが通信を確立するまでに経由する「ステート（状態）」があります。試験では、各ステートの定義が英語で問われることが多いため、それぞれの動作とキーワードをセットで覚えるのがコツです。\n\n・Active ＝ Forwarding（転送中）\n\n・Standby ＝ Candidate（次期候補）\n\n・Speak ＝ Election（選定中、ハロー送信開始）\n\n・Listen ＝ Monitoring（傍受中、ハロー受信のみ）"
   },
   {
     "number": 906,
@@ -32611,7 +32619,8 @@
       "r3": "R3"
     },
     "category": "IP Connectivity",
-    "explanation": "各ルーターに適切なip routeコマンドを設定: 宛先ネットワーク、サブネットマスク、ネクストホップ（または出力インターフェース）を正しく指定します。"
+    "explanation": "各ルーターに適切なip routeコマンドを設定: 宛先ネットワーク、サブネットマスク、ネクストホップ（または出力インターフェース）を正しく指定します。",
+    "detailed_explanation": "【トポロジのIPアドレス整理】\n\nHost A (10.10.14.10/24) → R1 → R2 → R3 → Host B (10.10.13.10/25)\n\n10.10.10.0/30（R1 ↔ R2）：\n\nR1 = 10.10.10.2　/　R2（左）= 10.10.10.1\n\n10.10.10.4/30（R2 ↔ R3）：\n\nR2（右）= 10.10.10.6　/　R3 = 10.10.10.5\n\n【私の回答】\n\nR1（1つ）：ip route 10.10.13.0 255.255.255.128 10.10.10.1\n\n→ Host Bのネットワーク（/25）へ、R2（.1）経由で転送 ✅\n\nR2（2つ）：\n\nip route 10.10.13.0 255.255.255.128 10.10.10.5\n\n→ Host Bのネットワークへ、R3（.5）経由で転送 ✅\n\nip route 10.10.14.0 255.255.255.0 10.10.10.2\n\n→ Host Aのネットワーク（/24）へ、R1（.2）経由で転送 ✅\n\nR3（1つ）：ip route 10.10.14.0 255.255.255.0 10.10.10.6\n\n→ Host Aのネットワークへ、R2（.6）経由で転送 ✅\n\n【通信経路の確認】\n\nHost A → Host B（行き）：\n\nHost A → R1 →（R1: .1へ転送）→ R2 →（R2: .5へ転送）→ R3 → Host B ✅\n\nHost B → Host A（戻り）：\n\nHost B → R3 →（R3: .6へ転送）→ R2 →（R2: .2へ転送）→ R1 → Host A ✅\n\n双方向の通信が成立します。\n\n【コミュニティの答えがおかしい理由】\n\nコミュニティ：\n\nR1: ip route 10.10.14.0 255.255.255.0 10.10.10.2\n\nR2: ip route 10.10.13.0 255.255.255.128 10.10.10.5 ＋\n\n　　ip route 10.10.13.10 255.255.255.255 10.10.10.1\n\nR3: ip route 10.10.14.10 255.255.255.255 10.10.10.6\n\n❌ 問題点1：R1 の ip route 10.10.14.0 255.255.255.0 10.10.10.2\n\n10.10.14.0/24 は R1に直接接続されたHost Aのネットワークです。\n\n自分が直接接続しているネットワークへのスタティックルートは不要です。\n\nしかも 10.10.10.2 は R1自身のIPアドレスです。\n\n→ 自分のネットワークを自分のIP経由でルーティング ← 完全に意味不明 ❌\n\n→ さらにR1にはHost Bへの経路がないため、行きのパケットが届きません ❌\n\n❌ 問題点2：R2 の ip route 10.10.13.10 255.255.255.255 10.10.10.1\n\n10.10.10.1 は R2自身のIPアドレスです。\n\nネクストホップに自分自身のIPは指定できません。\n\n→ ルーティングとして機能しない ❌\n\n❌ 問題点3：R2にHost Aへの戻りルートがない\n\nR2にはHost B方向のルートしかなく、\n\nHost Aのネットワーク（10.10.14.0/24）への経路が設定されていません。\n\n→ 戻りの通信ができない ❌\n\n【正しいルーティングの考え方】\n\n各ルーターで必要なルート：\n\nR1：Host Bのネットワークへの経路（Host Aは直接接続済み）\n\nR2：Host Bへの経路 ＋ Host Aへの経路（中継なので両方向必要）\n\nR3：Host Aのネットワークへの経路（Host Bは直接接続済み）\n\nネクストホップは必ず相手側ルーターのIPアドレスを指定する。\n\n自分自身のIPや直接接続済みネットワークへの経路は不要。"
   },
   {
     "number": 910,
@@ -33267,7 +33276,8 @@
       "ip150": "router1"
     },
     "category": "IP Connectivity",
-    "explanation": "OSPF動作環境でのルート分析: 各サイトのOSPFエリア、コスト、経路を確認し、パケットがどのパスを通るかを決定します。"
+    "explanation": "OSPF動作環境でのルート分析: 各サイトのOSPFエリア、コスト、経路を確認し、パケットがどのパスを通るかを決定します。",
+    "detailed_explanation": "【正解の振り分け】\n\nInternet（3つ）：\n\n・10.10.10.16\n\n・10.10.13.129\n\n・10.10.100.128\n\nRouter1（2つ）：\n\n・10.10.13.1\n\n・10.10.13.150\n\n【Router2のルーティングテーブル整理】\n\n直接接続（C）：\n\nC　10.10.10.0/30　→ 範囲：10.10.10.0～3　（Fa0/1）\n\nC　10.10.10.4/30　→ 範囲：10.10.10.4～7　（Fa0/2）\n\nC　10.10.10.8/30　→ 範囲：10.10.10.8～11　（Fa0/3）\n\nC　10.10.10.12/30 → 範囲：10.10.10.12～15（Fa0/4 → Internet側）\n\nOSPF学習（O）：\n\nO　10.10.13.0/25　→ 範囲：10.10.13.0～127　（Router1経由）\n\nO　10.10.13.144/28　→ 範囲：10.10.13.144～159（Router1経由）\n\nデフォルトルート（S*）：\n\nS*　0.0.0.0/0 via 10.10.10.13 → Internetへ\n\n【各宛先IPの解説】\n\n■ 10.10.10.16 → Internet\n\n10.10.10.0/30 → 0～3 ❌\n\n10.10.10.4/30 → 4～7 ❌\n\n10.10.10.8/30 → 8～11 ❌\n\n10.10.10.12/30 → 12～15 ❌（16は範囲外）\n\nどのルートにも一致しない → デフォルトルート → Internet\n\n■ 10.10.13.1 → Router1\n\nO 10.10.13.0/25 → 範囲：0～127\n\n10.10.13.1 はこの範囲に含まれる → Router1経由のOSPFルート\n\n■ 10.10.13.129 → Internet\n\nO 10.10.13.0/25 → 0～127 → 129は範囲外 ❌\n\nO 10.10.13.144/28 → 144～159 → 129は範囲外 ❌\n\nどのルートにも一致しない → デフォルトルート → Internet\n\n■ 10.10.13.150 → Router1\n\nO 10.10.13.144/28 → 範囲：144～159\n\n10.10.13.150 はこの範囲に含まれる → Router1経由のOSPFルート\n\n■ 10.10.100.128 → Internet\n\n10.10.100.x に一致するルートはテーブルに存在しない\n\n→ デフォルトルート → Internet\n\n【判断のポイント】\n\n① 各宛先IPがどのサブネット範囲に含まれるかを正確に計算する\n\n② どのルートにも一致しない場合はデフォルトルート（Internet）へ\n\n③ 10.10.13.129 が最大のひっかけ：/25の範囲は0～127で、129は含まれない"
   },
   {
     "number": 929,
@@ -34083,7 +34093,8 @@
       "agent": "capture"
     },
     "category": "IP Services",
-    "explanation": "SNMPコンポーネント: Manager(NMS)=監視・管理ステーション、Agent=デバイス上のプロセス、MIB=管理情報データベース、Trap=エージェントからの非同期通知、Community=認証文字列。"
+    "explanation": "SNMPコンポーネント: Manager(NMS)=監視・管理ステーション、Agent=デバイス上のプロセス、MIB=管理情報データベース、Trap=エージェントからの非同期通知、Community=認証文字列。",
+    "detailed_explanation": "正解は以下の通りです。\n\n【解答の組み合わせ】\n\nMIB：\n\ncollection of uniquely identifiable objects whose state can be interrogated over SNMP\n\n（SNMP経由で状態を照会できる、一意に識別可能なオブジェクトの集合体。情報のデータベースです。）\n\nmanaged device：\n\nnetwork node-controlled by SNMP\n\n（SNMPによって制御されるネットワークノード。ルーターやスイッチなどの実機を指します。）\n\nNMS：\n\nsystem that runs monitoring applications and controls network nodes\n\n（監視アプリケーションを実行し、ネットワークノードを制御するシステム。管理サーバーのことです。）\n\nagent：\n\nSNMP component that captures and translates device and network data\n\n（デバイスやネットワークのデータを取得・変換するSNMPコンポーネント。機器内部で動くソフトウェアプログラムです。）\n\n【解説のポイント】\n\nSNMP（Simple Network Management Protocol）を構成する4つの要素を整理しましょう。\n\n1. NMS (Network Management System)\n\n管理者の手元にある「親玉」です。各機器の状態を表示したり、設定を命令したりします。\n\n2. Managed Device (管理対象デバイス)\n\n監視される側のルーターやスイッチなどの「本体」です。\n\n3. Agent (エージェント)\n\nデバイスの中で動いている「係員」です。NMSからの質問に答えたり、異常時に報告を送ったりします。\n\n4. MIB (Management Information Base)\n\n情報の「カタログ」や「データベース」です。どんな情報が取得できるかが階層構造で定義されています。"
   },
   {
     "number": 951,
@@ -34306,7 +34317,8 @@
       "class": "criteria"
     },
     "category": "IP Services",
-    "explanation": "QoS機能: Classification=トラフィック識別、Marking=QoS値付与、Queuing=優先度別バッファ管理、Shaping=帯域制限（バッファリング）、Policing=帯域超過時の破棄/マーキングダウン。"
+    "explanation": "QoS機能: Classification=トラフィック識別、Marking=QoS値付与、Queuing=優先度別バッファ管理、Shaping=帯域制限（バッファリング）、Policing=帯域超過時の破棄/マーキングダウン。",
+    "detailed_explanation": "正解となる組み合わせは以下の通りです。\n\n【回答一覧】\n\npolicing: applies a specific action to packets whenever the maximum rate of packets is exceeded\n\nmarking: set the ToS value to associate a packet with a QoS group\n\nqueuing: reduces traffic congestion by holding packets and distributing them when the available bandwidth allows\n\nclassification: the overall process of using specific criteria to differentiate traffic into categories\n\n【各機能の解説】\n\nclassification（分類）: パケットの中身を検査し、特定の基準（IPアドレスやポート番号など）に基づいてトラフィックをカテゴリに分けるプロセスです。\n\nmarking（マーキング）: 分類されたパケットのヘッダ（ToSやDSCPフィールドなど）に特定の値を書き込み、ネットワーク内の他のデバイスが優先度を識別できるようにします。\n\npolicing（ポリシング）: 設定された最大レートを超えたトラフィックに対して、破棄やマーキングの変更といったアクションを即座に実行します。\n\nqueuing（キューイング）: 輻輳時にパケットをバッファ（メモリ）に一時的に保持し、帯域に余裕ができた際に優先順位に従って送り出すことで混雑を緩和します。\n【コミュニティの正解 vs 私の回答】\n\nコミュニティ：\n\nclassification → queuing の説明\n\npolicing → classification の説明\n\nqueuing → policing の説明\n\n私の回答（変更なし）：\n\nclassification → classification の説明\n\npolicing → policing の説明\n\nqueuing → queuing の説明\n\n【コミュニティの正解がおかしい理由】\n\nコミュニティの回答だと、こうなります：\n\n❌ queuing = \"applies a specific action to packets whenever the maximum rate of packets is exceeded\"\n\n→ 「最大レートを超えたときに特定のアクションを適用する」のはpolicingの定義です。\n\n→ queuingはパケットを保持して順番に送るのが役割であり、\n\n　超過時にドロップや再マーキングを行うのはpolicingです。\n\n❌ classification = \"reduces traffic congestion by holding packets and distributing them when the available bandwidth allows\"\n\n→ 「パケットを保持して帯域に余裕ができたら配信する」のはqueuingの定義です。\n\n→ classificationは「分類するだけ」であり、パケットを保持したり配信したりしません。\n\n❌ policing = \"the overall process of using specific criteria to differentiate traffic into categories\"\n\n→ 「特定の基準でトラフィックをカテゴリに分類する」のはclassificationの定義です。\n\n→ policingはレート制御であり、分類プロセスではありません。\n\n【正しい回答（変更なし）】\n\nclassification → the overall process of using specific criteria to\n\ndifferentiate traffic into categories\n\n（特定の基準でトラフィックをカテゴリに分類する → まさにclassification）\n\nmarking → set the ToS value to associate a packet with a QoS group\n\n（ToS値を設定してQoSグループに関連付ける → まさにmarking）\n\npolicing → applies a specific action to packets whenever the\n\nmaximum rate of packets is exceeded\n\n（最大レート超過時にアクションを適用 → まさにpolicing）\n\nqueuing → reduces traffic congestion by holding packets and\n\ndistributing them when the available bandwidth allows\n\n（パケットを保持して帯域に余裕ができたら配信 → まさにqueuing）\n\n【Ciscoの公式定義との照合】\n\nClassification：Cisco QoSの最初のステップで、\n\nACL・DSCP・CoSなどの基準に基づいてトラフィックを識別・分類するプロセス。\n\n→ \"differentiate traffic into categories\" そのもの。\n\nPolicing：設定したレートを超えるトラフィックに対して、\n\nドロップまたは再マーキングのアクションを適用するメカニズム。\n\n→ \"applies a specific action when maximum rate is exceeded\" そのもの。\n\nQueuing：輻輳時にパケットをバッファに格納し、\n\nスケジューリングアルゴリズムに従って帯域に余裕ができたら送信する仕組み。\n\n→ \"holding packets and distributing when bandwidth allows\" そのもの。"
   },
   {
     "number": 957,
@@ -34502,7 +34514,8 @@
       "ns": "specip"
     },
     "category": "IP Services",
-    "explanation": "DNSコマンド: ip name-server [IP]=DNSサーバー指定、ip domain-name [名前]=ドメイン名設定、ip domain-lookup=DNS解決有効化、ip host [名前] [IP]=静的ホスト定義。"
+    "explanation": "DNSコマンド: ip name-server [IP]=DNSサーバー指定、ip domain-name [名前]=ドメイン名設定、ip domain-lookup=DNS解決有効化、ip host [名前] [IP]=静的ホスト定義。",
+    "detailed_explanation": "正解となる組み合わせは以下の通りです。\n\n【回答一覧】\n\nip host switch_1 192.168.0.1: adds an entry to the host table\n\nip domain-name: completes the FQDN of the DNS server\n\nshow hosts: displays address-mapping information\n\nip domain-lookup: enables host-to-IP-address translation\n\nip name-server: specifies the IP address of the DNS server\n\n【各コマンドの解説】\n\nip domain-lookup: ルーターが名前解決（DNSルックアップ）を行う機能を有効にします。デフォルトで有効ですが、無効にするとホスト名での通信ができなくなります。\n\nip domain-name: ホスト名に付加されるデフォルトのドメイン名を指定します。これにより、ホスト名だけでFQDN（完全修飾ドメイン名）を補完できるようになります。\n\nip host [名前] [IP]: 静的なホスト名とIPアドレスの対応付けをルーター内のホストテーブルに追加します（DNSサーバーに頼らない名前解決）。\n\nip name-server: ルーターが名前解決の問い合わせを送る先のDNSサーバーのIPアドレスを指定します。\n\nshow hosts: キャッシュされている、または静的に設定されているホスト名とIPアドレスのマッピング情報を一覧表示します。"
   },
   {
     "number": 961,
@@ -34639,7 +34652,8 @@
       "host": "static"
     },
     "category": "IP Services",
-    "explanation": "DNSルックアップコマンド: nslookup=対話的DNS照会、dig=詳細なDNS情報取得、host=簡易ホスト名解決。CiscoではOSからのping [hostname]もDNS解決を使用します。"
+    "explanation": "DNSルックアップコマンド: nslookup=対話的DNS照会、dig=詳細なDNS情報取得、host=簡易ホスト名解決。CiscoではOSからのping [hostname]もDNS解決を使用します。",
+    "detailed_explanation": "正解となる組み合わせは以下の通りです。\n\n【回答一覧】\n\nip domain lookup source-interface: enables DNS lookup on an individual interface\n\nip dns server: enables the DNS server on the device\n\nip name-server: identifies a DNS server to provide lookup services\n\nip domain list: specifies a sequence of domain names\n\nip domain name: specifies the default domain to append to unqualified host names\n\nip host: statically maps an IP address to a hostname\n\n【各コマンドの解説】\n\nip dns server: デバイス自体をDNSサーバー（またはプロキシ）として動作させ、他のクライアントからの問い合わせに応答できるようにします。\n\nip domain list: 複数のドメイン名をリストとして定義します。名前解決の際、これらが順番に試行されます。\n\nip domain lookup source-interface: DNSクエリを送信する際に使用する特定のインターフェースを指定します。\n\nip domain name: ホスト名のみで入力された場合に、自動的に付加されるデフォルトのドメイン名を設定します。\n\nip host: 手動でホスト名とIPアドレスの対応表（静的エントリ）を作成します。\n\nip name-server: デバイスが外部の問い合わせに使用するDNSサーバーのIPアドレスを指定します。"
   },
   {
     "number": 964,
@@ -34899,7 +34913,8 @@
       "dtp": "switchspoof"
     },
     "category": "Security Fundamentals",
-    "explanation": "攻撃軽減: DHCPスヌーピング=DHCP starvation/spoofing、DAI=ARP spoofing、IPソースガード=IP spoofing、ポートセキュリティ=MAC flooding、802.1X=不正アクセス。"
+    "explanation": "攻撃軽減: DHCPスヌーピング=DHCP starvation/spoofing、DAI=ARP spoofing、IPソースガード=IP spoofing、ポートセキュリティ=MAC flooding、802.1X=不正アクセス。",
+    "detailed_explanation": "正解となる組み合わせは以下の通りです。\n\n【回答一覧】\n\nConfigure the native VLAN with a nondefault VLAN: 802.1q double-tagging VLAN-hopping attack\n\nConfigure the 802.1x authentication protocol: MAC flooding attack\n\nConfigure the DHCP snooping feature: man-in-the-middle spoofing attack\n\nDisable Dynamic Trunking Protocol: switch-spoofing VLAN-hopping attack\n\n【各技術の解説】\n\nConfigure the native VLAN with a nondefault VLAN: ネイティブVLANをデフォルト（VLAN 1）から未使用の番号に変更することで、タグを二重に付与して不正なVLANへ通信させる「ダブルタギング攻撃」を防ぎます。\n\nConfigure the 802.1x authentication protocol: ポートベースの認証を導入することで、未認証のデバイスが大量の偽造MACアドレスを送信してスイッチのMACアドレステーブルを溢れさせる「MACフローディング攻撃」を抑制します。\n\nConfigure the DHCP snooping feature: 不正なDHCPサーバーが偽のゲートウェイ情報を配布するのを防ぎ、結果として通信を傍受する「中間者（MITM）攻撃」を緩和します。\n\nDisable Dynamic Trunking Protocol (DTP): DTPを無効化（switchport nonegotiate）することで、攻撃者の端末がスイッチになりすましてトランクリンクを自動確立する「スイッチスプーフィング攻撃」を防ぎます。"
   },
   {
     "number": 971,
@@ -36010,7 +36025,8 @@
       "rest": "n"
     },
     "category": "Automation and Programmability",
-    "explanation": "ノースバウンドAPIの特徴: SDNコントローラと上位アプリケーション間の通信、REST APIベース、JSON/XMLデータ形式、プログラマブルなネットワーク管理を実現。"
+    "explanation": "ノースバウンドAPIの特徴: SDNコントローラと上位アプリケーション間の通信、REST APIベース、JSON/XMLデータ形式、プログラマブルなネットワーク管理を実現。",
+    "detailed_explanation": "【問題の解説：ノースバウンドAPIの特徴】\n\nこの問題は、SDN（Software Defined Networking）アーキテクチャにおけるノースバウンドAPI（Northbound API）の役割と特徴を識別するものです。\n\n正解となる4つの特徴：\n\n1. communicates between the SDN controller and the application plane\n\nノースバウンドAPIは、中央のSDNコントローラと、上位のアプリケーション層（管理ツールや自動化スクリプトなど）との間の通信を担います。\n\n2. supports automation\n\n外部アプリケーションがコントローラを介してネットワーク構成を動的に変更できるため、ネットワーク運用の自動化を可能にします。\n\n3. supports REST-based requirements\n\nノースバウンドAPIの多くは、開発者が扱いやすいREST（Representational State Transfer）形式のAPI（RESTful API）を採用しています。\n\n4. supports data sharing between systems\n\nビジネスアプリケーションやオーケストレーションツールなどの異なるシステム間で、ネットワーク情報の共有をサポートします。\n\n選択肢に含まれる誤りの解説：\n\n・communicates between the SDN controller and the data plane\n\nこれはサウスバウンドAPI（Southbound API）の説明です。コントローラと物理/仮想スイッチ間の通信を指します。\n\n・uses OpenFlow to interface between the data and control planes\n\nOpenFlowは代表的なサウスバウンドプロトコルであり、ノースバウンドではありません。\n\n・supports network virtualization protocols\n\nこれは一般的にサウスバウンドやインフラストラクチャ層の機能に関連する項目です。\n\n以上の理由から、上記4つの項目を右側のボックスに配置するのが正解となります。"
   },
   {
     "number": 1002,
@@ -36259,7 +36275,8 @@
       "nbapi": "dnac"
     },
     "category": "IP Services",
-    "explanation": "デバイス管理分類: 従来型=CLI/SNMP/個別設定/テンプレート手動適用、コントローラベース=API/集中管理/自動プロビジョニング/ポリシーベース設定展開。"
+    "explanation": "デバイス管理分類: 従来型=CLI/SNMP/個別設定/テンプレート手動適用、コントローラベース=API/集中管理/自動プロビジョニング/ポリシーベース設定展開。",
+    "detailed_explanation": "【問題の解説：従来の管理手法 vs Cisco DNA Center】\n\nこの問題は、従来のキャンパスデバイス管理（Traditional Campus Device Management）と、最新のコントローラベースであるCisco DNA Centerの違いを分類するものです。\n\n正しい分類：\n\n1. Traditional Campus Device Management（従来の管理）\n\n・leverages Cisco Prime Infrastructure\n\nCisco Prime Infrastructureは、DNA Centerが登場する前の主要な管理プラットフォームです。\n\n・requires manual configuration of complex protocols\n\n各デバイスに対して個別に、複雑なプロトコルの手動設定が必要でした。\n\n・lacks support for SDA\n\nSoftware-Defined Access (SDA) はDNA Centerによって実現される技術であり、従来の管理手法ではサポートされていません。\n\n2. Cisco DNA Center\n\n・reduces the workload for enterprise customers\n\n自動化と集中管理により、ネットワーク管理者の作業負荷を大幅に削減します。\n\n・uses algorithms to detect security threats\n\nAIや機械学習アルゴリズムを用いて、異常検知やセキュリティ脅威の特定を行います。\n\n・uses northbound APIs\n\n外部アプリケーションや自動化ツールと連携するために、RESTベースのノースバウンドAPIを使用します。\n\n解説のポイント：\n\nDNA Centerは「自動化」「インテリジェンス（AI）」「APIによる拡張性」がキーワードです。対して、従来の管理は「手動操作」や「旧来の管理ツール（Prime）」に関連付けられます。"
   },
   {
     "number": 1009,
@@ -36608,7 +36625,8 @@
       "agentless": "f"
     },
     "category": "Automation and Programmability",
-    "explanation": "Ansible機能: Playbook=実行手順（YAML）、Module=タスク実行単位（ios_command等）、Inventory=管理対象一覧、Role=再利用可能セット、Handler=条件付き実行。"
+    "explanation": "Ansible機能: Playbook=実行手順（YAML）、Module=タスク実行単位（ios_command等）、Inventory=管理対象一覧、Role=再利用可能セット、Handler=条件付き実行。",
+    "detailed_explanation": "【問題の解説：Ansibleの特徴】\n\nこの問題は、構成管理ツールであるAnsibleの主要な特徴を、他のツール（ChefやPuppetなど）と比較して識別するものです。\n\n正解となる4つの特徴：\n\n1. executes modules via SSH by default\n\nAnsibleは、管理対象のデバイスに対して標準的なSSHプロトコルを使用して通信し、タスク（モジュール）を実行します。\n\n2. uses the YAML language\n\n設定手順書である「プレイブック（Playbook）」は、人間にとって読みやすく書きやすいYAML形式で記述されます。\n\n3. pushes configurations to the client\n\nサーバー（コントロールノード）側からクライアント（管理対象）に対して設定を送り込む「プッシュ型」のモデルを採用しています。\n\n4. operates without agents\n\n管理対象側に専用のソフトウェアを常駐させる必要がない「エージェントレス（Agentless）」なツールであることが最大の利点の一つです。\n\n選択肢に含まれる誤りの解説（Ansibleではないもの）：\n\n・uses agents to manage hosts\n\nこれはChefやPuppetなどのエージェント型ツールの特徴です。Ansibleはエージェントを必要としません。\n\n・requires clients to pull configurations from the server\n\nこれは「プル型」モデルの説明であり、Chefなどの特徴です。Ansibleはプッシュ型であるため、クライアントが自分から設定を取りに行くことはありません。\n\n以上の4つの正解項目を右側のボックスに配置します。"
   },
   {
     "number": 1019,
@@ -36729,7 +36747,8 @@
       "console": "trad"
     },
     "category": "Automation and Programmability",
-    "explanation": "デバイス管理ユースケース: CLI=個別設定/トラブルシューティング、SNMP=監視/情報収集、DNA Center=自動プロビジョニング/ポリシー管理、Ansible=一括設定展開。"
+    "explanation": "デバイス管理ユースケース: CLI=個別設定/トラブルシューティング、SNMP=監視/情報収集、DNA Center=自動プロビジョニング/ポリシー管理、Ansible=一括設定展開。",
+    "detailed_explanation": "【問題の解説：デバイス管理技術の分類】\n\nこの問題は、最新のネットワーク管理プラットフォームであるCisco DNA Center（SD-Accessなど）と、従来の管理手法（Traditional）におけるユースケースを正しく分類するものです。\n\n正しい分類結果：\n\n1. Cisco DNA Center（SDN/自動化）の項目：\n\n・overlay and underlay configuration\n\nSD-Accessの基盤となる物理ネットワーク（アンダーレイ）と、その上で動作する論理的な仮想ネットワーク（オーバーレイ）の構築を自動化します。\n\n・VXLAN and LISP configuration\n\nSD-Accessのデータ転送（VXLAN）と、端末情報の管理（LISP）という高度なプロトコル設定を担当します。\n\n・routed access deployment\n\nファブリック構成において、アクセス層までルーティング機能を拡張した効率的なネットワーク展開をサポートします。\n\n2. Traditional（従来の管理）の項目：\n\n・STP deployment\n\nスパニングツリープロトコル（STP）によるループ回避設定は、従来のレイヤ2ネットワーク管理における典型的な手動作業です。\n\n・VLAN and HSRP configuration\n\nVLANの作成や、デフォルトゲートウェイの冗長化（HSRP）をコマンドラインから個別に設定する従来の手法です。\n\n・configuration via console\n\nコンソールケーブルを物理的に接続し、CLI（コマンドライン）から一台ずつ手動で設定を行う、最も伝統的な手法です。\n\n解説のポイント：\n\nCisco DNA Centerに関連するキーワードは、「Overlay/Underlay（オーバーレイ/アンダーレイ）」や「VXLAN/LISP」といったファブリック技術です。一方、個別のプロトコル名（STP, HSRP）や物理的な操作（Console）は、従来の管理手法に分類されます。"
   },
   {
     "number": 1022,
@@ -36853,7 +36872,8 @@
       "multi": "trad"
     },
     "category": "Automation and Programmability",
-    "explanation": "デバイス管理分類: 従来型=手動CLI設定/SNMP監視/個別管理、DNA Center=自動化/テンプレート展開/インテントベース/AI分析/REST API。"
+    "explanation": "デバイス管理分類: 従来型=手動CLI設定/SNMP監視/個別管理、DNA Center=自動化/テンプレート展開/インテントベース/AI分析/REST API。",
+    "detailed_explanation": "【問題の解説：デバイス管理手法の分類】\n\nこの問題は、最新のコントローラベースであるCisco DNA Centerによる管理と、従来の個別管理（Traditional）の特徴を正しく分類するものです。\n\n正しい分類結果：\n\n1. Cisco DNA Center Device Management（コントローラ管理）：\n\n・It provides a single interface for network security and analytics.\n\n単一のダッシュボード（一元的な管理画面）から、セキュリティ設定やネットワーク分析を統合的に行えます。\n\n・It uses NetFlow to analyze potential security threats and take appropriate action on that traffic.\n\nネットワーク全体のフローデータを収集・分析し、異常検知や自動的なセキュリティ対応を行います。\n\n・It supports CLI templates to apply a consistent configuration to multiple devices.\n\nテンプレート機能を使用して、多数のデバイスに対して統一された設定を一括で適用できます。\n\n2. Traditional Device Management（従来の管理）：\n\n・It manages device configurations on a per-device basis.\n\n各デバイスに個別にアクセスし、一台ずつ設定を管理・変更する手法です。\n\n・It uses multiple tools and applications to analyze and troubleshoot different types of data.\n\nデータ種別ごとに異なる管理ツールやログ確認を使い分ける必要があり、分析が分散化しています。\n\n・Security is managed near the perimeter of the network with firewalls, VPNs, and IPS.\n\nネットワークの境界（エッジ）部分に物理的な機器を配置して防御を固める、境界防御モデルが中心です。\n\n解説のポイント：\n\nCisco DNA Centerは、管理の「統合（Single interface）」と、データに基づいた「分析（Analytics）」、そして作業の「一括化（Multiple devices）」がキーワードです。対して、従来の管理は「個別（Per-device）」や「複数のツール（Multiple tools）」という非効率な側面に関連付けられます。"
   },
   {
     "number": 1025,
@@ -37017,7 +37037,8 @@
       "provision": "auto"
     },
     "category": "Automation and Programmability",
-    "explanation": "構成管理用語: agent=中央権威に更新があるかを判定するデーモン、push=中央サーバが必要に応じてノードへ更新を送るモデル、agentless=組み込みの管理機能なしで動作するデバイスハードウェア、pull=管理は容易だがスケーラビリティに欠ける可能性のあるデプロイオプション、provision=構成や更新を自動的にインストール・デプロイすること。"
+    "explanation": "構成管理用語: agent=中央権威に更新があるかを判定するデーモン、push=中央サーバが必要に応じてノードへ更新を送るモデル、agentless=組み込みの管理機能なしで動作するデバイスハードウェア、pull=管理は容易だがスケーラビリティに欠ける可能性のあるデプロイオプション、provision=構成や更新を自動的にインストール・デプロイすること。",
+    "detailed_explanation": "【問題】\n\n左側の構成管理用語を右側の説明にドラッグ＆ドロップせよ。\n\nすべての用語が使用されるわけではない。\n\n【正解マッピング】\n\nagent → daemon that determines when the central authority has updates available\n\npush → model in which the central server sends updates to nodes on an as-needed basis\n\nagentless → device hardware that runs without embedded management features\n\npull → easy-to-manage deployment option that may lack scalability\n\nprovision → to automatically install or deploy a configuration or update\n\n未使用：post\n\n════════════════════════════════\n\n【各マッピングの詳細解説】\n\n■ agent → 「daemon that determines when the central authority has updates available」\n\nエージェント（agent）とは、管理対象ノード上にインストールされ、\n\nバックグラウンドで常駐するデーモン（daemon）です。\n\nこのデーモンが定期的に中央管理サーバー（central authority）にポーリングし、\n\n更新があるかどうかを確認します。\n\nポイントは説明文の主語が「daemon」であること。\n\npullは通信モデル／方式を指す概念ですが、\n\nagentはデーモンそのものを指します。\n\n→ 「デーモンが中央機関の更新を確認する」＝ agentの動作定義です。\n\n■ push → 「model in which the central server sends updates to nodes on an as-needed basis」\n\nPushモデル（例：Ansible）では、中央サーバーが主導して\n\n管理対象ノードに必要に応じて（as-needed）更新を送信します。\n\nノード側からの要求ではなく、サーバー側がトリガーとなって構成を配布します。\n\n→ 「中央サーバーが必要に応じてノードに更新を送る」＝ pushモデルの定義です。\n\n■ agentless → 「device hardware that runs without embedded management features」\n\n「embedded management features がない」＝\n\n「管理用エージェントソフトが組み込まれていない」ということです。\n\nつまりagentless（エージェントなし）の状態のデバイスを指します。\n\nagentless環境では、デバイス自体に管理用ソフトが入っておらず、\n\n外部からSSH等でリモート接続して管理を行います。\n\n→ 「組み込み管理機能を持たないハードウェア」＝ agentlessの特徴です。\n\n■ pull → 「easy-to-manage deployment option that may lack scalability」\n\nこれは消去法的なマッピングですが、理屈も通ります。\n\nPullモデルでは、エージェントをインストールすれば\n\nあとはノードが自動的にポーリングして構成を取得してくれるため、\n\n管理者側の操作が少なく管理が容易（easy-to-manage）です。\n\nしかし、大量のノードが同時にポーリングすると\n\n中央サーバーに負荷が集中し、\n\nスケーラビリティに課題（may lack scalability）が出ることがあります。\n\n■ provision → 「to automatically install or deploy a configuration or update」\n\nプロビジョニング（provision）とは、\n\nデバイスやシステムに対して構成情報やアップデートを\n\n自動的にインストール・デプロイするプロセスです。\n\n→ 「構成や更新を自動的にインストール・展開する」＝ provisionの定義そのものです。\n\n════════════════════════════════\n\n【なぜ post は未使用か？】\n\nPOST（Power-On Self-Test）は、デバイスの電源投入時に実行される\n\nハードウェア自己診断テストであり、構成管理の用語ではありません。\n\n5つの説明文のどれにも該当しないため、未使用（ダミー選択肢）です。\n\n════════════════════════════════\n\n【まとめ】\n\nagent      → デーモンが中央機関の更新を確認する\n\npush       → 中央サーバーが必要に応じてノードに更新を送る\n\nagentless → 組込み管理機能を持たないデバイスハードウェア\n\npull        → 管理が容易だがスケーラビリティに課題あり（消去法）\n\nprovision → 構成や更新を自動的にインストール・展開する\n\npost        → ❌ 未使用\n\n【最大のポイント】\n\nagentとpullの違いを正確に理解すること！\n\n・agent ＝ ノード上で常駐するデーモン（ソフトウェア実体）\n\n・pull ＝ ノード側から取りに行く通信モデル（方式・概念）"
   },
   {
     "number": 1029,
@@ -47508,7 +47529,8 @@
       "nh_igp": "ll"
     },
     "category": "Network Fundamentals",
-    "explanation": "IPv6アドレスタイプ特徴: 各タイプのスコープ、プレフィックス、自動設定/手動設定、ルーティング可否の特性を分類します。"
+    "explanation": "IPv6アドレスタイプ特徴: 各タイプのスコープ、プレフィックス、自動設定/手動設定、ルーティング可否の特性を分類します。",
+    "detailed_explanation": "解答と解説\n\nこの問題は、IPv6のアドレス形式である「マルチキャスト」と「リンクローカルアドレス」の特徴を分類するものです。\n\n1. Multicast（マルチキャスト）\n\n・sends packets to a group address rather than a single address\n\n（単一のアドレスではなく、グループアドレスにパケットを送信する）\n\n・provides one-to-many communications\n\n（1対多の通信を提供する）\n\n解説：マルチキャストは、特定のグループに属する複数のインターフェースに対して同時にデータを送信するための仕組みです。特定の1対1（ユニキャスト）ではなく、1対多の通信を行うのが最大の特徴です。\n\n2. Link-Local Address（リンクローカルアドレス）\n\n・confined to a single link\n\n（単一のリンク内に限定される）\n\n・serves as the next-hop addresses in IGP\n\n（IGPにおけるネクストホップアドレスとして機能する）\n\n解説：リンクローカルアドレス（fe80::/10）は、同一の物理リンク（セグメント）内でのみ有効なアドレスです。ルータを越えて通信することはできません。また、IPv6のルーティングプロトコル（OSPFv3など）では、隣接ルータを識別するためのネクストホップアドレスとしてこのリンクローカルアドレスが利用されます。"
   },
   {
     "number": 1302,
@@ -47783,7 +47805,8 @@
       "single_wl": "smf"
     },
     "category": "Network Fundamentals",
-    "explanation": "ケーブル特性分類: 各ケーブルの仕様（帯域幅、距離、材質、コネクター）を正しい種別に割り当てます。"
+    "explanation": "ケーブル特性分類: 各ケーブルの仕様（帯域幅、距離、材質、コネクター）を正しい種別に割り当てます。",
+    "detailed_explanation": "解答と解説\n\nこの問題は、物理的な伝送媒体である「銅線（copper）」と「シングルモード光ファイバ（single-mode fiber）」の特性を分類するものです。\n\n1. copper（銅線）\n\n・comprised of shielded and unshielded twisted pairs\n\n（シールド付き（STP）、またはシールドなし（UTP）のツイストペア線で構成されている）\n\n・is affected by electrical and magnetic interference\n\n（電気的および磁気的な干渉（EMI）の影響を受ける）\n\n解説：LANケーブルに代表される銅線は、金属（銅）を使って電気信号を流します。そのため、外部の電磁ノイズの影響を受けやすく、シールドで保護したりペア線を撚ったりすることで対策をしています。\n\n2. single-mode fiber（シングルモード光ファイバ）\n\n・comprised of insulated glass strands\n\n（絶縁されたガラス繊維で構成されている）\n\n・uses a single wavelength of light\n\n（単一の波長の光を使用する）\n\n解説：光ファイバは非常に細い「ガラス」の芯（コア）を通る光信号でデータを伝送します。特にシングルモードは、1つの波長の光（レーザー）のみを真っ直ぐ通す構造になっており、信号の減衰が少ないため長距離・高速通信に向いています。"
   },
   {
     "number": 1310,
@@ -48315,7 +48338,8 @@
       "glass": "smf"
     },
     "category": "Network Fundamentals",
-    "explanation": "ケーブル種別: 各ケーブルの特徴（帯域幅、距離、材質、EMI耐性）を正しいカテゴリに分類します。"
+    "explanation": "ケーブル種別: 各ケーブルの特徴（帯域幅、距離、材質、EMI耐性）を正しいカテゴリに分類します。",
+    "detailed_explanation": "解答と解説\n\nこの問題は、銅線（copper）と光ファイバ（single-mode fiber）の物理的な構造と特性を分類するものです。\n\n1. cooper（銅線）\n\n・contains a conductor, bedding, and sheathing\n\n（導体、介在物、外装で構成されている）\n\n・affected by electrical and magnetic interference\n\n（電気的および磁気的な干渉（EMI）の影響を受ける）\n\n解説：銅線は電気信号を流すため、電磁ノイズの影響を非常に受けやすい性質があります。構造としては、中心の銅線（導体）を保護層や外被で包んでいます。\n\n2. single-mode fiber（シングルモード光ファイバ）\n\n・contains a core, cladding, and coating\n\n（コア、クラッド、コーティングで構成されている）\n\n・comprised of insulated glass strands\n\n（絶縁されたガラス繊維で構成されている）\n\n解説：光ファイバの基本構造は、光が通る中心部の「コア」、それを反射させる「クラッド」、保護用の「コーティング」の3層構造です。また、電気を通さないガラス繊維でできているため、電磁ノイズの影響を受けないのが大きなメリットです。"
   },
   {
     "number": 1324,
@@ -48392,7 +48416,8 @@
       "one_to_many": "mc"
     },
     "category": "Network Fundamentals",
-    "explanation": "IPv6アドレスタイプ: 各タイプの特徴を正しく分類。スコープ、自動設定可否、ルーティング特性、用途で区別します。"
+    "explanation": "IPv6アドレスタイプ: 各タイプの特徴を正しく分類。スコープ、自動設定可否、ルーティング特性、用途で区別します。",
+    "detailed_explanation": "解答と解説\n\nこの問題は、IPv6のアドレスタイプである「ユニークローカル（Unique Local）」と「マルチキャスト（Multicast）」の特徴を分類するものです。\n\n1. Unique Local（ユニークローカルアドレス）\n\n・counterpart of private IPv4 addresses\n\n（プライベートIPv4アドレスに相当するもの）\n\n・may be used by multiple organizations at the same time\n\n（複数の組織によって同時に使用される可能性がある）\n\n解説：ユニークローカルアドレス（fc00::/7）は、IPv4のプライベートアドレスと同じように、組織内部などの閉じたネットワークで自由に使用できるアドレスです。そのため、異なる組織間でアドレスが重複して使われることが想定されています。\n\n2. Multicast（マルチキャストアドレス）\n\n・never used as a source address\n\n（送信元アドレスとして使用されることはない）\n\n・provides one-to-many communications\n\n（1対多の通信を提供する）\n\n解説：マルチキャスト（ff00::/8）は、特定のグループ（1対多）にパケットを届けるための仕組みです。マルチキャストアドレスは常に「宛先」として指定されるものであり、パケットの「送信元」は常に個別の機器（ユニキャストアドレス）であるため、送信元アドレスにはなり得ません。"
   },
   {
     "number": 1326,
@@ -48473,7 +48498,8 @@
       "user_conn": "wlc"
     },
     "category": "Network Access",
-    "explanation": "AP vs WLCの特徴: AP=Wi-Fi信号を増幅する機能/ワークグループブリッジ（WGB）として設定可能、WLC=テンプレートを使用してQoS設定を実装/デバイスグループ内のユーザー接続データを提供。"
+    "explanation": "AP vs WLCの特徴: AP=Wi-Fi信号を増幅する機能/ワークグループブリッジ（WGB）として設定可能、WLC=テンプレートを使用してQoS設定を実装/デバイスグループ内のユーザー接続データを提供。",
+    "detailed_explanation": "解答と解説\n\nこの問題は、ワイヤレスネットワークにおける「アクセスポイント (AP)」と「ワイヤレスLANコントローラ (WLC)」の機能や特徴を分類するものです。\n\n1. Access Point（アクセスポイント）\n\n・ability to boost a wi-fi signal\n\n（Wi-Fi信号を増幅・発信する能力を持つ）\n\n・configurable as a workgroup bridge\n\n（ワークグループブリッジとして構成可能である）\n\n解説：APの主な役割は、無線クライアントに対してWi-Fi信号を提供することです。また、自律型APなどは、無線接続機能を持たない有線デバイスを無線ネットワークに橋渡しする「ワークグループブリッジ」モードとして動作させることも可能です。\n\n2. Wireless LAN Controller（ワイヤレスLANコントローラ）\n\n・uses templates to implement QOS configuration\n\n（テンプレートを使用してQoS設定を適用する）\n\n・supplies user connection data within a device group\n\n（デバイスグループ内のユーザー接続データを提供する）\n\n解説：WLCは、複数のAP（集中管理型AP）を統合管理するためのデバイスです。各APにいちいち設定するのではなく、WLC上で作成したテンプレートを各APに一括適用することで、QoSなどのポリシーを一元管理します。また、ネットワーク全体のユーザー接続状況などを集中的に監視・提供します。\n\n※「requires a special adapter for PoE」は、現代の多くのネットワーク機器が標準でPoEに対応しているため、いずれの主要な特徴としても選択されないのが一般的です。"
   },
   {
     "number": 1328,
@@ -48550,7 +48576,8 @@
       "long_dist": "smf"
     },
     "category": "Network Fundamentals",
-    "explanation": "ケーブル特性: 各ケーブルの物理的・性能的仕様を正しい種別に分類します。"
+    "explanation": "ケーブル特性: 各ケーブルの物理的・性能的仕様を正しい種別に分類します。",
+    "detailed_explanation": "解答と解説\n\nこの問題は、ネットワークの伝送媒体である「銅線（copper）」と「シングルモード光ファイバ（single-mode fiber）」の特性を分類するものです。\n\n1. copper（銅線）\n\n・is affected by electrical and magnetic interference\n\n（電気的および磁気的な干渉（EMI）の影響を受ける）\n\n・is comprised of shielded and unshielded twisted pairs\n\n（シールド付き（STP）、またはシールドなし（UTP）のツイストペア線で構成されている）\n\n解説：銅線は電気信号を流してデータを伝えるため、周囲の電磁ノイズに弱いという性質があります。一般的に使われるLANケーブル（ツイストペアケーブル）がこれに該当します。\n\n2. single-mode fiber（シングルモード光ファイバ）\n\n・is ideal over longer distances with little loss of integrity\n\n（信号の劣化が少なく、長距離伝送に理想的である）\n\n・transmits signals using pulses of light\n\n（光のパルスを使用して信号を伝送する）\n\n解説：光ファイバは電気ではなく「光」を使ってデータを送ります。そのためノイズに非常に強く、特にシングルモードは光が拡散しにくいため、数キロ〜数十キロといった長距離の通信に非常に適しています。"
   },
   {
     "number": 1330,
@@ -48834,7 +48861,8 @@
       "unicast_to_group": "mc"
     },
     "category": "Network Fundamentals",
-    "explanation": "IPv6アドレスタイプ: 各タイプの特徴をスコープ、設定方法、用途で正しく分類します。"
+    "explanation": "IPv6アドレスタイプ: 各タイプの特徴をスコープ、設定方法、用途で正しく分類します。",
+    "detailed_explanation": "解答と解説\n\nこの問題は、IPv6のアドレスタイプである「グローバルユニキャストアドレス（Global Unicast Address）」と「マルチキャスト（Multicast）」の特徴を分類するものです。\n\n1. Global Unicast Address（グローバルユニキャストアドレス）\n\n・publicly routable in the same way as IPv4 addresses\n\n（IPv4アドレスと同じ方法で公にルーティング可能である）\n\n・routable and reachable via the Internet\n\n（インターネットを介してルーティング可能であり、到達可能である）\n\n解説：グローバルユニキャストアドレス（2000::/3）は、IPv4のグローバルIPアドレスに相当します。インターネット上で一意であり、世界中で通信を行うために使用されます。\n\n2. Multicast（マルチキャスト）\n\n・provides one-to-many communications\n\n（1対多の通信を提供する）\n\n・has a unicast source sent to a group\n\n（グループに送信されるユニキャストの送信元を持つ）\n\n解説：マルチキャスト（ff00::/8）は、特定のグループに属する複数の受信者にデータを届けるための仕組みです。重要な点として、パケットの「宛先」はマルチキャストグループアドレスですが、そのパケットを生成して送る「送信元」は必ず個別の機器（ユニキャストアドレス）になります。"
   },
   {
     "number": 1337,
