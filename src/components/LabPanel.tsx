@@ -1,6 +1,12 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import type { LabSpec } from '../types';
 import { applyCommand, buildPrompt, INITIAL_STATE, type CliState } from '../utils/iosCli';
+import {
+  buildVocabulary,
+  classifyHelpQuery,
+  generateHelpCandidates,
+  NO_CANDIDATES_MESSAGE,
+} from '../utils/iosHelp';
 import './LabPanel.css';
 
 interface Props {
@@ -85,44 +91,75 @@ export default function LabPanel({ lab, commands, onChange }: Props) {
     });
   };
 
+  // ? ヘルプ本体。`inputBeforeQuestion` は ? を除いた入力途中の文字列。
+  // keydown の ? / ？ 経路と、Enter 送信時に末尾が ? / ？ だった経路の双方から呼ぶ。
+  // ヘルプは「調べる」補助操作。いかなる失敗も既存挙動を妨げない（要件 5.4, 6.4）
+  const runHelp = (inputBeforeQuestion: string) => {
+    try {
+      const cur = states[activeDevice];
+      const query = classifyHelpQuery(inputBeforeQuestion);
+      const vocabulary = buildVocabulary(
+        lab.tasks,
+        activeDevice,
+        cur.cli.mode,
+      );
+      const candidates = generateHelpCandidates(query, vocabulary);
+      const outputLines =
+        candidates.length > 0 ? candidates : [NO_CANDIDATES_MESSAGE];
+      // classifyHelpQuery は full / word のみ返す（none は返さない）
+      const preservedInput =
+        query.kind === 'none' ? inputBeforeQuestion : query.preservedInput;
+
+      // 結合行（プロンプト + 保持入力）を生成。失敗時は省略して候補出力を継続（要件 4.4）
+      let promptLine: string | null = null;
+      try {
+        promptLine = `${buildPrompt(activeDevice, cur.cli)}${preservedInput}`;
+      } catch {
+        promptLine = null;
+      }
+
+      setStates((prev) => {
+        const c = prev[activeDevice];
+        const appended =
+          promptLine !== null
+            ? [promptLine, ...outputLines]
+            : [...outputLines];
+        return {
+          ...prev,
+          [activeDevice]: {
+            // cli / history / historyCursor は不変（要件 5.1, 5.2）
+            ...c,
+            lines: [...c.lines, ...appended],
+          },
+        };
+      });
+      // ? を除去した入力を復元（要件 1.5, 4.1, 4.2）。onChange は呼ばない（要件 5.3）
+      setInput(preservedInput);
+    } catch {
+      // 失敗時は何もしない＝既存挙動継続（要件 5.4, 6.4）
+    }
+  };
+
   const handleKey = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
       e.preventDefault();
+      // IME・全角入力などで ? / ？ が入力欄に残ったまま Enter された場合は
+      // 送信せずヘルプとして扱う（末尾の ? / ？ を除去して分類）。
+      if (/[?？]$/.test(input)) {
+        const before = input.replace(/[?？]+$/, '');
+        runHelp(before);
+        return;
+      }
       submitInput();
     } else if (e.key === 'Tab') {
       e.preventDefault();
       // 実機 IOS と同じく「現在打っている単語」だけを補完する。
-      // expected_commands と共通 IOS コマンドからキーワード辞書を構築。
-      const COMMON_COMMANDS = [
-        'enable', 'disable', 'exit', 'end',
-        'configure terminal',
-        'write', 'write memory',
-        'copy running-config startup-config',
-        'show running-config', 'show startup-config',
-        'show ip interface brief', 'show interfaces', 'show vlan brief',
-        'show ip route', 'show version',
-        'no shutdown', 'shutdown',
-        'interface', 'interface range',
-        'switchport', 'trunk', 'allowed', 'vlan', 'native',
-        'channel-group', 'mode', 'active', 'passive', 'on',
-        'port-channel', 'ethernet', 'gigabitethernet', 'fastethernet',
-      ];
-      const allCommands = [
-        ...lab.tasks
-          .filter((t) => t.device === activeDevice)
-          .flatMap((t) => t.expected_commands),
-        ...COMMON_COMMANDS,
-      ];
-      // 各コマンドを単語に分解して語彙集合を構築
-      // ただし数値や ',' を含むトークン（VLAN リスト等の値）は除外
-      const isValueToken = (tok: string) =>
-        /[0-9,]/.test(tok) || tok.length === 0;
-      const vocabulary = new Set<string>();
-      for (const cmd of allCommands) {
-        for (const tok of cmd.split(/\s+/)) {
-          if (!isValueToken(tok)) vocabulary.add(tok.toLowerCase());
-        }
-      }
+      // 語彙集合は共有ロジック buildVocabulary で構築（ヘルプと同一・挙動不変）。
+      const vocabulary = buildVocabulary(
+        lab.tasks,
+        activeDevice,
+        currentState.cli.mode,
+      );
 
       // 末尾に空白がなければ「現在の単語」を補完、空白で終わっていれば何もしない
       // （次に何が来るかは実機ではコマンドツリーに依存。ここでは値の自動補完を抑止）
@@ -159,6 +196,10 @@ export default function LabPanel({ lab, commands, onChange }: Props) {
           });
         }
       }
+    } else if ((e.key === '?' || e.key === '？') && !e.nativeEvent.isComposing) {
+      // ? / ？ を input に混入させない（要件 1.4）。IME 変換中（isComposing）は除外
+      e.preventDefault();
+      runHelp(input);
     } else if (e.key === 'ArrowUp') {
       e.preventDefault();
       setStates((prev) => {
