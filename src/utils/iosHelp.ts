@@ -107,10 +107,28 @@ export type HelpQuery =
   | { kind: 'word'; prefix: string; preservedInput: string }; // Word_Help_Query
 
 /**
+ * 数字を含むが「値」ではなくキーワードとして扱うべきトークンの許可リスト。
+ * 値トークン除外（数字を含む＝値）の例外として保持する（例: ipv6, dot1q, md5）。
+ */
+const KEYWORD_TOKENS_WITH_DIGITS = new Set<string>([
+  'ipv6',
+  'dot1q',
+  '3des',
+  'md5',
+  'sha1',
+  'sha256',
+  'aes128',
+  'aes192',
+  'aes256',
+]);
+
+/**
  * トークンが値トークン（数字を含む or ',' を含む or 空）かどうか。
- * 既存 Tab 補完のインラインロジックと完全に同一。
+ * ただし ipv6 / dot1q など、数字を含むが実際にはキーワードである語は
+ * 許可リストにより値トークンとみなさない。
  */
 export function isValueToken(tok: string): boolean {
+  if (KEYWORD_TOKENS_WITH_DIGITS.has(tok.toLowerCase())) return false;
   return /[0-9,]/.test(tok) || tok.length === 0;
 }
 
