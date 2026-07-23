@@ -9,20 +9,92 @@
 import type { CliMode } from './iosCli';
 import type { LabTask } from '../types';
 
-/** ヘルプ／Tab 補完で共有する共通コマンド語彙 */
+/**
+ * ヘルプ／Tab 補完で共有する共通コマンド語彙。
+ *
+ * 各問題の expected_commands は「その問題の正解」だけを含むため、
+ * 問題に依存しない主要な Cisco IOS / CCNA コマンドをここで補う。
+ * 文脈依存ヘルプは「フレーズの先頭単語列に一致した次の単語」を提示するため、
+ * 複数単語コマンドはフレーズのまま列挙する（例: 'ip access-list extended'）。
+ */
 export const COMMON_COMMANDS: string[] = [
+  // --- EXEC / 基本 ---
   'enable', 'disable', 'exit', 'end',
   'configure terminal',
   'write', 'write memory',
   'copy running-config startup-config',
-  'show running-config', 'show startup-config',
-  'show ip interface brief', 'show interfaces', 'show vlan brief',
-  'show ip route', 'show version',
+  'reload', 'ping', 'traceroute',
   'no shutdown', 'shutdown',
-  'interface', 'interface range',
-  'switchport', 'trunk', 'allowed', 'vlan', 'native',
+
+  // --- show 系 ---
+  'show running-config', 'show startup-config',
+  'show ip interface brief', 'show interfaces', 'show interfaces status',
+  'show ip route', 'show version',
+  'show vlan brief', 'show mac address-table',
+  'show ip protocols', 'show ip ospf neighbor', 'show ip ospf interface',
+  'show cdp neighbors', 'show lldp neighbors',
+  'show access-lists', 'show ip access-lists',
+  'show etherchannel summary', 'show spanning-tree',
+  'show port-security', 'show standby',
+
+  // --- グローバル設定 ---
+  'hostname',
+  'banner motd',
+  'no ip domain-lookup', 'ip domain-name',
+  'service password-encryption',
+  'enable secret', 'enable password',
+  'username',
+  'ip default-gateway',
+  'ip name-server',
+  'ip dhcp pool', 'ip dhcp excluded-address',
+  'ipv6 unicast-routing',
+  'spanning-tree mode', 'spanning-tree vlan', 'spanning-tree portfast default',
+  'cdp run', 'no cdp run', 'lldp run', 'no lldp run',
+
+  // --- ルーティング ---
+  'ip route', 'ipv6 route',
+  'router ospf', 'router eigrp', 'router rip', 'router bgp',
+  'network', 'passive-interface', 'default-information originate',
+  'router-id', 'redistribute',
+
+  // --- ACL ---
+  'access-list',
+  'ip access-list standard', 'ip access-list extended',
+  'permit', 'deny', 'remark',
+  'access-class', 'ip access-group',
+
+  // --- NAT ---
+  'ip nat inside', 'ip nat outside',
+  'ip nat inside source', 'ip nat pool',
+
+  // --- インターフェース ---
+  'interface', 'interface range', 'interface vlan', 'interface loopback',
+  'ip address', 'ipv6 address',
+  'description',
+  'duplex', 'speed',
+  'switchport', 'switchport mode access', 'switchport mode trunk',
+  'switchport access vlan', 'switchport voice vlan',
+  'switchport trunk allowed vlan', 'switchport trunk native vlan',
+  'switchport trunk encapsulation dot1q',
+  'switchport port-security',
+  'trunk', 'allowed', 'native',
   'channel-group', 'mode', 'active', 'passive', 'on',
   'port-channel', 'ethernet', 'gigabitethernet', 'fastethernet',
+  'no cdp enable', 'lldp transmit', 'lldp receive',
+
+  // --- VLAN ---
+  'vlan', 'name',
+
+  // --- line / 管理アクセス ---
+  'line console', 'line vty', 'line aux',
+  'login', 'login local', 'password', 'transport input',
+  'logging synchronous', 'exec-timeout',
+
+  // --- NTP / SNMP / その他 ---
+  'ntp server', 'ntp master',
+  'snmp-server community', 'snmp-server host', 'snmp-server location',
+  'clock set',
+  'do',
 ];
 
 /** 候補が 1 件も存在しないときに表示する非空メッセージ */
