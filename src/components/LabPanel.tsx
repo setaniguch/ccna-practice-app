@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import type { LabSpec } from '../types';
 import { applyCommand, buildPrompt, INITIAL_STATE, type CliState } from '../utils/iosCli';
 import {
+  buildCommandPhrases,
   buildVocabulary,
   classifyHelpQuery,
   generateHelpCandidates,
@@ -98,12 +99,8 @@ export default function LabPanel({ lab, commands, onChange }: Props) {
     try {
       const cur = states[activeDevice];
       const query = classifyHelpQuery(inputBeforeQuestion);
-      const vocabulary = buildVocabulary(
-        lab.tasks,
-        activeDevice,
-        cur.cli.mode,
-      );
-      const candidates = generateHelpCandidates(query, vocabulary);
+      const phrases = buildCommandPhrases(lab.tasks, activeDevice);
+      const candidates = generateHelpCandidates(query, phrases);
       const outputLines =
         candidates.length > 0 ? candidates : [NO_CANDIDATES_MESSAGE];
       // classifyHelpQuery は full / word のみ返す（none は返さない）

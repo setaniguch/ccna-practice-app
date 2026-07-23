@@ -73,6 +73,19 @@ export function buildVocabulary(
   return vocabulary;
 }
 
+/**
+ * デバイスのタスク expected_commands と COMMON_COMMANDS を
+ * 「コマンドフレーズ（複数単語）」のまま列挙する。
+ * ヘルプの文脈依存候補生成（直前までに打った単語列に一致するフレーズの
+ * 次の単語を提示する）に用いる。
+ */
+export function buildCommandPhrases(tasks: LabTask[], device: string): string[] {
+  return [
+    ...tasks.filter((t) => t.device === device).flatMap((t) => t.expected_commands),
+    ...COMMON_COMMANDS,
+  ];
+}
+
 /** 部分語として抽出する末尾非空白文字列の最大長 */
 const MAX_PREFIX_LENGTH = 256;
 
@@ -114,11 +127,18 @@ function filterValueTokens(candidates: string[]): string[] {
 }
 
 /**
- * 分類結果と語彙から、画面表示用の候補配列を生成する。
- * - `none`: 空配列を返す。
- * - `full`: 語彙全件を対象とする。
- * - `word`: `prefix` に大文字小文字を区別せず前方一致する語を対象とする
- *   （語彙上の元の表記を保持する）。
+ * 分類結果とコマンドフレーズ一覧から、画面表示用の候補配列を生成する（文脈依存）。
+ *
+ * `preservedInput`（? を除いた入力途中の文字列）を単語に分解し、
+ * 「直前までに確定した単語列（contextWords）」に前方一致するフレーズだけを対象に、
+ * その「次の単語」を候補として提示する。実機 Cisco IOS の `?` と同じ挙動:
+ * - `?`            → 各フレーズの先頭単語（＝トップレベルコマンド一覧）
+ * - `configure ?`  → 先頭が configure のフレーズの 2 番目の単語（terminal など）
+ * - `sh?`          → 先頭が sh… で始まるフレーズの先頭単語（show, shutdown）
+ * - `configure t?` → configure に続く単語のうち t… で始まるもの（terminal）
+ *
+ * full の場合は末尾に確定単語列のみ（次単語の絞り込みなし）、
+ * word の場合は最後の部分語（prefix）に大文字小文字を区別せず前方一致する次単語のみ。
  *
  * いずれの候補も値トークン（数字を含む or ',' を含む or 空）を除外し、
  * 重複を除去したうえで大文字小文字を区別しない辞書順に整列して返す。
@@ -126,18 +146,44 @@ function filterValueTokens(candidates: string[]): string[] {
  */
 export function generateHelpCandidates(
   query: HelpQuery,
-  vocabulary: Set<string>,
+  phrases: string[],
 ): string[] {
   if (query.kind === 'none') return [];
 
-  // 対象候補の抽出（full: 全件、word: 前方一致）
-  const all = [...vocabulary];
-  let candidates: string[];
+  // preservedInput を単語列に分解
+  const tokens = query.preservedInput.trim().split(/\s+/).filter((t) => t.length > 0);
+
+  // 文脈語（既に確定した単語列）と、絞り込み用の部分語を決定
+  let contextWords: string[];
+  let partial: string;
   if (query.kind === 'full') {
-    candidates = all;
+    // 末尾が空白（or 空）→ 全単語が確定済み。次単語は絞り込まない
+    contextWords = tokens;
+    partial = '';
   } else {
-    const lowerPrefix = query.prefix.toLowerCase();
-    candidates = all.filter((c) => c.toLowerCase().startsWith(lowerPrefix));
+    // 末尾が非空白 → 最後の単語が入力途中の部分語
+    contextWords = tokens.slice(0, -1);
+    partial = query.prefix.toLowerCase();
+  }
+
+  // 各フレーズを単語分解し、contextWords に前方一致するものの「次の単語」を集める
+  const ctxLen = contextWords.length;
+  const lowerCtx = contextWords.map((w) => w.toLowerCase());
+  const candidates: string[] = [];
+  for (const phrase of phrases) {
+    const pw = phrase.split(/\s+/);
+    if (pw.length <= ctxLen) continue; // 次の単語が存在しない
+    let matches = true;
+    for (let i = 0; i < ctxLen; i++) {
+      if (pw[i].toLowerCase() !== lowerCtx[i]) {
+        matches = false;
+        break;
+      }
+    }
+    if (!matches) continue;
+    const nextWord = pw[ctxLen];
+    if (partial && !nextWord.toLowerCase().startsWith(partial)) continue;
+    candidates.push(nextWord);
   }
 
   // 値トークン除外（独立ヘルパを try/catch で保護。失敗時は未フィルタを返す）

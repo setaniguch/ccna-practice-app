@@ -31,9 +31,9 @@ vi.mock('../utils/iosHelp', async (importActual) => {
       helpControl.shouldThrow ? boom() : actual.classifyHelpQuery(input),
     generateHelpCandidates: (
       query: import('../utils/iosHelp').HelpQuery,
-      vocabulary: Set<string>,
+      phrases: string[],
     ) =>
-      helpControl.shouldThrow ? boom() : actual.generateHelpCandidates(query, vocabulary),
+      helpControl.shouldThrow ? boom() : actual.generateHelpCandidates(query, phrases),
   };
 });
 
