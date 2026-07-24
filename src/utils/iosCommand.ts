@@ -47,14 +47,16 @@ const ABBREVIATIONS: Array<[RegExp, string]> = [
   [/\bno sh\b/gi, 'no shutdown'],
   [/\bno shut\b/gi, 'no shutdown'],
 
-  // 保存系: wr / wr mem → write / write memory
-  [/^wr$/i, 'write memory'],
-  [/^write$/i, 'write memory'],
-  [/^wr mem$/i, 'write memory'],
-  [/^wr m$/i, 'write memory'],
-  [/^copy run start$/i, 'copy running-config startup-config'],
-  [/^copy running start$/i, 'copy running-config startup-config'],
-  [/^copy r s$/i, 'copy running-config startup-config'],
+  // 保存系: write 系も copy run start 系もすべて同一の「保存」として
+  // canonical 形（copy running-config startup-config）に寄せる。
+  // これにより write memory と copy running-config startup-config が採点上等価になる。
+  [/^wr$/i, 'copy running-config startup-config'],
+  [/^wr\s+m$/i, 'copy running-config startup-config'],
+  [/^wr\s+mem(ory)?$/i, 'copy running-config startup-config'],
+  [/^write$/i, 'copy running-config startup-config'],
+  [/^write\s+mem(ory)?$/i, 'copy running-config startup-config'],
+  [/^copy\s+run(ning)?(-config)?\s+start(up)?(-config)?$/i, 'copy running-config startup-config'],
+  [/^copy\s+r\s+s$/i, 'copy running-config startup-config'],
 ];
 
 export function normalizeCommand(cmd: string): string {
