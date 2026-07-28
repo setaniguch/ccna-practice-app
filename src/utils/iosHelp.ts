@@ -69,6 +69,10 @@ export const COMMON_COMMANDS: string[] = [
 
   // --- インターフェース ---
   'interface', 'interface range', 'interface vlan', 'interface loopback',
+  // interface ? で出る種別（実機の interface ? 相当）
+  'interface port-channel',
+  'interface ethernet', 'interface gigabitethernet', 'interface fastethernet',
+  'interface tengigabitethernet', 'interface serial', 'interface tunnel',
   'ip address', 'ipv6 address',
   'description',
   'duplex', 'speed',
