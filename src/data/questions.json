@@ -28935,14 +28935,13 @@
           "description": "e0/1, e0/2 を許可VLAN(1,10,20,99)のみ、e0/1 に native vlan 99",
           "device": "SW-1",
           "expected_commands": [
+            "enable",
             "configure terminal",
             "interface ethernet0/1",
             "switchport trunk allowed vlan 56,77,99",
+            "switchport trunk native vlan 99",
             "interface ethernet0/2",
             "switchport trunk allowed vlan 56,77,99",
-            "exit",
-            "interface ethernet0/1",
-            "switchport trunk native vlan 99",
             "end",
             "write"
           ]
@@ -28952,14 +28951,13 @@
           "description": "e0/1, e0/2 を許可VLAN(1,10,20,99)のみ、e0/1 に native vlan 99",
           "device": "SW-2",
           "expected_commands": [
+            "enable",
             "configure terminal",
             "interface ethernet0/1",
             "switchport trunk allowed vlan 56,77,99",
+            "switchport trunk native vlan 99",
             "interface ethernet0/2",
             "switchport trunk allowed vlan 56,77,99",
-            "exit",
-            "interface ethernet0/1",
-            "switchport trunk native vlan 99",
             "end",
             "write"
           ]
@@ -28969,10 +28967,10 @@
           "description": "e0/2 は許可VLAN(1,10,20,99)、e0/0-1 を channel-group 1 mode active、Po1も許可VLAN設定",
           "device": "SW-3",
           "expected_commands": [
+            "enable",
             "configure terminal",
             "interface range ethernet0/0 - 1",
             "channel-group 34 mode active",
-            "exit",
             "interface port-channel34",
             "switchport trunk allowed vlan 56,77,99",
             "interface ethernet0/2",
@@ -28986,10 +28984,10 @@
           "description": "e0/2 は許可VLAN(1,10,20,99)、e0/0-1 を channel-group 1 mode active、Po1も許可VLAN設定",
           "device": "SW-4",
           "expected_commands": [
+            "enable",
             "configure terminal",
             "interface range ethernet0/0 - 1",
             "channel-group 34 mode active",
-            "exit",
             "interface port-channel34",
             "switchport trunk allowed vlan 56,77,99",
             "interface ethernet0/2",
@@ -37480,6 +37478,7 @@
           "description": "Eth0/0-1 を channel-group 44 mode active、Po44 を dot1q トランク + native vlan 746",
           "device": "SW1",
           "expected_commands": [
+            "enable",
             "configure terminal",
             "interface range ethernet0/0 - 1",
             "channel-group 44 mode active",
@@ -37497,6 +37496,7 @@
           "description": "Eth0/0-1 を channel-group 44 mode active、Po44 を dot1q トランク + native vlan 746",
           "device": "SW2",
           "expected_commands": [
+            "enable",
             "configure terminal",
             "interface range ethernet0/0 - 1",
             "channel-group 44 mode active",
@@ -37587,6 +37587,7 @@
           "description": "ip route 192.168.1.1 /32 209.165.200.229",
           "device": "R3",
           "expected_commands": [
+            "enable",
             "configure terminal",
             "ip route 192.168.1.1 255.255.255.255 209.165.200.229",
             "end",
@@ -37598,6 +37599,7 @@
           "description": "ip route 0.0.0.0 0.0.0.0 209.165.202.130 / ipv6 route ::/0 2001:db8:abcd::2",
           "device": "R2",
           "expected_commands": [
+            "enable",
             "configure terminal",
             "ip route 0.0.0.0 0.0.0.0 209.165.202.130",
             "ipv6 route ::/0 2001:db8:abcd::2",
@@ -37921,6 +37923,7 @@
           "description": "NTP マスター、時刻設定、DHCP プール NETPOOL、RSA 1024 鍵生成",
           "device": "R1",
           "expected_commands": [
+            "enable",
             "configure terminal",
             "ntp master 1",
             "clock set 00:00:00 jan 1 2019",
@@ -37933,6 +37936,7 @@
           "description": "ntp server 10.1.2.1",
           "device": "R2",
           "expected_commands": [
+            "enable",
             "configure terminal",
             "ntp server 10.1.2.1",
             "copy running-config startup-config"
@@ -37943,6 +37947,7 @@
           "description": "ip dhcp pool TEST / network 10.1.3.0 /24 / excluded 1-10、Eth0/2 は ip address dhcp",
           "device": "R3",
           "expected_commands": [
+            "enable",
             "configure terminal",
             "ip dhcp pool TEST",
             "network 10.1.3.0 255.255.255.0",
@@ -37950,6 +37955,7 @@
             "interface ethernet0/2",
             "ip address dhcp",
             "no shutdown",
+            "end",
             "copy running-config startup-config"
           ]
         }
@@ -38025,6 +38031,7 @@
           "description": "vlan 100 Compute、vlan 200 Telephony、Eth0/1 voice 200 + access 100、Eth0/0 access モード",
           "device": "SW1",
           "expected_commands": [
+            "enable",
             "configure terminal",
             "vlan 100",
             "name Compute",
@@ -38035,6 +38042,7 @@
             "switchport access vlan 100",
             "interface ethernet0/0",
             "switchport mode access",
+            "end",
             "write memory"
           ]
         },
@@ -38043,11 +38051,13 @@
           "description": "vlan 99 Available、Eth0/1 access vlan 99",
           "device": "SW2",
           "expected_commands": [
+            "enable",
             "configure terminal",
             "vlan 99",
             "name Available",
             "interface ethernet0/1",
             "switchport access vlan 99",
+            "end",
             "write memory"
           ]
         }
@@ -38191,6 +38201,7 @@
           "description": "ipv6 unicast-routing、Eth0/1 に 192.168.180.1/28 と 2001:db8:acca::1/64",
           "device": "R1",
           "expected_commands": [
+            "enable",
             "configure terminal",
             "ipv6 unicast-routing",
             "interface ethernet0/1",
@@ -38206,6 +38217,7 @@
           "description": "ipv6 unicast-routing、Eth0/1 に 192.168.180.14/28 と 2001:db8:acca::2/64",
           "device": "R2",
           "expected_commands": [
+            "enable",
             "configure terminal",
             "ipv6 unicast-routing",
             "interface ethernet0/1",
@@ -38261,12 +38273,14 @@
           "description": "vlan 303 FINANCE、Eth0/1 access vlan 303、トランクで vlan 303 allowed",
           "device": "Sw1",
           "expected_commands": [
+            "enable",
             "configure terminal",
             "vlan 303",
             "name FINANCE",
             "interface ethernet0/1",
             "switchport access vlan 303",
             "switchport trunk allowed vlan 303",
+            "end",
             "write memory"
           ]
         },
@@ -38275,6 +38289,7 @@
           "description": "vlan 202 MARKETING、Eth0/1 access vlan 202、Eth0/2 トランク allowed vlan 303",
           "device": "Sw2",
           "expected_commands": [
+            "enable",
             "configure terminal",
             "vlan 202",
             "name MARKETING",
@@ -38282,6 +38297,7 @@
             "switchport access vlan 202",
             "interface ethernet0/2",
             "switchport trunk allowed vlan 303",
+            "end",
             "write memory"
           ]
         },
@@ -38290,6 +38306,7 @@
           "description": "vlan 202/303 作成、Eth0/0 access 202、Eth0/1 access 303、Eth0/3 トランク allowed 202,303",
           "device": "Sw3",
           "expected_commands": [
+            "enable",
             "configure terminal",
             "vlan 202",
             "name MARKETING",
@@ -38301,6 +38318,7 @@
             "switchport access vlan 303",
             "interface ethernet0/3",
             "switchport trunk allowed vlan 202,303",
+            "end",
             "write memory"
           ]
         }
@@ -38343,6 +38361,7 @@
           "description": "ローカル認証 vty、telnet 限定 + access-class 10、ENT-ACL を VLAN200 に in、Eth0/0 で port-security",
           "device": "Sw101",
           "expected_commands": [
+            "enable",
             "configure terminal",
             "username support password max2learn privilege 15",
             "line vty 0 4",
@@ -38361,6 +38380,7 @@
             "switchport port-security maximum 4",
             "switchport port-security violation protect",
             "switchport port-security mac-address sticky",
+            "end",
             "write memory"
           ]
         }
@@ -38405,6 +38425,7 @@
           "description": "ローカル認証 vty + telnet、CORP_ACL で BOOTP/HTTPS 許可その他拒否、VLAN10 in 適用",
           "device": "Gw1",
           "expected_commands": [
+            "enable",
             "configure terminal",
             "username wheel secret lock3path privilege 15",
             "line vty 0 4",
@@ -38416,6 +38437,7 @@
             "deny ip any any log",
             "interface vlan 10",
             "ip access-group CORP_ACL in",
+            "end",
             "write memory"
           ]
         },
@@ -38424,12 +38446,14 @@
           "description": "VLAN10 で ip dhcp snooping、information option、verify mac-address、relay information trusted",
           "device": "Sw1",
           "expected_commands": [
+            "enable",
             "configure terminal",
             "interface vlan 10",
             "ip dhcp snooping",
             "ip dhcp snooping information option",
             "ip dhcp snooping verify mac-address",
             "ip dhcp relay information trusted",
+            "end",
             "write memory"
           ]
         }
@@ -38830,6 +38854,7 @@
           "description": "192.168.1.0/24 → 10.10.31.1、172.20.20.128/25 を Eth0/1 と Eth0/2 へ",
           "device": "R2",
           "expected_commands": [
+            "enable",
             "configure terminal",
             "ip route 192.168.1.0 255.255.255.0 10.10.31.1",
             "ip route 172.20.20.128 255.255.255.128 ethernet0/2",
@@ -38841,6 +38866,7 @@
           "description": "0.0.0.0/0 → 10.10.13.3、192.168.0.0/24 を Eth0/1 と 10.10.12.2 (AD=3)",
           "device": "R1",
           "expected_commands": [
+            "enable",
             "configure terminal",
             "ip route 0.0.0.0 0.0.0.0 10.10.13.3",
             "ip route 192.168.0.0 255.255.255.0 ethernet0/1",
@@ -41226,6 +41252,7 @@
           "description": "Lo0 10.10.1.1/32, Lo1 192.168.1.1/24, Eth0/0 10.10.12.1/24, Eth0/1 10.10.13.1/24, OSPF process 1 (router-id 10.10.12.1)",
           "device": "R1",
           "expected_commands": [
+            "enable",
             "configure terminal",
             "interface loopback0",
             "ip address 10.10.1.1 255.255.255.255",
@@ -41245,6 +41272,7 @@
             "router-id 10.10.12.1",
             "network 10.10.1.1 0.0.0.0 area 0",
             "network 192.168.1.0 0.0.0.255 area 0",
+            "end",
             "copy running-config startup-config"
           ]
         },
@@ -41253,6 +41281,7 @@
           "description": "Lo0 10.10.2.2/32, Lo1 192.168.2.2/24, Eth0/0 10.10.12.2/24, Eth0/2 10.10.23.2/24, ip ospf priority 255",
           "device": "R2",
           "expected_commands": [
+            "enable",
             "configure terminal",
             "interface loopback0",
             "ip address 10.10.2.2 255.255.255.255",
@@ -41273,6 +41302,7 @@
             "router ospf 1",
             "network 10.10.2.2 0.0.0.0 area 0",
             "network 192.168.2.0 0.0.0.255 area 0",
+            "end",
             "copy running-config startup-config"
           ]
         },
@@ -41281,6 +41311,7 @@
           "description": "Lo0 10.10.3.3/32, Lo1 192.168.3.3/24, Eth0/1 10.10.13.3/24, Eth0/2 10.10.23.3/24",
           "device": "R3",
           "expected_commands": [
+            "enable",
             "configure terminal",
             "interface loopback0",
             "ip address 10.10.3.3 255.255.255.255",
@@ -41299,6 +41330,7 @@
             "router ospf 1",
             "network 10.10.3.3 0.0.0.0 area 0",
             "network 192.168.3.0 0.0.0.255 area 0",
+            "end",
             "copy running-config startup-config"
           ]
         }
@@ -42810,6 +42842,7 @@
           "description": "vlan 20 SERVER1, vlan 30 SALES, Eth0/2 access vlan 20, Eth0/3 access vlan 30",
           "device": "SW2",
           "expected_commands": [
+            "enable",
             "configure terminal",
             "vlan 20",
             "name SERVER1",
@@ -42832,10 +42865,12 @@
           "description": "Eth0/1 で no cdp enable, no shutdown",
           "device": "SW1",
           "expected_commands": [
+            "enable",
             "configure terminal",
             "interface ethernet0/1",
             "no cdp enable",
-            "no shutdown"
+            "no shutdown",
+            "end"
           ]
         }
       ]
@@ -42944,6 +42979,7 @@
           "description": "10.0.41.10/32 → 10.0.12.2、10.0.41.0/24 → 10.0.12.2 (AD=200)、10.0.41.0/24 → 10.0.13.2",
           "device": "R1",
           "expected_commands": [
+            "enable",
             "configure terminal",
             "ip route 10.0.41.10 255.255.255.255 10.0.12.2",
             "ip route 10.0.41.0 255.255.255.0 10.0.12.2 200",
@@ -42955,6 +42991,7 @@
           "description": "ip route 0.0.0.0 0.0.0.0 209.165.200.225",
           "device": "R2",
           "expected_commands": [
+            "enable",
             "configure terminal",
             "ip route 0.0.0.0 0.0.0.0 209.165.200.225"
           ]
@@ -43093,6 +43130,7 @@
           "description": "172.25.0.0/16 を /21 サブネット化、第2サブネット 172.25.32.0/21 の最初の使用可能 IP",
           "device": "Sw101",
           "expected_commands": [
+            "enable",
             "configure terminal",
             "interface ethernet0/0",
             "ip address 172.25.32.1 255.255.248.0",
@@ -43106,6 +43144,7 @@
           "description": "172.25.32.0/21 の最後の使用可能 IP、IPv6 GUA",
           "device": "Sw102",
           "expected_commands": [
+            "enable",
             "configure terminal",
             "interface ethernet0/0",
             "ip address 172.25.39.254 255.255.248.0",
@@ -44315,6 +44354,7 @@
           "description": "ip route 0.0.0.0 0.0.0.0 10.0.12.2、10.0.41.0/24 → 10.0.13.2",
           "device": "R1",
           "expected_commands": [
+            "enable",
             "configure terminal",
             "ip route 0.0.0.0 0.0.0.0 10.0.12.2",
             "ip route 10.0.41.0 255.255.255.0 10.0.13.2"
@@ -44325,6 +44365,7 @@
           "description": "ip route 0.0.0.0 0.0.0.0 209.165.200.225、10.0.41.10/32 → 10.0.24.2",
           "device": "R2",
           "expected_commands": [
+            "enable",
             "configure terminal",
             "ip route 0.0.0.0 0.0.0.0 209.165.200.225",
             "ip route 10.0.41.10 255.255.255.255 10.0.24.2"
@@ -45723,10 +45764,10 @@
           "description": "vlan 15 OPS、Eth0/1 access vlan 15、Eth0/0 を CDP のみ、Eth0/2 を LLDP のみ",
           "device": "SW-1",
           "expected_commands": [
+            "enable",
             "configure terminal",
             "vlan 15",
             "name OPS",
-            "exit",
             "interface ethernet0/1",
             "switchport mode access",
             "switchport access vlan 15",
@@ -45735,7 +45776,8 @@
             "interface ethernet0/0",
             "no lldp transmit",
             "no lldp receive",
-            "cdp enable"
+            "cdp enable",
+            "end"
           ]
         },
         {
@@ -45743,10 +45785,10 @@
           "description": "vlan 66 ENGINEERING、Eth0/1 access vlan 66、Eth0/0 CDP のみ、Eth0/2 LLDP のみ",
           "device": "SW-2",
           "expected_commands": [
+            "enable",
             "configure terminal",
             "vlan 66",
             "name ENGINEERING",
-            "exit",
             "interface ethernet0/1",
             "switchport mode access",
             "switchport access vlan 66",
@@ -45755,7 +45797,8 @@
             "interface ethernet0/0",
             "no lldp transmit",
             "no lldp receive",
-            "cdp enable"
+            "cdp enable",
+            "end"
           ]
         }
       ]
@@ -45832,17 +45875,18 @@
           "description": "vlan 35 SALES、Eth0/2 access vlan 35、lldp run、PC1 接続インタフェースで lldp 無効化",
           "device": "SW-1",
           "expected_commands": [
+            "enable",
             "configure terminal",
             "vlan 35",
             "name SALES",
-            "exit",
             "interface ethernet0/2",
             "switchport mode access",
             "switchport access vlan 35",
             "no shutdown",
             "lldp run",
             "no lldp transmit",
-            "no lldp receive"
+            "no lldp receive",
+            "end"
           ]
         },
         {
@@ -45850,15 +45894,16 @@
           "description": "vlan 39 MARKETING、Eth0/2 access vlan 39、lldp run",
           "device": "SW-2",
           "expected_commands": [
+            "enable",
             "configure terminal",
             "vlan 39",
             "name MARKETING",
-            "exit",
             "interface ethernet0/2",
             "switchport mode access",
             "switchport access vlan 39",
             "no shutdown",
-            "lldp run"
+            "lldp run",
+            "end"
           ]
         }
       ]
@@ -46081,6 +46126,7 @@
           "description": "Eth0/0,Eth0/1 channel-group 12 mode active、Po12 dot1q トランク + native vlan 35、Eth0/2 native vlan 35",
           "device": "SW-1",
           "expected_commands": [
+            "enable",
             "configure terminal",
             "interface ethernet0/0",
             "channel-group 12 mode active",
@@ -46091,7 +46137,8 @@
             "switchport mode trunk",
             "switchport trunk native vlan 35",
             "interface ethernet0/2",
-            "switchport trunk native vlan 35"
+            "switchport trunk native vlan 35",
+            "end"
           ]
         },
         {
@@ -46099,6 +46146,7 @@
           "description": "Eth0/0,Eth0/1 channel-group 12 mode passive、Po12 dot1q トランク + native vlan 35、Eth0/2 native vlan 35",
           "device": "SW-2",
           "expected_commands": [
+            "enable",
             "configure terminal",
             "interface ethernet0/0",
             "channel-group 12 mode passive",
@@ -46109,7 +46157,8 @@
             "switchport mode trunk",
             "switchport trunk native vlan 35",
             "interface ethernet0/2",
-            "switchport trunk native vlan 35"
+            "switchport trunk native vlan 35",
+            "end"
           ]
         },
         {
@@ -46117,11 +46166,13 @@
           "description": "switchport trunk native vlan 35 を Eth0/0, Eth0/1 に",
           "device": "SW-3",
           "expected_commands": [
+            "enable",
             "configure terminal",
             "interface ethernet0/0",
             "switchport trunk native vlan 35",
             "interface ethernet0/1",
-            "switchport trunk native vlan 35"
+            "switchport trunk native vlan 35",
+            "end"
           ]
         }
       ]
@@ -46865,6 +46916,7 @@
           "description": "Eth0/0 トランク + access vlan 10 / native vlan 11、Eth0/2,Eth0/3 LACP passive、Po23 トランク",
           "device": "SW-2",
           "expected_commands": [
+            "enable",
             "configure terminal",
             "interface ethernet0/0",
             "switchport mode trunk",
@@ -46881,7 +46933,8 @@
             "channel-group 23 mode passive",
             "interface port-channel23",
             "switchport mode trunk",
-            "switchport trunk encapsulation dot1q"
+            "switchport trunk encapsulation dot1q",
+            "end"
           ]
         },
         {
@@ -46889,6 +46942,7 @@
           "description": "Eth0/0 トランク + access vlan 10 / native vlan 11、Eth0/2,Eth0/3 LACP active、Po23 トランク",
           "device": "SW-3",
           "expected_commands": [
+            "enable",
             "configure terminal",
             "interface ethernet0/0",
             "switchport mode trunk",
@@ -46905,7 +46959,8 @@
             "channel-group 23 mode active",
             "interface port-channel23",
             "switchport mode trunk",
-            "switchport trunk encapsulation dot1q"
+            "switchport trunk encapsulation dot1q",
+            "end"
           ]
         }
       ]
@@ -47278,6 +47333,7 @@
           "description": "no switchport、172.16.16.1/20、IPv6 2001:db8:0:400::/54 eui-64",
           "device": "Sw101",
           "expected_commands": [
+            "enable",
             "configure terminal",
             "interface gigabitethernet1/0/1",
             "no switchport",
@@ -47293,6 +47349,7 @@
           "description": "no switchport、172.16.31.254/20、IPv6 2001:db8:0:400::/54 eui-64",
           "device": "Sw102",
           "expected_commands": [
+            "enable",
             "configure terminal",
             "interface gigabitethernet1/0/1",
             "no switchport",
@@ -47848,6 +47905,7 @@
           "name": "SW-1: トランク許可 VLAN 設定",
           "device": "SW-1",
           "expected_commands": [
+            "enable",
             "configure terminal",
             "interface ethernet0/0",
             "switchport trunk allowed vlan 5,6",
@@ -47861,6 +47919,7 @@
           "name": "SW-2: LACP active Po44 + Eth0/1 trunk vlan 77",
           "device": "SW-2",
           "expected_commands": [
+            "enable",
             "configure terminal",
             "interface range ethernet0/0 - 1",
             "channel-group 44 mode active",
@@ -47874,6 +47933,7 @@
           "name": "SW-3: LACP active Po34 + dot1q",
           "device": "SW-3",
           "expected_commands": [
+            "enable",
             "configure terminal",
             "interface range ethernet0/0 - 1",
             "channel-group 34 mode active",
@@ -47887,6 +47947,7 @@
           "name": "SW-4: LACP passive Po34 + dot1q",
           "device": "SW-4",
           "expected_commands": [
+            "enable",
             "configure terminal",
             "interface range ethernet0/0 - 1",
             "channel-group 34 mode passive",
@@ -48747,6 +48808,7 @@
           "name": "SW103: ローカル認証 (devnet/sha256/access8cli) + vty telnet",
           "device": "SW103",
           "expected_commands": [
+            "enable",
             "configure terminal",
             "username devnet privilege 15 algorithm-type sha256 secret access8cli",
             "line vty 0 4",
@@ -48760,6 +48822,7 @@
           "name": "R1: 拡張 ACL INTERNET_ACL",
           "device": "R1",
           "expected_commands": [
+            "enable",
             "configure terminal",
             "ip access-list extended INTERNET_ACL",
             "permit tcp 172.16.0.0 0.0.255.255 any eq 443",
@@ -48773,6 +48836,7 @@
           "name": "Sw101: DHCP snooping vlan 101",
           "device": "Sw101",
           "expected_commands": [
+            "enable",
             "configure terminal",
             "ip dhcp snooping vlan 101",
             "no ip dhcp snooping information option",
@@ -48897,6 +48961,7 @@
           "description": "10.30.64.1/20 + IPv6 2001:db8::20::1/68",
           "device": "Sw101",
           "expected_commands": [
+            "enable",
             "configure terminal",
             "interface ethernet0/0",
             "ip address 10.30.64.1 255.255.240.0",
@@ -48911,6 +48976,7 @@
           "description": "10.30.64.254/20 (注: /20 ブロードキャスト前の最終ホスト)",
           "device": "Sw102",
           "expected_commands": [
+            "enable",
             "configure terminal",
             "interface ethernet0/0",
             "ip address 10.30.64.254 255.255.240.0",
@@ -48965,6 +49031,7 @@
           "name": "R1: 2001:db8:41::/64 主+バックアップ (AD 2)",
           "device": "R1",
           "expected_commands": [
+            "enable",
             "configure terminal",
             "ipv6 route 2001:db8:41::/64 2001:db8:12::2",
             "ipv6 route 2001:db8:41::/64 2001:db8:13::3 2",
@@ -48976,6 +49043,7 @@
           "name": "R2: 2001:db8:41::/64 → R4",
           "device": "R2",
           "expected_commands": [
+            "enable",
             "configure terminal",
             "ipv6 route 2001:db8:41::/64 2001:db8:24::4",
             "end",
@@ -48986,6 +49054,7 @@
           "name": "R3: 2001:db8:41::/64 → R4",
           "device": "R3",
           "expected_commands": [
+            "enable",
             "configure terminal",
             "ipv6 route 2001:db8:41::/64 2001:db8:34::4",
             "end",
@@ -48996,6 +49065,7 @@
           "name": "R4: 2001:db8:12::/64, 2001:db8:13::/64 戻り経路",
           "device": "R4",
           "expected_commands": [
+            "enable",
             "configure terminal",
             "ipv6 route 2001:db8:12::/64 2001:db8:24::2",
             "ipv6 route 2001:db8:13::/64 2001:db8:34::3",
@@ -49213,6 +49283,7 @@
           "name": "SW-1: vlan 10 Engineering + f0/1 voice + f0/2 no cdp",
           "device": "SW-1",
           "expected_commands": [
+            "enable",
             "configure terminal",
             "vlan 10",
             "name Engineering",
@@ -49233,6 +49304,7 @@
           "name": "SW-2: f0/10 LLDP + f0/1 access vlan 30",
           "device": "SW-2",
           "expected_commands": [
+            "enable",
             "configure terminal",
             "interface fastethernet0/10",
             "lldp transmit",
@@ -49379,6 +49451,7 @@
           "name": "SW-1: vlan 77/177 + e0/1-3 access+voice + lldp run",
           "device": "SW-1",
           "expected_commands": [
+            "enable",
             "configure terminal",
             "vlan 77",
             "name User_VLAN",
@@ -49397,6 +49470,7 @@
           "name": "SW-2: vlan 77/177 + e0/1-3 access+voice + lldp run",
           "device": "SW-2",
           "expected_commands": [
+            "enable",
             "configure terminal",
             "vlan 77",
             "name User_VLAN",
@@ -49485,6 +49559,7 @@
           "name": "SW-1: e0/0,e0/1 trunk vlan 1,12,22 + e0/2 trunk vlan 12,22 + LACP Po1",
           "device": "SW-1",
           "expected_commands": [
+            "enable",
             "configure terminal",
             "interface ethernet0/0",
             "switchport mode trunk",
@@ -49508,6 +49583,7 @@
           "name": "SW-2: e0/0,e0/1 trunk vlan 1,12,22 + LACP Po1",
           "device": "SW-2",
           "expected_commands": [
+            "enable",
             "configure terminal",
             "interface ethernet0/0",
             "switchport mode trunk",
@@ -49564,6 +49640,7 @@
           "name": "SW101: ローカル認証 + service password-encryption + vty telnet",
           "device": "SW101",
           "expected_commands": [
+            "enable",
             "configure terminal",
             "username netops password ipsec4all",
             "service password-encryption",
@@ -49578,6 +49655,7 @@
           "name": "SW103: 拡張 ACL ENT_ACL + Vlan10 in",
           "device": "SW103",
           "expected_commands": [
+            "enable",
             "configure terminal",
             "ip access-list extended ENT_ACL",
             "permit icmp host 172.16.10.10 host 172.16.20.10",
@@ -49595,6 +49673,7 @@
           "name": "SW102: Eth0/0 port-security max 2 restrict",
           "device": "SW102",
           "expected_commands": [
+            "enable",
             "configure terminal",
             "interface ethernet0/0",
             "switchport port-security",
@@ -49815,6 +49894,7 @@
           "name": "R1: NTP master 1",
           "device": "R1",
           "expected_commands": [
+            "enable",
             "configure terminal",
             "ntp master 1",
             "end",
@@ -49825,6 +49905,7 @@
           "name": "R2: NAT (XLATE/test_pool) + NTP client",
           "device": "R2",
           "expected_commands": [
+            "enable",
             "configure terminal",
             "ip access-list standard XLATE",
             "permit 10.2.3.3",
@@ -49845,6 +49926,7 @@
           "name": "R3: G0/2 DHCP + SSH (root/s3cret)",
           "device": "R3",
           "expected_commands": [
+            "enable",
             "configure terminal",
             "interface gigabitethernet0/2",
             "ip address dhcp",
@@ -49899,6 +49981,7 @@
           "name": "SW-1: vlan 99 FINANCIAL + e0/2 access + cdp run + e0/2 no cdp enable",
           "device": "SW-1",
           "expected_commands": [
+            "enable",
             "configure terminal",
             "vlan 99",
             "name FINANCIAL",
@@ -49906,7 +49989,6 @@
             "switchport mode access",
             "switchport access vlan 99",
             "cdp run",
-            "interface ethernet0/2",
             "no cdp enable",
             "end",
             "write memory"
@@ -49916,6 +49998,7 @@
           "name": "SW-2: vlan 99 FINANCIAL + e0/2 access",
           "device": "SW-2",
           "expected_commands": [
+            "enable",
             "configure terminal",
             "vlan 99",
             "name FINANCIAL",
@@ -49930,6 +50013,7 @@
           "name": "SW-3: vlan 99 FINANCIAL + e0/2 access",
           "device": "SW-3",
           "expected_commands": [
+            "enable",
             "configure terminal",
             "vlan 99",
             "name FINANCIAL",
@@ -50045,6 +50129,7 @@
           "name": "R1: e0/0 IPv4 10.0.12.5/31 + IPv6 2001:db8:12::1/126",
           "device": "R1",
           "expected_commands": [
+            "enable",
             "configure terminal",
             "interface ethernet0/0",
             "ip address 10.0.12.5 255.255.255.254",
@@ -50057,6 +50142,7 @@
           "name": "R2: e0/0 IPv4 10.0.12.6/31 + IPv6 2001:db8:12::2/126",
           "device": "R2",
           "expected_commands": [
+            "enable",
             "configure terminal",
             "interface ethernet0/0",
             "ip address 10.0.12.6 255.255.255.254",
@@ -50106,6 +50192,7 @@
           "name": "R5: ホストルート + R1: デフォルト + フローティング",
           "device": "R1",
           "expected_commands": [
+            "enable",
             "configure terminal",
             "ip route 0.0.0.0 0.0.0.0 10.133.13.2",
             "ip route 0.0.0.0 0.0.0.0 10.122.12.2 225",
@@ -50119,6 +50206,7 @@
           "name": "R5: ホストルート 10.200.220.6/32",
           "device": "R5",
           "expected_commands": [
+            "enable",
             "configure terminal",
             "ip route 10.200.220.6 255.255.255.255 10.100.110.1",
             "end",
@@ -50129,6 +50217,7 @@
           "name": "R2: 10.100.110.0/25 戻り経路",
           "device": "R2",
           "expected_commands": [
+            "enable",
             "configure terminal",
             "ip route 10.100.110.0 255.255.255.128 10.122.12.1",
             "end",
@@ -50381,6 +50470,7 @@
           "name": "Sw3: tech12/load1key + service password-encryption + vty telnet",
           "device": "Sw3",
           "expected_commands": [
+            "enable",
             "configure terminal",
             "username tech12 secret load1key",
             "service password-encryption",
@@ -50395,6 +50485,7 @@
           "name": "R1: ISP_ACL (RFC1918 deny) + e0/1 out",
           "device": "R1",
           "expected_commands": [
+            "enable",
             "configure terminal",
             "ip access-list extended ISP_ACL",
             "deny ip 10.0.0.0 0.255.255.255 any",
@@ -50410,6 +50501,7 @@
           "name": "Sw2: ARP inspection vlan 5 (validate dst-mac/src-mac/ip)",
           "device": "Sw2",
           "expected_commands": [
+            "enable",
             "configure terminal",
             "ip arp inspection vlan 5",
             "ip arp inspection validate dst-mac",
@@ -50561,6 +50653,7 @@
           "name": "Sw1: e0/0,e0/1 trunk vlan 110,99 native 99 + LACP Po1",
           "device": "Sw1",
           "expected_commands": [
+            "enable",
             "configure terminal",
             "interface ethernet0/0",
             "switchport mode trunk",
@@ -50584,6 +50677,7 @@
           "name": "Sw2: e0/0,e0/1 trunk vlan 110,99 native 99 + LACP Po1",
           "device": "Sw2",
           "expected_commands": [
+            "enable",
             "configure terminal",
             "interface ethernet0/0",
             "switchport mode trunk",
@@ -50708,6 +50802,7 @@
           "name": "SW-1: vlan 77/88/177/188 + access + LLDP",
           "device": "SW-1",
           "expected_commands": [
+            "enable",
             "configure terminal",
             "vlan 77",
             "name IT_User_VLAN",
@@ -50723,11 +50818,10 @@
             "interface ethernet0/3",
             "switchport mode access",
             "switchport access vlan 88",
-            "interface ethernet0/1",
-            "switchport voice vlan 177",
-            "interface ethernet0/3",
             "switchport voice vlan 188",
             "lldp run",
+            "interface ethernet0/1",
+            "switchport voice vlan 177",
             "end",
             "write memory"
           ]
@@ -50736,6 +50830,7 @@
           "name": "SW-2: vlan 77/88/177/188 + access + LLDP",
           "device": "SW-2",
           "expected_commands": [
+            "enable",
             "configure terminal",
             "vlan 77",
             "name IT_User_VLAN",
@@ -50751,11 +50846,10 @@
             "interface ethernet0/1",
             "switchport mode access",
             "switchport access vlan 88",
-            "interface ethernet0/2",
-            "switchport voice vlan 177",
-            "interface ethernet0/1",
             "switchport voice vlan 188",
             "lldp run",
+            "interface ethernet0/2",
+            "switchport voice vlan 177",
             "end",
             "write memory"
           ]
@@ -50793,24 +50887,22 @@
           "name": "R1: e0/0,e0/1,e0/2 IP + OSPF 33 area 0 priority 255",
           "device": "R1",
           "expected_commands": [
+            "enable",
             "configure terminal",
             "interface ethernet0/1",
             "ip address 10.0.22.1 255.255.255.252",
+            "ip ospf 33 area 0",
+            "ip ospf priority 255",
             "interface ethernet0/2",
             "ip address 10.0.33.1 255.255.255.252",
+            "ip ospf 33 area 0",
+            "ip ospf priority 255",
             "interface ethernet0/0",
             "ip address 10.0.233.1 255.255.255.240",
+            "ip ospf 33 area 0",
+            "ip ospf priority 255",
             "router ospf 33",
             "router-id 10.0.22.1",
-            "interface ethernet0/0",
-            "ip ospf 33 area 0",
-            "ip ospf priority 255",
-            "interface ethernet0/1",
-            "ip ospf 33 area 0",
-            "ip ospf priority 255",
-            "interface ethernet0/2",
-            "ip ospf 33 area 0",
-            "ip ospf priority 255",
             "end",
             "write memory"
           ]
