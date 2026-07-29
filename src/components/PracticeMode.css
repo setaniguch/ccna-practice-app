@@ -211,3 +211,47 @@ button.small {
   line-height: 1.7;
   color: #334155;
 }
+
+/* ラボ問題: 答え合わせの模範解答（完全形コマンド）表示 */
+.practice-answer__lab {
+  margin-top: 8px;
+}
+.practice-answer__labTask {
+  margin: 8px 0;
+}
+.practice-answer__labTitle {
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+.practice-answer__labCmds {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.practice-answer__labCmds li {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+.practice-answer__labCmds li.ok {
+  background: rgba(22, 163, 74, 0.12);
+}
+.practice-answer__labCmds li.ng {
+  background: rgba(220, 38, 38, 0.10);
+}
+.practice-answer__labMark {
+  flex: 0 0 auto;
+  font-weight: 700;
+}
+.practice-answer__labCmds li.ok .practice-answer__labMark {
+  color: #16a34a;
+}
+.practice-answer__labCmds li.ng .practice-answer__labMark {
+  color: #dc2626;
+}
+.practice-answer__solutionImg {
+  margin-top: 8px;
+}

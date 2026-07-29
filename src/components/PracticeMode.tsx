@@ -2,7 +2,7 @@ import { useState } from 'react';
 import type { Question, AnswerMap, DragDropAnswerMap, LabAnswerMap } from '../types';
 import QuestionCard from './QuestionCard';
 import { resolveImageUrl } from '../utils/imagePath';
-import { gradeLabCommands } from '../utils/iosCommand';
+import { gradeLabCommands, normalizeCommand } from '../utils/iosCommand';
 import './PracticeMode.css';
 
 interface Props {
@@ -168,12 +168,44 @@ export default function PracticeMode({ questions, onFinish }: Props) {
                   </ul>
                 </div>
               )}
-              {current.type === 'lab' && current.lab?.solution_images && current.lab.solution_images.length > 0 && (
-                <div className="practice-answer__images">
-                  {current.lab.solution_images.map((src) => (
-                    <img key={src} src={resolveImageUrl(src)} alt="模範解答" />
-                  ))}
+              {current.type === 'lab' && current.lab && (
+                <div className="practice-answer__lab">
+                  <strong>模範解答（コマンド）:</strong>
+                  {current.lab.tasks.map((t, idx) => {
+                    const entered =
+                      (labAnswers[current.number] && labAnswers[current.number][t.device]) ?? [];
+                    const enteredNorm = new Set(entered.map(normalizeCommand));
+                    const r = gradeLabCommands(entered, t.expected_commands);
+                    return (
+                      <div key={idx} className="practice-answer__labTask">
+                        <div className="practice-answer__labTitle">
+                          [{t.device}] {t.name} — {r.matched} / {r.total}
+                        </div>
+                        <ul className="practice-answer__labCmds">
+                          {t.expected_commands.map((c, i) => {
+                            const ok = enteredNorm.has(normalizeCommand(c));
+                            return (
+                              <li key={i} className={ok ? 'ok' : 'ng'}>
+                                <span className="practice-answer__labMark">{ok ? '○' : '×'}</span>
+                                <code>{c}</code>
+                              </li>
+                            );
+                          })}
+                        </ul>
+                      </div>
+                    );
+                  })}
                 </div>
+              )}
+              {current.type === 'lab' && current.lab?.solution_images && current.lab.solution_images.length > 0 && (
+                <details className="practice-answer__solutionImg">
+                  <summary>模範解答の図を表示</summary>
+                  <div className="practice-answer__images">
+                    {current.lab.solution_images.map((src) => (
+                      <img key={src} src={resolveImageUrl(src)} alt="模範解答" />
+                    ))}
+                  </div>
+                </details>
               )}
               {current.answer_images && current.answer_images.length > 0 && (
                 <div className="practice-answer__images">
