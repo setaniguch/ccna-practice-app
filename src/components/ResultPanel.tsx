@@ -1,6 +1,6 @@
 import type { Question, AnswerMap, DragDropAnswerMap, LabAnswerMap } from '../types';
 import { resolveImageUrl } from '../utils/imagePath';
-import { gradeLabCommands, normalizeCommand } from '../utils/iosCommand';
+import { gradeLabCommands, gradeLabLines } from '../utils/iosCommand';
 import './ResultPanel.css';
 
 interface Props {
@@ -157,16 +157,12 @@ export default function ResultPanel({ questions, answers, ddAnswers, labAnswers,
                             </tr>
                           </thead>
                           <tbody>
-                            {t.expected_commands.map((c, i) => {
-                              const enteredNorm = new Set(entered.map(normalizeCommand));
-                              const ok = enteredNorm.has(normalizeCommand(c));
-                              return (
-                                <tr key={i} className={ok ? 'ok' : 'ng'}>
-                                  <td><code>{c}</code></td>
-                                  <td>{ok ? '○' : '×'}</td>
-                                </tr>
-                              );
-                            })}
+                            {gradeLabLines(entered, t.expected_commands).map((ln, i) => (
+                              <tr key={i} className={ln.ok ? 'ok' : 'ng'}>
+                                <td><code>{ln.command}</code></td>
+                                <td>{ln.ok ? '○' : '×'}</td>
+                              </tr>
+                            ))}
                           </tbody>
                         </table>
                         {entered.length > 0 && (

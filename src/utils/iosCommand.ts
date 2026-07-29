@@ -5,6 +5,8 @@
  * - 主要な短縮形を完全形に展開（int → interface, conf t → configure terminal など）
  */
 
+import { applyCommand, INITIAL_STATE, type CliState } from './iosCli';
+
 const ABBREVIATIONS: Array<[RegExp, string]> = [
   // モード遷移系
   [/^en$/i, 'enable'],
@@ -111,27 +113,65 @@ export function normalizeCommand(cmd: string): string {
 }
 
 /**
- * 入力コマンド列と期待コマンド列を比較する。
- * - 順序は問わない（集合として比較）
+ * コマンド列を先頭から実行してモード遷移を追跡し、各コマンドを
+ * 「実行時のコンテキスト（モード＋インターフェース等）＋正規化コマンド」の
+ * キーとして返す。これにより、同じコマンド文字列でも異なるインターフェースで
+ * 打たれたものを区別できる。
+ */
+function tagWithContext(commands: string[]): { command: string; key: string }[] {
+  let state: CliState = INITIAL_STATE;
+  const out: { command: string; key: string }[] = [];
+  for (const raw of commands) {
+    const cmd = raw.trim().replace(/\s+/g, ' ');
+    if (!cmd) continue;
+    const norm = normalizeCommand(cmd);
+    if (!norm) continue;
+    const before = state;
+    const next = applyCommand(state, cmd).next;
+    // モードやコンテキストを変える「移動系」(enable/conf t/interface X/exit/end 等)や
+    // 保存コマンドは文脈非依存で判定する。サブモード内の設定コマンドのみ文脈依存。
+    const changesState = next.mode !== before.mode || next.context !== before.context;
+    const isSave = norm === 'copy running-config startup-config';
+    const global = changesState || isSave;
+    const ctx = before.mode + (before.context ? ':' + normalizeCommand(before.context) : '');
+    out.push({ command: raw, key: (global ? '*' : ctx) + '|' + norm });
+    state = next;
+  }
+  return out;
+}
+
+/**
+ * 期待コマンドを1行ずつ、コンテキストを考慮して正誤判定する。
+ * 表示（模範解答の○/×）にも採点にも使う単一の真実源。
+ */
+export function gradeLabLines(
+  entered: string[],
+  expected: string[],
+): { command: string; ok: boolean }[] {
+  const enteredKeys = new Set(tagWithContext(entered).map((x) => x.key));
+  return tagWithContext(expected).map((x) => ({
+    command: x.command,
+    ok: enteredKeys.has(x.key),
+  }));
+}
+
+/**
+ * 入力コマンド列と期待コマンド列をコンテキスト付きで比較する。
+ * - 順序は問わないが、コマンドが打たれたモード／インターフェースは区別する
  * - 完全一致した正解コマンド数 / 期待コマンド総数 を返す
  */
 export function gradeLabCommands(
   entered: string[],
   expected: string[],
 ): { matched: number; total: number; missing: string[]; extra: string[] } {
-  const enteredNorm = new Set(entered.map(normalizeCommand).filter(Boolean));
-  const expectedNorm = expected.map(normalizeCommand).filter(Boolean);
+  const lines = gradeLabLines(entered, expected);
+  const matched = lines.filter((l) => l.ok);
+  const missing = lines.filter((l) => !l.ok).map((l) => l.command);
 
-  const matched: string[] = [];
-  const missing: string[] = [];
-  for (const e of expectedNorm) {
-    if (enteredNorm.has(e)) matched.push(e);
-    else missing.push(e);
-  }
-  const expectedSet = new Set(expectedNorm);
-  const extra: string[] = [];
-  for (const c of enteredNorm) {
-    if (!expectedSet.has(c)) extra.push(c);
-  }
-  return { matched: matched.length, total: expectedNorm.length, missing, extra };
+  const expectedKeys = new Set(tagWithContext(expected).map((x) => x.key));
+  const extra = tagWithContext(entered)
+    .filter((x) => !expectedKeys.has(x.key))
+    .map((x) => x.command);
+
+  return { matched: matched.length, total: lines.length, missing, extra };
 }

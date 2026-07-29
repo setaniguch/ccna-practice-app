@@ -2,7 +2,7 @@ import { useState } from 'react';
 import type { Question, AnswerMap, DragDropAnswerMap, LabAnswerMap } from '../types';
 import QuestionCard from './QuestionCard';
 import { resolveImageUrl } from '../utils/imagePath';
-import { gradeLabCommands, normalizeCommand } from '../utils/iosCommand';
+import { gradeLabCommands, gradeLabLines } from '../utils/iosCommand';
 import { explainCommand } from '../utils/explainCommand';
 import './PracticeMode.css';
 
@@ -176,23 +176,20 @@ export default function PracticeMode({ questions, onFinish }: Props) {
                   {current.lab.tasks.map((t, idx) => {
                     const entered =
                       (labAnswers[current.number] && labAnswers[current.number][t.device]) ?? [];
-                    const enteredNorm = new Set(entered.map(normalizeCommand));
                     const r = gradeLabCommands(entered, t.expected_commands);
+                    const lines = gradeLabLines(entered, t.expected_commands);
                     return (
                       <div key={idx} className="practice-answer__labTask">
                         <div className="practice-answer__labTitle">
                           [{t.device}] {t.name} — {r.matched} / {r.total}
                         </div>
                         <ul className="practice-answer__labCmds">
-                          {t.expected_commands.map((c, i) => {
-                            const ok = enteredNorm.has(normalizeCommand(c));
-                            return (
-                              <li key={i} className={ok ? 'ok' : 'ng'}>
-                                <span className="practice-answer__labMark">{ok ? '○' : '×'}</span>
-                                <code>{c}</code>
-                              </li>
-                            );
-                          })}
+                          {lines.map((ln, i) => (
+                            <li key={i} className={ln.ok ? 'ok' : 'ng'}>
+                              <span className="practice-answer__labMark">{ln.ok ? '○' : '×'}</span>
+                              <code>{ln.command}</code>
+                            </li>
+                          ))}
                         </ul>
                       </div>
                     );
