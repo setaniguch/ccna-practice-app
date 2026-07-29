@@ -21,6 +21,8 @@ const ABBREVIATIONS: Array<[RegExp, string]> = [
   // インターフェース短縮
   [/\bint\b/gi, 'interface'],
   [/\binter\b/gi, 'interface'],
+  // interface range の range 短縮（int ra / int ran / int rang → interface range）
+  [/^interface r(a(n(g(e)?)?)?)?\b/i, 'interface range'],
 
   // インターフェース名短縮（gi/gig/g0/0 → GigabitEthernet0/0 など）
   [/\bgi(\d+)\b/gi, 'GigabitEthernet$1'],
@@ -59,6 +61,36 @@ const ABBREVIATIONS: Array<[RegExp, string]> = [
   [/^copy\s+r\s+s$/i, 'copy running-config startup-config'],
 ];
 
+/**
+ * `interface range` コマンドを「構成メンバーのインターフェース集合」に正規化する。
+ * ダッシュ前後のスペース有無や短縮（e0/1-3 / e0/1 - 3 等）の表記ゆれを吸収し、
+ * 同じ範囲を指す入力を同一文字列に揃える。
+ * 例: "interface range ethernet0/0 - 1" → "interface range ethernet0/0,ethernet0/1"
+ */
+function canonicalizeInterfaceRange(input: string): string {
+  const m = input.match(/^interface range (.+)$/i);
+  if (!m) return input;
+  // ダッシュ前後の空白を除去して統一
+  const spec = m[1].trim().toLowerCase().replace(/\s*-\s*/g, '-');
+  // 単一レンジ: <type><module>/<startPort>-<end>（end はポート番号 or フル表記）
+  const rm = spec.match(/^([a-z][a-z-]*?)(\d+)\/(\d+)-(.+)$/);
+  if (rm) {
+    const [, type, module, startStr, endPart] = rm;
+    const start = parseInt(startStr, 10);
+    const endMatch = endPart.match(/(\d+)\s*$/);
+    if (endMatch) {
+      const end = parseInt(endMatch[1], 10);
+      if (end >= start && end - start < 64) {
+        const members: string[] = [];
+        for (let p = start; p <= end; p++) members.push(`${type}${module}/${p}`);
+        return `interface range ${members.join(',')}`;
+      }
+    }
+  }
+  // 解析できない場合はダッシュ間隔だけ統一して返す
+  return `interface range ${spec}`;
+}
+
 export function normalizeCommand(cmd: string): string {
   let s = cmd.trim();
   if (!s) return '';
@@ -70,6 +102,10 @@ export function normalizeCommand(cmd: string): string {
   }
   // 末尾セミコロンや余計な記号は除去
   s = s.replace(/[;]+$/, '').trim();
+  // interface range はメンバー集合へ正規化（表記ゆれ吸収）
+  if (/^interface range /i.test(s)) {
+    s = canonicalizeInterfaceRange(s);
+  }
   // 小文字化（大半の比較は大文字小文字無視で良い）
   return s.toLowerCase();
 }
