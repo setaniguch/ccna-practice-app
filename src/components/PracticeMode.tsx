@@ -3,6 +3,7 @@ import type { Question, AnswerMap, DragDropAnswerMap, LabAnswerMap } from '../ty
 import QuestionCard from './QuestionCard';
 import { resolveImageUrl } from '../utils/imagePath';
 import { gradeLabCommands, normalizeCommand } from '../utils/iosCommand';
+import { explainCommand } from '../utils/explainCommand';
 import './PracticeMode.css';
 
 interface Props {
@@ -170,6 +171,7 @@ export default function PracticeMode({ questions, onFinish }: Props) {
               )}
               {current.type === 'lab' && current.lab && (
                 <div className="practice-answer__lab">
+                  {/* 区分け①: 模範解答のコマンド一覧（○/× 判定） */}
                   <strong>模範解答（コマンド）:</strong>
                   {current.lab.tasks.map((t, idx) => {
                     const entered =
@@ -195,6 +197,35 @@ export default function PracticeMode({ questions, onFinish }: Props) {
                       </div>
                     );
                   })}
+
+                  {/* 区分け②: コマンド解説（回答とは別エリア） */}
+                  <details className="practice-answer__cmdExplain" open>
+                    <summary>コマンド解説（なぜそのコマンド・値なのか）</summary>
+                    {current.lab.tasks.map((t, idx) => {
+                      // タスク内の重複コマンドは1回だけ解説する
+                      const uniqueCmds = t.expected_commands.filter(
+                        (c, i) => t.expected_commands.indexOf(c) === i,
+                      );
+                      return (
+                        <div key={idx} className="practice-answer__explainTask">
+                          <div className="practice-answer__labTitle">
+                            [{t.device}] {t.name}
+                          </div>
+                          <dl className="practice-answer__explainList">
+                            {uniqueCmds.map((c, i) => {
+                              const desc = explainCommand(c);
+                              return (
+                                <div key={i} className="practice-answer__explainRow">
+                                  <dt><code>{c}</code></dt>
+                                  <dd>{desc || '—'}</dd>
+                                </div>
+                              );
+                            })}
+                          </dl>
+                        </div>
+                      );
+                    })}
+                  </details>
                 </div>
               )}
               {current.type === 'lab' && current.lab?.solution_images && current.lab.solution_images.length > 0 && (
