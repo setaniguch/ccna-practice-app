@@ -180,6 +180,95 @@ export function buildCommandPhrases(tasks: LabTask[], device: string): string[] 
   ];
 }
 
+/**
+ * 現在の CLI モードで入力可能なコマンドフレーズ（モード別）。
+ * 実機 Cisco IOS の `?` と同様、そのモードで有効なコマンドだけを提示するために使う。
+ * 複数単語コマンドはフレーズのまま列挙し、文脈依存の次単語提示（generateHelpCandidates）に渡す。
+ */
+const SHOW_COMMANDS: string[] = [
+  'show running-config', 'show startup-config',
+  'show ip interface brief', 'show interfaces', 'show interfaces status',
+  'show ip route', 'show version', 'show vlan brief', 'show mac address-table',
+  'show ip protocols', 'show ip ospf neighbor', 'show ip ospf interface',
+  'show cdp neighbors', 'show lldp neighbors',
+  'show access-lists', 'show ip access-lists',
+  'show etherchannel summary', 'show spanning-tree',
+  'show port-security', 'show standby',
+];
+
+const MODE_COMMANDS: Partial<Record<CliMode, string[]>> = {
+  user: [
+    'enable', 'disable', 'exit', 'ping', 'traceroute',
+    'show version', 'show ip interface brief', 'show interfaces', 'show ip route',
+  ],
+  priv: [
+    'disable', 'configure terminal', 'exit',
+    ...SHOW_COMMANDS,
+    'copy running-config startup-config', 'write memory', 'write',
+    'reload', 'ping', 'traceroute', 'clock set', 'crypto key generate rsa',
+    'debug', 'no debug',
+  ],
+  config: [
+    'interface', 'interface range', 'interface vlan', 'interface loopback',
+    'interface port-channel', 'interface ethernet', 'interface gigabitethernet',
+    'interface fastethernet', 'interface tengigabitethernet', 'interface serial',
+    'interface tunnel',
+    'line console', 'line vty', 'line aux',
+    'router ospf', 'router eigrp', 'router rip', 'router bgp',
+    'vlan',
+    'ip route', 'ip access-list standard', 'ip access-list extended',
+    'ip dhcp pool', 'ip dhcp excluded-address', 'ip nat inside source', 'ip nat pool',
+    'ip domain-name', 'ip default-gateway', 'ip name-server', 'no ip domain-lookup',
+    'ipv6 route', 'ipv6 unicast-routing', 'ipv6 access-list',
+    'hostname', 'username', 'enable secret', 'enable password',
+    'service password-encryption', 'banner motd',
+    'spanning-tree mode', 'spanning-tree vlan', 'spanning-tree portfast default',
+    'cdp run', 'no cdp run', 'lldp run', 'no lldp run',
+    'ntp server', 'ntp master',
+    'snmp-server community', 'snmp-server host', 'snmp-server location',
+    'access-list', 'crypto key generate rsa', 'do', 'exit', 'end',
+  ],
+  'config-if': [
+    'ip address', 'ip address dhcp', 'ipv6 address',
+    'no shutdown', 'shutdown', 'description', 'duplex', 'speed',
+    'switchport', 'switchport mode access', 'switchport mode trunk',
+    'switchport access vlan', 'switchport voice vlan',
+    'switchport trunk allowed vlan', 'switchport trunk native vlan',
+    'switchport trunk encapsulation dot1q',
+    'switchport port-security', 'switchport port-security maximum',
+    'switchport port-security violation', 'switchport port-security mac-address sticky',
+    'no switchport',
+    'channel-group', 'ip ospf', 'ip nat inside', 'ip nat outside',
+    'ip access-group', 'ip helper-address',
+    'cdp enable', 'no cdp enable', 'lldp transmit', 'lldp receive',
+    'no lldp transmit', 'no lldp receive',
+    'spanning-tree portfast', 'spanning-tree bpduguard enable',
+    'exit', 'end',
+  ],
+  'config-line': [
+    'login', 'login local', 'password', 'transport input',
+    'exec-timeout', 'logging synchronous', 'access-class', 'exit', 'end',
+  ],
+  'config-router': [
+    'network', 'router-id', 'passive-interface',
+    'default-information originate', 'redistribute', 'exit', 'end',
+  ],
+  'config-vlan': ['name', 'exit', 'end'],
+  'config-acl-std': ['permit', 'deny', 'remark', 'exit', 'end'],
+  'config-acl-ext': ['permit', 'deny', 'remark', 'exit', 'end'],
+};
+
+/** 汎用的な設定サブモードのフォールバック（未定義モード用）。 */
+const SUBMODE_FALLBACK = ['exit', 'end', 'do'];
+
+/**
+ * 現在の CLI モードで入力可能なコマンドフレーズ一覧を返す。
+ * ヘルプ（`?`）はこれを対象に、文脈依存で次単語を提示する。
+ */
+export function commandsForMode(mode: CliMode): string[] {
+  return MODE_COMMANDS[mode] ?? SUBMODE_FALLBACK;
+}
+
 /** 部分語として抽出する末尾非空白文字列の最大長 */
 const MAX_PREFIX_LENGTH = 256;
 

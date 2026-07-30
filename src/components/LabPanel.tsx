@@ -2,9 +2,9 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import type { LabSpec } from '../types';
 import { applyCommand, buildPrompt, INITIAL_STATE, type CliState } from '../utils/iosCli';
 import {
-  buildCommandPhrases,
   buildVocabulary,
   classifyHelpQuery,
+  commandsForMode,
   generateHelpCandidates,
   NO_CANDIDATES_MESSAGE,
 } from '../utils/iosHelp';
@@ -99,7 +99,8 @@ export default function LabPanel({ lab, commands, onChange }: Props) {
     try {
       const cur = states[activeDevice];
       const query = classifyHelpQuery(inputBeforeQuestion);
-      const phrases = buildCommandPhrases(lab.tasks, activeDevice);
+      // 現在の CLI モードで入力可能なコマンドだけを対象にする（実機同様）
+      const phrases = commandsForMode(cur.cli.mode);
       const candidates = generateHelpCandidates(query, phrases);
       const outputLines =
         candidates.length > 0 ? candidates : [NO_CANDIDATES_MESSAGE];

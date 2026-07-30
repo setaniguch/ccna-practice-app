@@ -116,9 +116,9 @@ describe('8.1 入力復元・フォーカス保持・スクロール (要件 4.3
 
     fireEvent.keyDown(input, { key: '?' });
 
-    // 'sh' に前方一致する語彙: show, shutdown（大文字小文字非依存の辞書順）
+    // userモード(R1>)で 'sh' に前方一致するコマンドは show のみ（shutdown は設定モード用）
     // 結合行は現在のプロンプト(R1>) + preservedInput('sh')
-    expect(lineTexts(container)).toEqual(['R1>sh', 'show', 'shutdown']);
+    expect(lineTexts(container)).toEqual(['R1>sh', 'show']);
   });
 
   it('ヘルプ出力の追加後、画面が最下部までスクロールする (要件 4.6)', async () => {
