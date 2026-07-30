@@ -197,69 +197,105 @@ const SHOW_COMMANDS: string[] = [
 ];
 
 const MODE_COMMANDS: Partial<Record<CliMode, string[]>> = {
+  // ユーザーEXEC（host>）
   user: [
-    'enable', 'disable', 'exit', 'ping', 'traceroute',
+    'access-enable', 'access-profile', 'clear', 'connect', 'crypto', 'disable',
+    'disconnect', 'enable', 'exit', 'help', 'lock', 'login', 'logout',
+    'name-connection', 'ping', 'ppp', 'pwd', 'release', 'renew', 'resume',
+    'rlogin', 'set', 'ssh', 'telnet', 'terminal', 'traceroute', 'tunnel', 'where',
     'show version', 'show ip interface brief', 'show interfaces', 'show ip route',
+    'show clock', 'show users', 'show sessions', 'show flash',
   ],
+  // 特権EXEC（host#）
   priv: [
-    'disable', 'configure terminal', 'exit',
+    'archive', 'cd', 'clear', 'clock', 'configure', 'connect', 'copy', 'debug',
+    'delete', 'dir', 'disable', 'disconnect', 'enable', 'erase', 'exit', 'format',
+    'help', 'lock', 'login', 'logout', 'mkdir', 'monitor', 'more', 'mstat',
+    'name-connection', 'no', 'ping', 'pwd', 'reload', 'rename', 'reset', 'resume',
+    'rlogin', 'rmdir', 'send', 'setup', 'ssh', 'telnet', 'terminal', 'test',
+    'traceroute', 'tunnel', 'undebug', 'verify', 'vlan', 'where', 'write',
+    'configure terminal',
     ...SHOW_COMMANDS,
-    'copy running-config startup-config', 'write memory', 'write',
-    'reload', 'ping', 'traceroute', 'clock set', 'crypto key generate rsa',
-    'debug', 'no debug',
+    'copy running-config startup-config',
+    'clock set', 'crypto key generate rsa', 'no debug', 'write memory',
   ],
+  // グローバル設定（host(config)#）
   config: [
-    'interface', 'interface range', 'interface vlan', 'interface loopback',
-    'interface port-channel', 'interface ethernet', 'interface gigabitethernet',
-    'interface fastethernet', 'interface tengigabitethernet', 'interface serial',
-    'interface tunnel',
+    'aaa', 'access-list', 'archive', 'banner', 'boot', 'cdp', 'class-map', 'clock',
+    'crypto', 'default', 'do', 'enable', 'end', 'exit', 'help', 'hostname',
+    'interface', 'ip', 'ipv6', 'key', 'lacp', 'line', 'lldp', 'logging', 'login',
+    'mac', 'mac-address-table', 'monitor', 'no', 'ntp', 'parser', 'passive-interface',
+    'policy-map', 'port-channel', 'priority-list', 'privilege', 'radius', 'radius-server',
+    'route-map', 'router', 'service', 'snmp-server', 'spanning-tree', 'tacacs',
+    'tacacs-server', 'time-range', 'track', 'username', 'vlan', 'vrf', 'vtp',
+    // 主要サブツリー（ドリルダウン用）
+    'interface range', 'interface vlan', 'interface loopback', 'interface port-channel',
+    'interface ethernet', 'interface gigabitethernet', 'interface fastethernet',
+    'interface tengigabitethernet', 'interface serial', 'interface tunnel',
     'line console', 'line vty', 'line aux',
     'router ospf', 'router eigrp', 'router rip', 'router bgp',
-    'vlan',
     'ip route', 'ip access-list standard', 'ip access-list extended',
     'ip dhcp pool', 'ip dhcp excluded-address', 'ip nat inside source', 'ip nat pool',
-    'ip domain-name', 'ip default-gateway', 'ip name-server', 'no ip domain-lookup',
+    'ip domain-name', 'ip default-gateway', 'ip name-server', 'ip helper-address',
     'ipv6 route', 'ipv6 unicast-routing', 'ipv6 access-list',
-    'hostname', 'username', 'enable secret', 'enable password',
-    'service password-encryption', 'banner motd',
+    'enable secret', 'enable password', 'service password-encryption', 'banner motd',
     'spanning-tree mode', 'spanning-tree vlan', 'spanning-tree portfast default',
     'cdp run', 'no cdp run', 'lldp run', 'no lldp run',
     'ntp server', 'ntp master',
     'snmp-server community', 'snmp-server host', 'snmp-server location',
-    'access-list', 'crypto key generate rsa', 'do', 'exit', 'end',
+    'no ip domain-lookup', 'crypto key generate rsa',
   ],
+  // インターフェース設定（host(config-if)#）
   'config-if': [
-    'ip address', 'ip address dhcp', 'ipv6 address',
-    'no shutdown', 'shutdown', 'description', 'duplex', 'speed',
-    'switchport', 'switchport mode access', 'switchport mode trunk',
+    'arp', 'bandwidth', 'bfd', 'carrier-delay', 'cdp', 'channel-group',
+    'channel-protocol', 'default', 'delay', 'description', 'do', 'duplex',
+    'encapsulation', 'end', 'exit', 'flowcontrol', 'help', 'hold-queue', 'ip',
+    'ipv6', 'keepalive', 'lacp', 'lldp', 'load-interval', 'logging', 'loopback',
+    'mac-address', 'mtu', 'no', 'ntp', 'power', 'service-policy', 'shutdown',
+    'snmp', 'spanning-tree', 'speed', 'srr-queue', 'standby', 'storm-control',
+    'switchport', 'tx-ring-limit', 'udld', 'vrf',
+    // 主要サブツリー
+    'ip address', 'ip address dhcp', 'ip ospf', 'ip nat inside', 'ip nat outside',
+    'ip access-group', 'ip helper-address',
+    'ipv6 address',
+    'switchport mode access', 'switchport mode trunk',
     'switchport access vlan', 'switchport voice vlan',
     'switchport trunk allowed vlan', 'switchport trunk native vlan',
     'switchport trunk encapsulation dot1q',
     'switchport port-security', 'switchport port-security maximum',
     'switchport port-security violation', 'switchport port-security mac-address sticky',
-    'no switchport',
-    'channel-group', 'ip ospf', 'ip nat inside', 'ip nat outside',
-    'ip access-group', 'ip helper-address',
+    'no switchport', 'no shutdown',
+    'spanning-tree portfast', 'spanning-tree bpduguard enable',
     'cdp enable', 'no cdp enable', 'lldp transmit', 'lldp receive',
     'no lldp transmit', 'no lldp receive',
-    'spanning-tree portfast', 'spanning-tree bpduguard enable',
-    'exit', 'end',
   ],
+  // ライン設定（host(config-line)#）
   'config-line': [
-    'login', 'login local', 'password', 'transport input',
-    'exec-timeout', 'logging synchronous', 'access-class', 'exit', 'end',
+    'absolute-timeout', 'accounting', 'access-class', 'authorization', 'banner',
+    'default', 'do', 'exec-timeout', 'exit', 'help', 'history', 'ipv6', 'length',
+    'location', 'lockable', 'logging', 'login', 'logout-warning', 'monitor',
+    'motd-banner', 'no', 'notify', 'padding', 'password', 'privilege',
+    'refuse-message', 'rotary', 'session-limit', 'session-timeout', 'speed',
+    'stopbits', 'terminal-type', 'timeout', 'transport', 'width',
+    'login local', 'transport input', 'logging synchronous',
   ],
+  // ルーティングプロセス設定（host(config-router)#）
   'config-router': [
-    'network', 'router-id', 'passive-interface',
-    'default-information originate', 'redistribute', 'exit', 'end',
+    'area', 'auto-cost', 'default', 'default-information', 'default-metric',
+    'distance', 'distribute-list', 'do', 'exit', 'help', 'log-adjacency-changes',
+    'maximum-paths', 'neighbor', 'network', 'no', 'passive-interface',
+    'redistribute', 'router-id', 'timers',
+    'default-information originate',
   ],
-  'config-vlan': ['name', 'exit', 'end'],
-  'config-acl-std': ['permit', 'deny', 'remark', 'exit', 'end'],
-  'config-acl-ext': ['permit', 'deny', 'remark', 'exit', 'end'],
+  // VLAN設定（host(config-vlan)#）
+  'config-vlan': ['default', 'do', 'exit', 'name', 'no', 'remote-span', 'shutdown'],
+  // 名前付きACL（標準/拡張）
+  'config-acl-std': ['default', 'deny', 'do', 'exit', 'no', 'permit', 'remark'],
+  'config-acl-ext': ['default', 'deny', 'do', 'exit', 'no', 'permit', 'remark'],
 };
 
 /** 汎用的な設定サブモードのフォールバック（未定義モード用）。 */
-const SUBMODE_FALLBACK = ['exit', 'end', 'do'];
+const SUBMODE_FALLBACK = ['default', 'do', 'exit', 'help', 'no'];
 
 /**
  * 現在の CLI モードで入力可能なコマンドフレーズ一覧を返す。
