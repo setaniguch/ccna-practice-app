@@ -105,6 +105,59 @@ describe('gradeLabCommands: コンテキスト（インターフェース）を�
   });
 });
 
+describe('gradeLabCommands: interface range と個別 interface の等価', () => {
+  const expected = [
+    'enable', 'configure terminal',
+    'interface ethernet0/0',
+    'switchport mode trunk',
+    'switchport trunk allowed vlan 1,12,22',
+    'interface ethernet0/1',
+    'switchport mode trunk',
+    'switchport trunk allowed vlan 1,12,22',
+  ];
+
+  it('range e0/0-1 でまとめて設定しても個別設定の期待に一致する', () => {
+    const entered = [
+      'enable', 'configure terminal',
+      'interface range e0/0-1',
+      'switchport mode trunk',
+      'switchport trunk allowed vlan 1,12,22',
+    ];
+    const r = gradeLabCommands(entered, expected);
+    expect(r.matched).toBe(r.total);
+  });
+
+  it('逆に、期待が range でも個別入力で一致する', () => {
+    const exp = [
+      'enable', 'configure terminal',
+      'interface range ethernet0/0 - 1',
+      'channel-group 34 mode active',
+    ];
+    const entered = [
+      'enable', 'configure terminal',
+      'interface ethernet0/0', 'channel-group 34 mode active',
+      'interface ethernet0/1', 'channel-group 34 mode active',
+    ];
+    const r = gradeLabCommands(entered, exp);
+    expect(r.matched).toBe(r.total);
+  });
+
+  it('片方の IF しか設定していなければ range 期待は未達成', () => {
+    const exp = [
+      'enable', 'configure terminal',
+      'interface range ethernet0/0 - 1',
+      'channel-group 34 mode active',
+    ];
+    const entered = [
+      'enable', 'configure terminal',
+      'interface ethernet0/0', 'channel-group 34 mode active',
+    ];
+    const lines = gradeLabLines(entered, exp);
+    const cg = lines.find((l) => l.command === 'channel-group 34 mode active');
+    expect(cg?.ok).toBe(false);
+  });
+});
+
 describe('gradeLabCommands: 保存コマンドの相互一致', () => {
   it('write memory 入力が copy running-config startup-config の正解に一致する', () => {
     const r = gradeLabCommands(

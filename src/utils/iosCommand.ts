@@ -118,46 +118,88 @@ export function normalizeCommand(cmd: string): string {
  * キーとして返す。これにより、同じコマンド文字列でも異なるインターフェースで
  * 打たれたものを区別できる。
  */
-function tagWithContext(commands: string[]): { command: string; key: string }[] {
+/** コンテキスト文字列（applyCommand が設定済み・正規化済み）からメンバーIFを取り出す。
+ *  例: "range ethernet0/0,ethernet0/1" → ["ethernet0/0","ethernet0/1"]、"ethernet0/0" → ["ethernet0/0"] */
+function contextMembers(context?: string): string[] {
+  if (!context) return [];
+  const c = context.trim();
+  if (c.startsWith('range ')) {
+    return c.slice('range '.length).split(',').map((s) => s.trim()).filter(Boolean);
+  }
+  return [c];
+}
+
+/**
+ * 1コマンドを「要件キーの集合」に写像する。
+ * - インターフェース選択(interface X / interface range …) → 選択キー sel|<member>（メンバー毎）
+ * - 移動系(enable/conf t/exit/end/line/router/vlan/acl 選択)・保存 → グローバルキー *|<norm>
+ * - インターフェース文脈内の設定コマンド → if|<member>|<norm>（メンバー毎に展開）
+ *   これにより interface range と個別 interface が等価に扱われる。
+ * - その他サブモード内の設定コマンド → <mode>[:<context>]|<norm>
+ */
+function keysForCommand(norm: string, before: CliState, after: CliState): string[] {
+  const changed = after.mode !== before.mode || after.context !== before.context;
+  const isSave = norm === 'copy running-config startup-config';
+
+  // インターフェース（レンジ含む）の選択
+  if (norm.startsWith('interface ') && after.mode === 'config-if') {
+    return contextMembers(after.context).map((m) => 'sel|' + m);
+  }
+  // 移動系・保存はコンテキスト非依存
+  if (changed || isSave) {
+    return ['*|' + norm];
+  }
+  // インターフェース文脈内の設定コマンドはメンバー毎に展開
+  if (before.mode === 'config-if') {
+    return contextMembers(before.context).map((m) => 'if|' + m + '|' + norm);
+  }
+  // その他サブモード内の設定コマンド
+  const ctx = before.mode + (before.context ? ':' + before.context : '');
+  return [ctx + '|' + norm];
+}
+
+/** コマンド列を実行しながら各コマンドの要件キー集合を得る。 */
+function simulate(
+  commands: string[],
+  cb: (command: string, keys: string[]) => void,
+): void {
   let state: CliState = INITIAL_STATE;
-  const out: { command: string; key: string }[] = [];
   for (const raw of commands) {
     const cmd = raw.trim().replace(/\s+/g, ' ');
     if (!cmd) continue;
     const norm = normalizeCommand(cmd);
     if (!norm) continue;
     const before = state;
-    const next = applyCommand(state, cmd).next;
-    // モードやコンテキストを変える「移動系」(enable/conf t/interface X/exit/end 等)や
-    // 保存コマンドは文脈非依存で判定する。サブモード内の設定コマンドのみ文脈依存。
-    const changesState = next.mode !== before.mode || next.context !== before.context;
-    const isSave = norm === 'copy running-config startup-config';
-    const global = changesState || isSave;
-    const ctx = before.mode + (before.context ? ':' + normalizeCommand(before.context) : '');
-    out.push({ command: raw, key: (global ? '*' : ctx) + '|' + norm });
-    state = next;
+    const after = applyCommand(state, cmd).next;
+    cb(raw, keysForCommand(norm, before, after));
+    state = after;
   }
-  return out;
 }
 
 /**
  * 期待コマンドを1行ずつ、コンテキストを考慮して正誤判定する。
  * 表示（模範解答の○/×）にも採点にも使う単一の真実源。
+ * 期待コマンドは、その要件キーが「すべて」入力側に含まれていれば正解。
  */
 export function gradeLabLines(
   entered: string[],
   expected: string[],
 ): { command: string; ok: boolean }[] {
-  const enteredKeys = new Set(tagWithContext(entered).map((x) => x.key));
-  return tagWithContext(expected).map((x) => ({
-    command: x.command,
-    ok: enteredKeys.has(x.key),
-  }));
+  const enteredKeys = new Set<string>();
+  simulate(entered, (_c, keys) => keys.forEach((k) => enteredKeys.add(k)));
+
+  const lines: { command: string; ok: boolean }[] = [];
+  simulate(expected, (command, keys) => {
+    const ok = keys.length > 0 && keys.every((k) => enteredKeys.has(k));
+    lines.push({ command, ok });
+  });
+  return lines;
 }
 
 /**
  * 入力コマンド列と期待コマンド列をコンテキスト付きで比較する。
  * - 順序は問わないが、コマンドが打たれたモード／インターフェースは区別する
+ * - interface range と個別 interface は等価に扱う
  * - 完全一致した正解コマンド数 / 期待コマンド総数 を返す
  */
 export function gradeLabCommands(
@@ -168,10 +210,12 @@ export function gradeLabCommands(
   const matched = lines.filter((l) => l.ok);
   const missing = lines.filter((l) => !l.ok).map((l) => l.command);
 
-  const expectedKeys = new Set(tagWithContext(expected).map((x) => x.key));
-  const extra = tagWithContext(entered)
-    .filter((x) => !expectedKeys.has(x.key))
-    .map((x) => x.command);
+  const expectedKeys = new Set<string>();
+  simulate(expected, (_c, keys) => keys.forEach((k) => expectedKeys.add(k)));
+  const extra: string[] = [];
+  simulate(entered, (command, keys) => {
+    if (!keys.every((k) => expectedKeys.has(k))) extra.push(command);
+  });
 
   return { matched: matched.length, total: lines.length, missing, extra };
 }
