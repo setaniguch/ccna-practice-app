@@ -38368,13 +38368,13 @@
             "login local",
             "transport input telnet",
             "access-class 10 in",
-            "ip access-list extended ENT-ACL",
-            "permit icmp host 192.168.200.10 host 182.168.100.10",
+            "ip access-list extended ENT_ACL",
+            "permit icmp host 192.168.200.10 host 192.168.100.10",
             "deny icmp any any",
             "permit ip any any",
             "access-list 10 permit 192.168.200.10",
             "interface vlan 200",
-            "ip access-group ENT-ACL in",
+            "ip access-group ENT_ACL in",
             "interface ethernet0/0",
             "switchport port-security",
             "switchport port-security maximum 4",
@@ -38427,7 +38427,7 @@
           "expected_commands": [
             "enable",
             "configure terminal",
-            "username wheel secret lock3path privilege 15",
+            "username wheel privilege 15 algorithm-type scrypt secret lock3path",
             "line vty 0 4",
             "login local",
             "transport input telnet",
@@ -43126,31 +43126,35 @@
       ],
       "tasks": [
         {
-          "name": "Sw101: Eth0/0 に 172.25.32.1/21 と IPv6",
-          "description": "172.25.0.0/16 を /21 サブネット化、第2サブネット 172.25.32.0/21 の最初の使用可能 IP",
+          "name": "Sw101: e0/0 ルーテッドポート + IP/IPv6",
+          "description": "no switchport、172.16.16.1/20（第2/20サブネット最初）、IPv6 2001:db8:0:400::/64 eui-64",
           "device": "Sw101",
           "expected_commands": [
             "enable",
             "configure terminal",
             "interface ethernet0/0",
-            "ip address 172.25.32.1 255.255.248.0",
-            "ipv6 address 2001:db8::20:1/69",
+            "no switchport",
+            "ip address 172.16.16.1 255.255.240.0",
+            "ipv6 address 2001:db8:0:400::/64 eui-64",
             "no shutdown",
-            "end"
+            "end",
+            "write memory"
           ]
         },
         {
-          "name": "Sw102: Eth0/0 に 172.25.39.254/21 と IPv6",
-          "description": "172.25.32.0/21 の最後の使用可能 IP、IPv6 GUA",
+          "name": "Sw102: e0/0 ルーテッドポート + IP/IPv6",
+          "description": "no switchport、172.16.31.254/20（第2/20サブネット最後）、IPv6 2001:db8:0:400::/64 eui-64",
           "device": "Sw102",
           "expected_commands": [
             "enable",
             "configure terminal",
             "interface ethernet0/0",
-            "ip address 172.25.39.254 255.255.248.0",
-            "ipv6 address 2001:db8::27:fffe/69",
+            "no switchport",
+            "ip address 172.16.31.254 255.255.240.0",
+            "ipv6 address 2001:db8:0:400::/64 eui-64",
             "no shutdown",
-            "end"
+            "end",
+            "write memory"
           ]
         }
       ]
