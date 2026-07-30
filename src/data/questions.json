@@ -47329,32 +47329,32 @@
       ],
       "tasks": [
         {
-          "name": "Sw101: G1/0/1 ルーテッドポート + IP/IPv6",
-          "description": "no switchport、172.16.16.1/20、IPv6 2001:db8:0:400::/54 eui-64",
+          "name": "Sw101: e0/0 ルーテッドポート + IP/IPv6",
+          "description": "no switchport、10.20.16.1/20、IPv6 2001:db8:0:100::/64 eui-64",
           "device": "Sw101",
           "expected_commands": [
             "enable",
             "configure terminal",
-            "interface gigabitethernet1/0/1",
+            "interface ethernet0/0",
             "no switchport",
-            "ip address 172.16.16.1 255.255.240.0",
-            "ipv6 address 2001:db8:0:400::/54 eui-64",
+            "ip address 10.20.16.1 255.255.240.0",
+            "ipv6 address 2001:db8:0:100::/64 eui-64",
             "no shutdown",
             "end",
             "write memory"
           ]
         },
         {
-          "name": "Sw102: G1/0/1 ルーテッドポート + IP/IPv6",
-          "description": "no switchport、172.16.31.254/20、IPv6 2001:db8:0:400::/54 eui-64",
+          "name": "Sw102: e0/0 ルーテッドポート + IP/IPv6",
+          "description": "no switchport、10.20.31.254/20、IPv6 2001:db8:0:100::/64 eui-64",
           "device": "Sw102",
           "expected_commands": [
             "enable",
             "configure terminal",
-            "interface gigabitethernet1/0/1",
+            "interface ethernet0/0",
             "no switchport",
-            "ip address 172.16.31.254 255.255.240.0",
-            "ipv6 address 2001:db8:0:400::/54 eui-64",
+            "ip address 10.20.31.254 255.255.240.0",
+            "ipv6 address 2001:db8:0:100::/64 eui-64",
             "no shutdown",
             "end",
             "write memory"
