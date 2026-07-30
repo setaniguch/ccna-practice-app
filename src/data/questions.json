@@ -28932,7 +28932,7 @@
       "tasks": [
         {
           "name": "SW-1: トランク許可VLAN+ネイティブVLAN99",
-          "description": "e0/1, e0/2 を許可VLAN(1,10,20,99)のみ、e0/1 に native vlan 99",
+          "description": "e0/1, e0/2 を許可VLAN(56,77,99)のみ、e0/1 に native vlan 99",
           "device": "SW-1",
           "expected_commands": [
             "enable",
@@ -28948,7 +28948,7 @@
         },
         {
           "name": "SW-2: トランク許可VLAN+ネイティブVLAN99",
-          "description": "e0/1, e0/2 を許可VLAN(1,10,20,99)のみ、e0/1 に native vlan 99",
+          "description": "e0/1, e0/2 を許可VLAN(56,77,99)のみ、e0/1 に native vlan 99",
           "device": "SW-2",
           "expected_commands": [
             "enable",
@@ -28964,7 +28964,7 @@
         },
         {
           "name": "SW-3: e0/2 許可VLAN + Po1(LACP)",
-          "description": "e0/2 は許可VLAN(1,10,20,99)、e0/0-1 を channel-group 1 mode active、Po1も許可VLAN設定",
+          "description": "e0/2 は許可VLAN(56,77,99)、e0/0-1 を channel-group 1 mode active、Po1も許可VLAN設定",
           "device": "SW-3",
           "expected_commands": [
             "enable",
@@ -28981,7 +28981,7 @@
         },
         {
           "name": "SW-4: e0/2 許可VLAN + Po1(LACP)",
-          "description": "e0/2 は許可VLAN(1,10,20,99)、e0/0-1 を channel-group 1 mode active、Po1も許可VLAN設定",
+          "description": "e0/2 は許可VLAN(56,77,99)、e0/0-1 を channel-group 1 mode active、Po1も許可VLAN設定",
           "device": "SW-4",
           "expected_commands": [
             "enable",
@@ -37919,42 +37919,59 @@
       ],
       "tasks": [
         {
-          "name": "R1: NTP master / clock / DHCP プール / SSH RSA",
-          "description": "NTP マスター、時刻設定、DHCP プール NETPOOL、RSA 1024 鍵生成",
+          "name": "R1: NTP master + DHCP(NETPOOL) + clock",
+          "description": "ntp master、DHCP プール NETPOOL(10.1.3.0/24, 1-10除外)、clock 2018/5/1",
           "device": "R1",
           "expected_commands": [
             "enable",
             "configure terminal",
             "ntp master 1",
-            "clock set 00:00:00 jan 1 2019",
-            "crypto key generate rsa 1024",
+            "ip dhcp excluded-address 10.1.3.1 10.1.3.10",
+            "ip dhcp pool NETPOOL",
+            "network 10.1.3.0 255.255.255.0",
+            "default-router 10.1.3.1",
+            "end",
+            "clock set 00:00:00 1 may 2018",
             "copy running-config startup-config"
           ]
         },
         {
-          "name": "R2: NTP server",
-          "description": "ntp server 10.1.2.1",
+          "name": "R2: NTP client + NAT(PUBNET overload)",
+          "description": "ntp server 10.1.3.1、E0/1 inside/E0/0 outside、PUBNETをE0/0へoverload",
           "device": "R2",
           "expected_commands": [
             "enable",
             "configure terminal",
-            "ntp server 10.1.2.1",
+            "ntp server 10.1.3.1",
+            "interface ethernet0/1",
+            "ip nat inside",
+            "interface ethernet0/0",
+            "ip nat outside",
+            "exit",
+            "ip access-list standard PUBNET",
+            "permit 10.2.3.0 0.0.0.255",
+            "exit",
+            "ip nat inside source list PUBNET interface ethernet0/0 overload",
+            "end",
             "copy running-config startup-config"
           ]
         },
         {
-          "name": "R3: DHCP プール + e0/2 を DHCP で取得",
-          "description": "ip dhcp pool TEST / network 10.1.3.0 /24 / excluded 1-10、Eth0/2 は ip address dhcp",
+          "name": "R3: e0/2 DHCP + SSH(RSA1024)",
+          "description": "e0/2 ip address dhcp、username netadmin、RSA1024、vty ssh only",
           "device": "R3",
           "expected_commands": [
             "enable",
             "configure terminal",
-            "ip dhcp pool TEST",
-            "network 10.1.3.0 255.255.255.0",
-            "ip dhcp excluded-address 10.1.3.1 10.1.3.10",
             "interface ethernet0/2",
             "ip address dhcp",
             "no shutdown",
+            "exit",
+            "username netadmin password N3t4ccess",
+            "crypto key generate rsa 1024",
+            "line vty 0 4",
+            "login local",
+            "transport input ssh",
             "end",
             "copy running-config startup-config"
           ]
@@ -38856,7 +38873,7 @@
           "expected_commands": [
             "enable",
             "configure terminal",
-            "ip route 192.168.1.0 255.255.255.0 10.10.31.1",
+            "ip route 192.168.0.0 255.255.255.0 10.10.31.1",
             "ip route 172.20.20.128 255.255.255.128 ethernet0/2",
             "ip route 172.20.20.128 255.255.255.128 ethernet0/1"
           ]
