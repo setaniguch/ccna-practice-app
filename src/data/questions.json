@@ -49308,7 +49308,7 @@
             "configure terminal",
             "vlan 10",
             "name Engineering",
-            "interface ethernet0/10",
+            "interface ethernet0/0",
             "lldp transmit",
             "lldp receive",
             "interface ethernet0/1",
@@ -49322,12 +49322,12 @@
           ]
         },
         {
-          "name": "SW-2: e0/10 LLDP + e0/1 access vlan 30",
+          "name": "SW-2: e0/0 LLDP + e0/1 access vlan 30",
           "device": "SW-2",
           "expected_commands": [
             "enable",
             "configure terminal",
-            "interface ethernet0/10",
+            "interface ethernet0/0",
             "lldp transmit",
             "lldp receive",
             "interface ethernet0/1",
