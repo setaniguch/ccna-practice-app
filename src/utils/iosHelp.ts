@@ -262,8 +262,12 @@ const MODE_COMMANDS: Partial<Record<CliMode, string[]>> = {
     'snmp', 'spanning-tree', 'speed', 'srr-queue', 'standby', 'storm-control',
     'switchport', 'tx-ring-limit', 'udld', 'vrf',
     // 主要サブツリー
-    'ip address', 'ip address dhcp', 'ip ospf', 'ip nat inside', 'ip nat outside',
+    'ip address', 'ip address dhcp', 'ip nat inside', 'ip nat outside',
     'ip access-group', 'ip helper-address',
+    // ip ospf のインターフェース単位サブコマンド（ip ospf ? に相当）
+    'ip ospf', 'ip ospf priority', 'ip ospf cost', 'ip ospf network',
+    'ip ospf hello-interval', 'ip ospf dead-interval', 'ip ospf authentication',
+    'ip ospf authentication-key', 'ip ospf message-digest-key', 'ip ospf mtu-ignore',
     'ipv6 address',
     'switchport mode access', 'switchport mode trunk',
     'switchport access vlan', 'switchport voice vlan',
