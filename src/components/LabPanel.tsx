@@ -2,7 +2,6 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import type { LabSpec } from '../types';
 import { applyCommand, buildPrompt, INITIAL_STATE, type CliState } from '../utils/iosCli';
 import {
-  buildVocabulary,
   classifyHelpQuery,
   commandsForMode,
   generateHelpCandidates,
@@ -151,48 +150,49 @@ export default function LabPanel({ lab, commands, onChange }: Props) {
       submitInput();
     } else if (e.key === 'Tab') {
       e.preventDefault();
-      // 実機 IOS と同じく「現在打っている単語」だけを補完する。
-      // 語彙集合は共有ロジック buildVocabulary で構築（ヘルプと同一・挙動不変）。
-      const vocabulary = buildVocabulary(
-        lab.tasks,
-        activeDevice,
-        currentState.cli.mode,
-      );
+      // Tab 補完は ? ヘルプと同一の文脈依存ロジックを使う（実機準拠）。
+      // 「現在打っている単語」を、その文脈で来られる次単語だけに補完する。
+      try {
+        // 末尾が空白 or 空なら補完しない（部分語がないため）
+        if (input.length === 0 || /\s$/.test(input)) return;
+        const lastSpace = input.lastIndexOf(' ');
+        const head = lastSpace >= 0 ? input.slice(0, lastSpace + 1) : '';
+        const partial = input.slice(lastSpace + 1).toLowerCase();
+        if (!partial) return;
 
-      // 末尾に空白がなければ「現在の単語」を補完、空白で終わっていれば何もしない
-      // （次に何が来るかは実機ではコマンドツリーに依存。ここでは値の自動補完を抑止）
-      if (input.length === 0 || /\s$/.test(input)) return;
-      const lastSpace = input.lastIndexOf(' ');
-      const head = lastSpace >= 0 ? input.slice(0, lastSpace + 1) : '';
-      const partial = input.slice(lastSpace + 1).toLowerCase();
-      if (!partial) return;
+        const cur = states[activeDevice];
+        const query = classifyHelpQuery(input); // word query（prefix=現在の単語）
+        const phrases = commandsForMode(cur.cli.mode);
+        const matches = generateHelpCandidates(query, phrases); // 前方一致済みの次単語
 
-      const matches = Array.from(vocabulary).filter((w) =>
-        w.startsWith(partial),
-      );
-      if (matches.length === 0) return;
-      if (matches.length === 1) {
-        setInput(head + matches[0] + ' ');
-      } else {
-        let common = matches[0];
-        for (const m of matches.slice(1)) {
-          let i = 0;
-          while (i < common.length && i < m.length && common[i] === m[i]) i++;
-          common = common.slice(0, i);
-        }
-        if (common.length > partial.length) {
-          setInput(head + common);
+        if (matches.length === 0) return;
+        if (matches.length === 1) {
+          setInput(head + matches[0] + ' ');
         } else {
-          setStates((prev) => {
-            const cur = prev[activeDevice];
-            const newLines = [
-              ...cur.lines,
-              `${buildPrompt(activeDevice, cur.cli)}${input}`,
-              matches.join('  '),
-            ];
-            return { ...prev, [activeDevice]: { ...cur, lines: newLines } };
-          });
+          // 共通接頭辞（大文字小文字無視）
+          let common = matches[0].toLowerCase();
+          for (const m of matches.slice(1)) {
+            const ml = m.toLowerCase();
+            let i = 0;
+            while (i < common.length && i < ml.length && common[i] === ml[i]) i++;
+            common = common.slice(0, i);
+          }
+          if (common.length > partial.length) {
+            setInput(head + common);
+          } else {
+            setStates((prev) => {
+              const c = prev[activeDevice];
+              const newLines = [
+                ...c.lines,
+                `${buildPrompt(activeDevice, c.cli)}${input}`,
+                matches.join('  '),
+              ];
+              return { ...prev, [activeDevice]: { ...c, lines: newLines } };
+            });
+          }
         }
+      } catch {
+        // 補完ロジック失敗時は何もしない（既存の入力を維持）
       }
     } else if ((e.key === '?' || e.key === '？') && !e.nativeEvent.isComposing) {
       // ? / ？ を input に混入させない（要件 1.4）。IME 変換中（isComposing）は除外

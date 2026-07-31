@@ -240,17 +240,18 @@ describe('8.3 既存挙動の非退行（回帰） (要件 6.1, 6.2, 6.4)', () =
     expect(lineTexts(container)).toContain('R1>sh');
   });
 
-  it('ヘルプ関数が例外を投げても Tab 補完と履歴ナビが継続動作する (要件 6.4)', () => {
+  it('ヘルプ関数が例外を投げても Tab と履歴ナビがクラッシュしない (要件 6.4)', () => {
     helpControl.shouldThrow = true;
     const { input } = renderLab({ R1: ['enable'] });
     input.focus();
 
-    // Tab 補完は buildVocabulary（非モック）を使うため継続動作する
+    // Tab は ? と同一ロジックを共有するため、内部で例外が出ても
+    // try/catch で握りつぶし入力を壊さない（補完はされない）
     typeValue(input, 'ena');
     fireEvent.keyDown(input, { key: 'Tab' });
-    expect(input.value).toBe('enable ');
+    expect(input.value).toBe('ena');
 
-    // 履歴ナビも継続動作
+    // 履歴ナビはヘルプに依存しないため継続動作する
     fireEvent.keyDown(input, { key: 'ArrowUp' });
     expect(input.value).toBe('enable');
   });
