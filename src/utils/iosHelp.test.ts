@@ -44,4 +44,19 @@ describe('iosHelp: モード別の ? 候補', () => {
     expect(c).toContain('ospf');
     expect(c).toContain('nat');
   });
+
+  it('config で DHCP プール系サブコマンド(default-router 等)が出る', () => {
+    const top = help('', 'config');
+    expect(top).toContain('default-router');
+    expect(top).toContain('dns-server');
+    expect(top).toContain('network');
+    // default- で始まる語の補完（default-router / default-information）
+    const c = help('default-', 'config');
+    expect(c).toContain('default-router');
+  });
+
+  it('config で ip arp inspection / ip dhcp snooping が辿れる', () => {
+    expect(help('ip arp ', 'config')).toContain('inspection');
+    expect(help('ip dhcp ', 'config')).toContain('snooping');
+  });
 });
