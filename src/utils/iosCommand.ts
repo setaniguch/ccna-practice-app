@@ -118,6 +118,40 @@ export function normalizeCommand(cmd: string): string {
  * キーとして返す。これにより、同じコマンド文字列でも異なるインターフェースで
  * 打たれたものを区別できる。
  */
+/**
+ * 「グローバル設定(config)専用」で、インターフェース等のサブモードには属さないコマンド。
+ * 模範解答内で（exit省略により）サブモード文脈に現れても、常に config レベルで判定する。
+ * ここに挙げるのはインターフェース版が存在しない、曖昧さのないコマンドのみ。
+ */
+const GLOBAL_CONFIG_PATTERNS: RegExp[] = [
+  /^(no )?lldp run$/,
+  /^(no )?cdp run$/,
+  /^ipv6 unicast-routing$/,
+  /^(no )?ip routing$/,
+  /^hostname /,
+  /^ip route /,
+  /^ipv6 route /,
+  /^ip default-gateway /,
+  /^ip domain[- ]name /,
+  /^no ip domain-lookup$/,
+  /^ip name-server /,
+  /^ip dhcp /,
+  /^ip access-list /,
+  /^access-list /,
+  /^username /,
+  /^enable (secret|password) /,
+  /^service /,
+  /^ntp /,
+  /^snmp-server /,
+  /^banner /,
+  /^aaa /,
+  /^spanning-tree (mode|vlan|portfast default)/,
+];
+
+function isGlobalConfigCommand(norm: string): boolean {
+  return GLOBAL_CONFIG_PATTERNS.some((re) => re.test(norm));
+}
+
 /** コンテキスト文字列（applyCommand が設定済み・正規化済み）からメンバーIFを取り出す。
  *  例: "range ethernet0/0,ethernet0/1" → ["ethernet0/0","ethernet0/1"]、"ethernet0/0" → ["ethernet0/0"] */
 function contextMembers(context?: string): string[] {
@@ -148,6 +182,11 @@ function keysForCommand(norm: string, before: CliState, after: CliState): string
   // 移動系・保存はコンテキスト非依存
   if (changed || isSave) {
     return ['*|' + norm];
+  }
+  // グローバル設定専用コマンドは、現在の文脈に関わらず config レベルで判定
+  // （模範解答で exit 省略によりサブモード文脈に現れても正しく一致させる）
+  if (isGlobalConfigCommand(norm)) {
+    return ['config|' + norm];
   }
   // インターフェース文脈内の設定コマンドはメンバー毎に展開
   if (before.mode === 'config-if') {

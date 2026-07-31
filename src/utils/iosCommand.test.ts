@@ -158,6 +158,34 @@ describe('gradeLabCommands: interface range と個別 interface の等価', () =
   });
 });
 
+describe('gradeLabCommands: グローバルコマンドは文脈非依存(lldp run 等)', () => {
+  it('模範解答が interface 文脈直後に lldp run を置いても、config で打てば一致', () => {
+    const expected = [
+      'enable', 'configure terminal',
+      'interface range ethernet0/1 - 3',
+      'switchport mode access',
+      'switchport access vlan 77',
+      'lldp run',
+      'end', 'write memory',
+    ];
+    const entered = [
+      'enable', 'configure terminal',
+      'interface range e0/1-3',
+      'switchport mode access',
+      'switchport access vlan 77',
+      'exit',
+      'lldp run',
+      'end', 'write memory',
+    ];
+    const lines = gradeLabLines(entered, expected);
+    const l = lines.find((x) => x.command === 'lldp run');
+    expect(l?.ok).toBe(true);
+    expect(gradeLabCommands(entered, expected).matched).toBe(
+      gradeLabCommands(entered, expected).total,
+    );
+  });
+});
+
 describe('gradeLabCommands: 保存コマンドの相互一致', () => {
   it('write memory 入力が copy running-config startup-config の正解に一致する', () => {
     const r = gradeLabCommands(
