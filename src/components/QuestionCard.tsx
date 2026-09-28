@@ -152,6 +152,14 @@ export default function QuestionCard({ question, selected, ddAnswers, labCommand
   const hasDdData = isDragDrop && question.dd_items && question.dd_targets;
   const hasLabData = isLab && question.lab && question.lab.devices.length > 0;
   const isComplete = isAnswerFullyEntered(question, selected, ddAnswers);
+  // ラボ問題は本番同様、問題文・トポロジ図を LabPanel の左パネル（タブ）に表示する。
+  // トポロジ図は lab.topology_images を優先し、問題図として残っている追加画像も併せて渡す。
+  const labTopologyImages = hasLabData
+    ? [
+        ...(question.lab!.topology_images ?? []),
+        ...(question.question_images ?? []),
+      ]
+    : [];
 
   const toggle = (letter: string) => {
     if (isMulti) {
@@ -167,7 +175,7 @@ export default function QuestionCard({ question, selected, ddAnswers, labCommand
   return (
     <div className="qcard">
       <h2 className="qcard__title">問 {question.number}</h2>
-      {(() => {
+      {!hasLabData && (() => {
         const text = question.question_text;
         const topoImgs = isLab ? question.lab?.topology_images : undefined;
         if (topoImgs && topoImgs.length > 0) {
@@ -192,7 +200,7 @@ export default function QuestionCard({ question, selected, ddAnswers, labCommand
         return <p className="qcard__text">{text}</p>;
       })()}
 
-      {question.question_images && question.question_images.length > 0 && (
+      {!hasLabData && question.question_images && question.question_images.length > 0 && (
         <div className="qcard__images">
           {question.question_images.map((src) => (
             <img key={src} src={resolveImageUrl(src)} alt="問題図" />
@@ -226,6 +234,8 @@ export default function QuestionCard({ question, selected, ddAnswers, labCommand
         <LabPanel
           key={question.number}
           lab={question.lab!}
+          questionText={question.question_text}
+          topologyImages={labTopologyImages}
           commands={labCommands}
           onChange={onLabChange}
         />

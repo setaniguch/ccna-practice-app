@@ -7,10 +7,25 @@ import {
   generateHelpCandidates,
   NO_CANDIDATES_MESSAGE,
 } from '../utils/iosHelp';
+import { parseLabSections } from '../utils/labSections';
+import { resolveImageUrl } from '../utils/imagePath';
 import './LabPanel.css';
+
+/** 左パネルのタブ。本番試験と同じ順序（Tasks / Guidelines / Topology）。 */
+type InfoTab = 'tasks' | 'guidelines' | 'topology';
+
+const INFO_TABS: { key: InfoTab; label: string }[] = [
+  { key: 'tasks', label: 'タスク' },
+  { key: 'guidelines', label: 'ガイドライン' },
+  { key: 'topology', label: 'トポロジ' },
+];
 
 interface Props {
   lab: LabSpec;
+  /** 問題文全体。ガイドライン / トポロジ / タスクのタブへ分解して表示する */
+  questionText?: string;
+  /** トポロジタブに表示する図 */
+  topologyImages?: string[];
   /** デバイスごとの入力済みコマンド履歴（永続化用） */
   commands: Record<string, string[]>;
   onChange: (deviceHostname: string, commands: string[]) => void;
@@ -26,9 +41,16 @@ interface DeviceTerminalState {
   historyCursor: number;
 }
 
-export default function LabPanel({ lab, commands, onChange }: Props) {
+export default function LabPanel({
+  lab,
+  questionText,
+  topologyImages,
+  commands,
+  onChange,
+}: Props) {
   const devices = lab.devices;
   const [activeDevice, setActiveDevice] = useState(devices[0]?.hostname ?? '');
+  const [infoTab, setInfoTab] = useState<InfoTab>('tasks');
   const [states, setStates] = useState<Record<string, DeviceTerminalState>>(() => {
     const init: Record<string, DeviceTerminalState> = {};
     for (const d of devices) {
@@ -58,6 +80,14 @@ export default function LabPanel({ lab, commands, onChange }: Props) {
       screenRef.current.scrollTop = screenRef.current.scrollHeight;
     }
   }, [currentState?.lines.length, activeDevice]);
+
+  // 問題文を左パネルのタブ（タスク / ガイドライン / トポロジ）に分解
+  const sections = useMemo(() => parseLabSections(questionText), [questionText]);
+  // 同一ファイル名の重複を除去したトポロジ図
+  const topoImages = useMemo(
+    () => Array.from(new Set(topologyImages ?? [])),
+    [topologyImages],
+  );
 
   if (!devices.length || !currentState) return null;
 
@@ -218,50 +248,135 @@ export default function LabPanel({ lab, commands, onChange }: Props) {
     }
   };
 
-  const tasksForDevice = useMemo(
-    () => lab.tasks.filter((t) => t.device === activeDevice),
-    [lab.tasks, activeDevice],
-  );
-
   const prompt = buildPrompt(activeDevice, currentState.cli);
 
   return (
     <div className="lab">
-      <div className="lab__deviceTabs">
-        {devices.map((d) => (
-          <button
-            key={d.hostname}
-            className={`lab__deviceTab${activeDevice === d.hostname ? ' lab__deviceTab--active' : ''}`}
-            onClick={() => setActiveDevice(d.hostname)}
-          >
-            {d.hostname}
-          </button>
-        ))}
-      </div>
-
-      {tasksForDevice.length > 0 && (
-        <div className="lab__deviceTaskHint" style={{ display: 'none' }} />
-      )}
-
-      <div className="lab__terminal" onClick={() => inputRef.current?.focus()}>
-        <div className="lab__screen" ref={screenRef}>
-          {currentState.lines.map((l, i) => (
-            <div key={i} className="lab__line">{l}</div>
-          ))}
-          <div className="lab__inputLine">
-            <span className="lab__prompt">{prompt}</span>
-            <input
-              ref={inputRef}
-              className="lab__input"
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              onKeyDown={handleKey}
-              spellCheck={false}
-              autoComplete="off"
-              autoCapitalize="off"
-            />
+      <div className="lab__split">
+        {/* 左パネル: タスク / ガイドライン / トポロジ（本番試験と同じ 3 タブ） */}
+        <section className="lab__info">
+          <div className="lab__infoTabs" role="tablist" aria-label="ラボ情報">
+            {INFO_TABS.map((t) => (
+              <button
+                key={t.key}
+                type="button"
+                role="tab"
+                id={`lab-infotab-${t.key}`}
+                aria-selected={infoTab === t.key}
+                aria-controls="lab-infopanel"
+                className={`lab__infoTab${infoTab === t.key ? ' lab__infoTab--active' : ''}`}
+                onClick={() => setInfoTab(t.key)}
+              >
+                {t.label}
+              </button>
+            ))}
           </div>
-        </div>
+
+          <div
+            className="lab__infoBody"
+            id="lab-infopanel"
+            role="tabpanel"
+            aria-labelledby={`lab-infotab-${infoTab}`}
+          >
+            {infoTab === 'tasks' && (
+              sections.intro || sections.tasks ? (
+                <>
+                  {sections.intro && (
+                    <p className="lab__sectionText">{sections.intro}</p>
+                  )}
+                  {sections.tasks && (
+                    <p className="lab__sectionText">{sections.tasks}</p>
+                  )}
+                </>
+              ) : (
+                <p className="lab__empty">タスクの記載はありません。</p>
+              )
+            )}
+
+            {infoTab === 'guidelines' && (
+              sections.guidelines ? (
+                <p className="lab__sectionText">{sections.guidelines}</p>
+              ) : (
+                <p className="lab__empty">ガイドラインの記載はありません。</p>
+              )
+            )}
+
+            {infoTab === 'topology' && (
+              <>
+                {topoImages.length > 0 && (
+                  <div className="lab__topoImgs">
+                    {topoImages.map((src) => (
+                      <img key={src} src={resolveImageUrl(src)} alt="トポロジ図" />
+                    ))}
+                  </div>
+                )}
+                {sections.topology && (
+                  <p className="lab__sectionText">{sections.topology}</p>
+                )}
+                {lab.topology && (
+                  <pre className="lab__topoAscii">{lab.topology}</pre>
+                )}
+                {topoImages.length === 0 && !sections.topology && !lab.topology && (
+                  <p className="lab__empty">トポロジ図はありません。</p>
+                )}
+                <div className="lab__topoDevices">
+                  <span className="lab__topoDevicesLabel">
+                    デバイスコンソールを開く:
+                  </span>
+                  {devices.map((d) => (
+                    <button
+                      key={d.hostname}
+                      type="button"
+                      className={`lab__topoDevice${activeDevice === d.hostname ? ' lab__topoDevice--active' : ''}`}
+                      onClick={() => setActiveDevice(d.hostname)}
+                    >
+                      {d.hostname}
+                    </button>
+                  ))}
+                </div>
+              </>
+            )}
+          </div>
+        </section>
+
+        {/* 右パネル: デバイスごとのタブを持つターミナル */}
+        <section className="lab__console">
+          <div className="lab__deviceTabs" role="tablist" aria-label="デバイスコンソール">
+            {devices.map((d) => (
+              <button
+                key={d.hostname}
+                type="button"
+                role="tab"
+                aria-selected={activeDevice === d.hostname}
+                className={`lab__deviceTab${activeDevice === d.hostname ? ' lab__deviceTab--active' : ''}`}
+                onClick={() => setActiveDevice(d.hostname)}
+              >
+                {d.hostname}
+              </button>
+            ))}
+          </div>
+
+          <div className="lab__terminal" onClick={() => inputRef.current?.focus()}>
+            <div className="lab__screen" ref={screenRef}>
+              {currentState.lines.map((l, i) => (
+                <div key={i} className="lab__line">{l}</div>
+              ))}
+              <div className="lab__inputLine">
+                <span className="lab__prompt">{prompt}</span>
+                <input
+                  ref={inputRef}
+                  className="lab__input"
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
+                  onKeyDown={handleKey}
+                  spellCheck={false}
+                  autoComplete="off"
+                  autoCapitalize="off"
+                />
+              </div>
+            </div>
+          </div>
+        </section>
       </div>
     </div>
   );
