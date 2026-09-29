@@ -44,6 +44,9 @@ const ABBREVIATIONS: Array<[RegExp, string]> = [
   // SwitchPort
   [/\bsw\b/gi, 'switchport'],
 
+  // ip domain name（IOS 15 以降の表記）と ip domain-name（従来表記）を同一視する
+  [/^ip domain name\b/i, 'ip domain-name'],
+
   // よくある語の短縮
   [/\bdesc\b/gi, 'description'],
   [/\bsh\b/gi, 'show'],
@@ -135,8 +138,13 @@ const GLOBAL_CONFIG_PATTERNS: RegExp[] = [
   /^ip domain[- ]name /,
   /^no ip domain-lookup$/,
   /^ip name-server /,
-  /^ip dhcp /,
-  /^ip arp inspection /,
+  // ip dhcp / ip arp inspection はインターフェース版（ip dhcp snooping trust,
+  // ip dhcp relay information trusted, ip arp inspection trust 等）が存在するため、
+  // グローバル設定専用のものだけを列挙する（文脈非依存にしてよいのはこれらのみ）
+  /^(no )?ip dhcp (pool|excluded-address)\b/,
+  /^(no )?ip dhcp snooping$/,
+  /^(no )?ip dhcp snooping (vlan|information|verify|database)\b/,
+  /^(no )?ip arp inspection (vlan|validate|filter)\b/,
   /^ip nat inside source /,
   /^ip nat pool /,
   /^ip access-list /,
@@ -144,7 +152,7 @@ const GLOBAL_CONFIG_PATTERNS: RegExp[] = [
   /^username /,
   /^enable (secret|password) /,
   /^service /,
-  /^ntp /,
+  /^ntp (master|server)\b/,
   /^snmp-server /,
   /^banner /,
   /^aaa /,

@@ -287,7 +287,7 @@ const MODE_COMMANDS: Partial<Record<CliMode, string[]>> = {
   // ライン設定（host(config-line)#）
   'config-line': [
     'absolute-timeout', 'accounting', 'access-class', 'authorization', 'banner',
-    'default', 'do', 'exec-timeout', 'exit', 'help', 'history', 'ipv6', 'length',
+    'default', 'do', 'end', 'exec-timeout', 'exit', 'help', 'history', 'ipv6', 'length',
     'location', 'lockable', 'logging', 'login', 'logout-warning', 'monitor',
     'motd-banner', 'no', 'notify', 'padding', 'password', 'privilege',
     'refuse-message', 'rotary', 'session-limit', 'session-timeout', 'speed',
@@ -297,20 +297,20 @@ const MODE_COMMANDS: Partial<Record<CliMode, string[]>> = {
   // ルーティングプロセス設定（host(config-router)#）
   'config-router': [
     'area', 'auto-cost', 'default', 'default-information', 'default-metric',
-    'distance', 'distribute-list', 'do', 'exit', 'help', 'log-adjacency-changes',
+    'distance', 'distribute-list', 'do', 'end', 'exit', 'help', 'log-adjacency-changes',
     'maximum-paths', 'neighbor', 'network', 'no', 'passive-interface',
     'redistribute', 'router-id', 'timers',
     'default-information originate',
   ],
   // VLAN設定（host(config-vlan)#）
-  'config-vlan': ['default', 'do', 'exit', 'name', 'no', 'remote-span', 'shutdown'],
+  'config-vlan': ['default', 'do', 'end', 'exit', 'help', 'name', 'no', 'remote-span', 'shutdown'],
   // 名前付きACL（標準/拡張）
-  'config-acl-std': ['default', 'deny', 'do', 'exit', 'no', 'permit', 'remark'],
-  'config-acl-ext': ['default', 'deny', 'do', 'exit', 'no', 'permit', 'remark'],
+  'config-acl-std': ['default', 'deny', 'do', 'end', 'exit', 'help', 'no', 'permit', 'remark'],
+  'config-acl-ext': ['default', 'deny', 'do', 'end', 'exit', 'help', 'no', 'permit', 'remark'],
 };
 
 /** 汎用的な設定サブモードのフォールバック（未定義モード用）。 */
-const SUBMODE_FALLBACK = ['default', 'do', 'exit', 'help', 'no'];
+const SUBMODE_FALLBACK = ['default', 'do', 'end', 'exit', 'help', 'no'];
 
 /**
  * 現在の CLI モードで入力可能なコマンドフレーズ一覧を返す。

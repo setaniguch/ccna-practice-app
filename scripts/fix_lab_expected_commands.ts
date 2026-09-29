@@ -48,14 +48,20 @@ const GLOBAL_ONLY_PATTERNS: RegExp[] = [
   /^ip domain[- ]name /,
   /^no ip domain-lookup$/,
   /^ip name-server /,
-  /^ip dhcp /,
-  /^ip arp inspection /,
+  // ip dhcp / ip arp inspection はインターフェース版（ip dhcp snooping trust,
+  // ip dhcp relay information trusted, ip arp inspection trust 等）が存在するため、
+  // グローバル設定専用のものだけを列挙する
+  /^(no )?ip dhcp (pool|excluded-address)\b/,
+  /^(no )?ip dhcp snooping$/,
+  /^(no )?ip dhcp snooping (vlan|information|verify|database)\b/,
+  /^(no )?ip arp inspection (vlan|validate|filter)\b/,
   /^ip nat inside source /,
   /^ip nat pool /,
+  /^access-list /,
   /^username /,
   /^enable (secret|password) /,
   /^service /,
-  /^ntp /,
+  /^ntp (master|server)\b/,
   /^snmp-server /,
   /^banner /,
   /^aaa /,
@@ -158,6 +164,19 @@ function fixCommands(original: string[]): string[] | null {
     out.push(raw);
     state = applyCommand(state, raw).next;
   }
+
+  // グローバル設定モードを抜けてしまう余計な `exit` を除去する。
+  // 模範解答の `exit` は常に「サブモードを抜ける」意図で書かれており、
+  // config から priv へ落ちると以降の設定コマンドが成立しなくなる。
+  const trimmed: string[] = [];
+  let st: CliState = INITIAL_STATE;
+  for (const cmd of out) {
+    if (normalizeCommand(cmd) === 'exit' && st.mode === 'config') continue;
+    trimmed.push(cmd);
+    st = applyCommand(st, cmd).next;
+  }
+  out.length = 0;
+  out.push(...trimmed);
 
   // 末尾の `end` と保存コマンドを保証する
   const norms = out.map((c) => normalizeCommand(c));
