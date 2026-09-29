@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { gradeLabCommands, gradeLabLines, normalizeCommand } from './iosCommand';
+import { normalizeCommand } from './iosCommand';
 
 describe('normalizeCommand: 保存系の等価化', () => {
   const canonical = 'copy running-config startup-config';
@@ -55,151 +55,10 @@ describe('normalizeCommand: interface range の表記ゆれ吸収', () => {
   });
 });
 
-describe('gradeLabCommands: コンテキスト（インターフェース）を区別する', () => {
-  const expected = [
-    'enable',
-    'configure terminal',
-    'interface ethernet0/1',
-    'ip ospf 33 area 0',
-    'interface ethernet0/2',
-    'ip ospf 33 area 0',
-    'end',
-  ];
-
-  it('e0/1 でしか打っていない ip ospf は e0/2 側では正解にならない', () => {
-    const entered = [
-      'enable',
-      'configure terminal',
-      'interface e0/1',
-      'ip ospf 33 area 0',
-    ];
-    const lines = gradeLabLines(entered, expected);
-    // interface ethernet0/1 と その ip ospf は ok、interface ethernet0/2 側の ip ospf は ng
-    const byCmd = lines.map((l) => `${l.ok ? 'O' : 'X'} ${l.command}`);
-    expect(byCmd).toEqual([
-      'O enable',
-      'O configure terminal',
-      'O interface ethernet0/1',
-      'O ip ospf 33 area 0',
-      'X interface ethernet0/2',
-      'X ip ospf 33 area 0',
-      'X end',
-    ]);
-    const r = gradeLabCommands(entered, expected);
-    expect(r.matched).toBe(4);
-    expect(r.total).toBe(7);
-  });
-
-  it('両インターフェースを正しく設定すれば全一致する', () => {
-    const entered = [
-      'enable',
-      'configure terminal',
-      'interface e0/1',
-      'ip ospf 33 area 0',
-      'interface e0/2',
-      'ip ospf 33 area 0',
-      'end',
-    ];
-    const r = gradeLabCommands(entered, expected);
-    expect(r.matched).toBe(r.total);
-  });
-});
-
-describe('gradeLabCommands: interface range と個別 interface の等価', () => {
-  const expected = [
-    'enable', 'configure terminal',
-    'interface ethernet0/0',
-    'switchport mode trunk',
-    'switchport trunk allowed vlan 1,12,22',
-    'interface ethernet0/1',
-    'switchport mode trunk',
-    'switchport trunk allowed vlan 1,12,22',
-  ];
-
-  it('range e0/0-1 でまとめて設定しても個別設定の期待に一致する', () => {
-    const entered = [
-      'enable', 'configure terminal',
-      'interface range e0/0-1',
-      'switchport mode trunk',
-      'switchport trunk allowed vlan 1,12,22',
-    ];
-    const r = gradeLabCommands(entered, expected);
-    expect(r.matched).toBe(r.total);
-  });
-
-  it('逆に、期待が range でも個別入力で一致する', () => {
-    const exp = [
-      'enable', 'configure terminal',
-      'interface range ethernet0/0 - 1',
-      'channel-group 34 mode active',
-    ];
-    const entered = [
-      'enable', 'configure terminal',
-      'interface ethernet0/0', 'channel-group 34 mode active',
-      'interface ethernet0/1', 'channel-group 34 mode active',
-    ];
-    const r = gradeLabCommands(entered, exp);
-    expect(r.matched).toBe(r.total);
-  });
-
-  it('片方の IF しか設定していなければ range 期待は未達成', () => {
-    const exp = [
-      'enable', 'configure terminal',
-      'interface range ethernet0/0 - 1',
-      'channel-group 34 mode active',
-    ];
-    const entered = [
-      'enable', 'configure terminal',
-      'interface ethernet0/0', 'channel-group 34 mode active',
-    ];
-    const lines = gradeLabLines(entered, exp);
-    const cg = lines.find((l) => l.command === 'channel-group 34 mode active');
-    expect(cg?.ok).toBe(false);
-  });
-});
-
-describe('gradeLabCommands: グローバルコマンドは文脈非依存(lldp run 等)', () => {
-  it('模範解答が interface 文脈直後に lldp run を置いても、config で打てば一致', () => {
-    const expected = [
-      'enable', 'configure terminal',
-      'interface range ethernet0/1 - 3',
-      'switchport mode access',
-      'switchport access vlan 77',
-      'lldp run',
-      'end', 'write memory',
-    ];
-    const entered = [
-      'enable', 'configure terminal',
-      'interface range e0/1-3',
-      'switchport mode access',
-      'switchport access vlan 77',
-      'exit',
-      'lldp run',
-      'end', 'write memory',
-    ];
-    const lines = gradeLabLines(entered, expected);
-    const l = lines.find((x) => x.command === 'lldp run');
-    expect(l?.ok).toBe(true);
-    expect(gradeLabCommands(entered, expected).matched).toBe(
-      gradeLabCommands(entered, expected).total,
+describe('normalizeCommand: ip domain name / ip domain-name の等価化', () => {
+  it('どちらの表記でも同じに正規化される', () => {
+    expect(normalizeCommand('ip domain name cisco.com')).toBe(
+      normalizeCommand('ip domain-name cisco.com'),
     );
-  });
-});
-
-describe('gradeLabCommands: 保存コマンドの相互一致', () => {
-  it('write memory 入力が copy running-config startup-config の正解に一致する', () => {
-    const r = gradeLabCommands(
-      ['configure terminal', 'write memory'],
-      ['configure terminal', 'copy running-config startup-config'],
-    );
-    expect(r.matched).toBe(2);
-    expect(r.total).toBe(2);
-    expect(r.missing).toEqual([]);
-  });
-
-  it('wr 入力が write memory の正解に一致する', () => {
-    const r = gradeLabCommands(['wr'], ['write memory']);
-    expect(r.matched).toBe(1);
-    expect(r.missing).toEqual([]);
   });
 });

@@ -2,7 +2,7 @@ import { useState } from 'react';
 import type { Question, AnswerMap, DragDropAnswerMap, LabAnswerMap } from '../types';
 import QuestionCard from './QuestionCard';
 import { resolveImageUrl } from '../utils/imagePath';
-import { gradeLabCommands, gradeLabLines } from '../utils/iosCommand';
+import { gradeLabCommands, gradeLabLines } from '../utils/iosConfigState';
 import { explainCommand } from '../utils/explainCommand';
 import './PracticeMode.css';
 
@@ -173,6 +173,12 @@ export default function PracticeMode({ questions, onFinish }: Props) {
                 <div className="practice-answer__lab">
                   {/* 区分け①: 模範解答のコマンド一覧（○/× 判定） */}
                   <strong>模範解答（コマンド）:</strong>
+                  <p className="practice-answer__gradeNote">
+                    判定は最終的な設定内容で行います。順序やコマンドの選び方（interface range
+                    でまとめる、打ち直す、exit を省くなど）が違っても、設定結果が同じなら正解です。
+                    <span className="practice-answer__labMark">—</span>
+                    の行はモード移動などで設定内容を伴わないため採点対象外です。
+                  </p>
                   {current.lab.tasks.map((t, idx) => {
                     const entered =
                       (labAnswers[current.number] && labAnswers[current.number][t.device]) ?? [];
@@ -188,7 +194,11 @@ export default function PracticeMode({ questions, onFinish }: Props) {
                             <li
                               key={i}
                               className={ln.optional ? 'opt' : ln.ok ? 'ok' : 'ng'}
-                              title={ln.optional ? '実機では省略可能なため採点対象外' : undefined}
+                              title={
+                                ln.optional
+                                  ? 'モード移動など設定内容を伴わない行のため採点対象外'
+                                  : undefined
+                              }
                             >
                               <span className="practice-answer__labMark">
                                 {ln.optional ? '—' : ln.ok ? '○' : '×'}

@@ -249,7 +249,14 @@ button.small {
 .practice-answer__labCmds li.ok .practice-answer__labMark {
   color: #16a34a;
 }
-/* 実機では省略可能で採点対象外の行（exit など） */
+.practice-answer__gradeNote {
+  margin: 4px 0 8px;
+  font-size: 0.82rem;
+  line-height: 1.7;
+  color: #6b7280;
+}
+
+/* モード移動など、設定内容を伴わず採点対象外の行（enable / exit / interface 選択など） */
 .practice-answer__labCmds li.opt {
   background: rgba(107, 114, 128, 0.08);
   color: #6b7280;

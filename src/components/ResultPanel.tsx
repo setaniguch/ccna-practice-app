@@ -1,6 +1,6 @@
 import type { Question, AnswerMap, DragDropAnswerMap, LabAnswerMap } from '../types';
 import { resolveImageUrl } from '../utils/imagePath';
-import { gradeLabCommands, gradeLabLines } from '../utils/iosCommand';
+import { gradeLabCommands, gradeLabLines } from '../utils/iosConfigState';
 import './ResultPanel.css';
 
 interface Props {
@@ -163,7 +163,13 @@ export default function ResultPanel({ questions, answers, ddAnswers, labAnswers,
                                 className={ln.optional ? 'opt' : ln.ok ? 'ok' : 'ng'}
                               >
                                 <td><code>{ln.command}</code></td>
-                                <td title={ln.optional ? '実機では省略可能なため採点対象外' : undefined}>
+                                <td
+                                  title={
+                                    ln.optional
+                                      ? 'モード移動など設定内容を伴わない行のため採点対象外'
+                                      : undefined
+                                  }
+                                >
                                   {ln.optional ? '—' : ln.ok ? '○' : '×'}
                                 </td>
                               </tr>
