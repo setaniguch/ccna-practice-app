@@ -158,9 +158,14 @@ export default function ResultPanel({ questions, answers, ddAnswers, labAnswers,
                           </thead>
                           <tbody>
                             {gradeLabLines(entered, t.expected_commands).map((ln, i) => (
-                              <tr key={i} className={ln.ok ? 'ok' : 'ng'}>
+                              <tr
+                                key={i}
+                                className={ln.optional ? 'opt' : ln.ok ? 'ok' : 'ng'}
+                              >
                                 <td><code>{ln.command}</code></td>
-                                <td>{ln.ok ? '○' : '×'}</td>
+                                <td title={ln.optional ? '実機では省略可能なため採点対象外' : undefined}>
+                                  {ln.optional ? '—' : ln.ok ? '○' : '×'}
+                                </td>
                               </tr>
                             ))}
                           </tbody>

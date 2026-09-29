@@ -140,6 +140,12 @@
   background: #f0fdf4;
 }
 
+/* 実機では省略可能で採点対象外の行（exit など） */
+.result__ddtable tr.opt td {
+  background: #f9fafb;
+  color: #6b7280;
+}
+
 .result__ddtable tr.ng td {
   background: #fef2f2;
 }

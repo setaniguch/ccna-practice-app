@@ -149,6 +149,7 @@ const GLOBAL_CONFIG_PATTERNS: RegExp[] = [
   /^banner /,
   /^aaa /,
   /^spanning-tree (mode|vlan|portfast default)/,
+  /^crypto key generate /,
 ];
 
 function isGlobalConfigCommand(norm: string): boolean {
@@ -219,21 +220,31 @@ function simulate(
 }
 
 /**
+ * 採点対象外として扱うコマンド。
+ * `exit` は実機では省略できる（サブモードから直接グローバル設定コマンドを打てる）ため、
+ * 模範解答には正規形として載せるが、入力必須にはしない。
+ */
+function isOptionalCommand(norm: string): boolean {
+  return norm === 'exit';
+}
+
+/**
  * 期待コマンドを1行ずつ、コンテキストを考慮して正誤判定する。
  * 表示（模範解答の○/×）にも採点にも使う単一の真実源。
  * 期待コマンドは、その要件キーが「すべて」入力側に含まれていれば正解。
+ * `optional: true` の行は表示だけ行い、採点（matched / total）には数えない。
  */
 export function gradeLabLines(
   entered: string[],
   expected: string[],
-): { command: string; ok: boolean }[] {
+): { command: string; ok: boolean; optional: boolean }[] {
   const enteredKeys = new Set<string>();
   simulate(entered, (_c, keys) => keys.forEach((k) => enteredKeys.add(k)));
 
-  const lines: { command: string; ok: boolean }[] = [];
+  const lines: { command: string; ok: boolean; optional: boolean }[] = [];
   simulate(expected, (command, keys) => {
     const ok = keys.length > 0 && keys.every((k) => enteredKeys.has(k));
-    lines.push({ command, ok });
+    lines.push({ command, ok, optional: isOptionalCommand(normalizeCommand(command)) });
   });
   return lines;
 }
@@ -242,15 +253,16 @@ export function gradeLabLines(
  * 入力コマンド列と期待コマンド列をコンテキスト付きで比較する。
  * - 順序は問わないが、コマンドが打たれたモード／インターフェースは区別する
  * - interface range と個別 interface は等価に扱う
- * - 完全一致した正解コマンド数 / 期待コマンド総数 を返す
+ * - `exit` のような省略可能な移動コマンドは採点対象から除く
+ * - 完全一致した正解コマンド数 / 採点対象の期待コマンド数 を返す
  */
 export function gradeLabCommands(
   entered: string[],
   expected: string[],
 ): { matched: number; total: number; missing: string[]; extra: string[] } {
-  const lines = gradeLabLines(entered, expected);
-  const matched = lines.filter((l) => l.ok);
-  const missing = lines.filter((l) => !l.ok).map((l) => l.command);
+  const graded = gradeLabLines(entered, expected).filter((l) => !l.optional);
+  const matched = graded.filter((l) => l.ok);
+  const missing = graded.filter((l) => !l.ok).map((l) => l.command);
 
   const expectedKeys = new Set<string>();
   simulate(expected, (_c, keys) => keys.forEach((k) => expectedKeys.add(k)));
@@ -259,5 +271,5 @@ export function gradeLabCommands(
     if (!keys.every((k) => expectedKeys.has(k))) extra.push(command);
   });
 
-  return { matched: matched.length, total: lines.length, missing, extra };
+  return { matched: matched.length, total: graded.length, missing, extra };
 }

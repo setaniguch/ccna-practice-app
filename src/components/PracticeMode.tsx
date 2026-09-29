@@ -185,8 +185,14 @@ export default function PracticeMode({ questions, onFinish }: Props) {
                         </div>
                         <ul className="practice-answer__labCmds">
                           {lines.map((ln, i) => (
-                            <li key={i} className={ln.ok ? 'ok' : 'ng'}>
-                              <span className="practice-answer__labMark">{ln.ok ? '○' : '×'}</span>
+                            <li
+                              key={i}
+                              className={ln.optional ? 'opt' : ln.ok ? 'ok' : 'ng'}
+                              title={ln.optional ? '実機では省略可能なため採点対象外' : undefined}
+                            >
+                              <span className="practice-answer__labMark">
+                                {ln.optional ? '—' : ln.ok ? '○' : '×'}
+                              </span>
                               <code>{ln.command}</code>
                             </li>
                           ))}

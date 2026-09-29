@@ -72,6 +72,45 @@ export function buildPrompt(hostname: string, state: CliState): string {
 }
 
 /**
+ * グローバル設定モードで打つとサブモードへ入るコマンドを判定する。
+ * 実機ではサブモードからも同じコマンドを直接打てる（パーサが親モードで解釈する）ため、
+ * config / config-XXX のどちらからでもこの判定を共用する。
+ * 該当しなければ null。
+ */
+function enterSubMode(lower: string): CliState | null {
+  // interface X
+  let m = lower.match(/^interface\s+(\S.*)$/);
+  if (m) return { mode: 'config-if', context: m[1] };
+  // line vty / con / aux
+  m = lower.match(/^line\s+(\S.*)$/);
+  if (m) return { mode: 'config-line', context: m[1] };
+  // router ospf/eigrp/rip/bgp
+  m = lower.match(/^router\s+(\S.*)$/);
+  if (m) return { mode: 'config-router', context: m[1] };
+  // vlan N
+  m = lower.match(/^vlan\s+(\d+)$/);
+  if (m) return { mode: 'config-vlan', context: m[1] };
+  // ip access-list standard/extended X
+  m = lower.match(/^ip access-list\s+standard\s+(\S+)$/);
+  if (m) return { mode: 'config-acl-std', context: m[1] };
+  m = lower.match(/^ip access-list\s+extended\s+(\S+)$/);
+  if (m) return { mode: 'config-acl-ext', context: m[1] };
+  // aaa group
+  m = lower.match(/^aaa group\s+(\S.*)$/);
+  if (m) return { mode: 'config-aaa', context: m[1] };
+  // key chain X
+  m = lower.match(/^key chain\s+(\S+)$/);
+  if (m) return { mode: 'config-keychain', context: m[1] };
+  // radius server X
+  m = lower.match(/^radius server\s+(\S+)$/);
+  if (m) return { mode: 'config-radius', context: m[1] };
+  // tacacs server X
+  m = lower.match(/^tacacs server\s+(\S+)$/);
+  if (m) return { mode: 'config-tacacs', context: m[1] };
+  return null;
+}
+
+/**
  * 入力された 1 行コマンドを実行（モード遷移のみ）。
  * 戻り値: 次の状態と、画面表示用の出力（複数行可）
  */
@@ -120,35 +159,8 @@ export function applyCommand(
 
   // グローバル → サブモード
   if (state.mode === 'config') {
-    // interface X
-    let m = lower.match(/^interface\s+(\S.*)$/);
-    if (m) return { next: { mode: 'config-if', context: m[1] }, output: [] };
-    // line vty / con / aux
-    m = lower.match(/^line\s+(\S.*)$/);
-    if (m) return { next: { mode: 'config-line', context: m[1] }, output: [] };
-    // router ospf/eigrp/rip/bgp
-    m = lower.match(/^router\s+(\S.*)$/);
-    if (m) return { next: { mode: 'config-router', context: m[1] }, output: [] };
-    // vlan N
-    m = lower.match(/^vlan\s+(\d+)$/);
-    if (m) return { next: { mode: 'config-vlan', context: m[1] }, output: [] };
-    // ip access-list standard X
-    m = lower.match(/^ip access-list\s+standard\s+(\S+)$/);
-    if (m) return { next: { mode: 'config-acl-std', context: m[1] }, output: [] };
-    m = lower.match(/^ip access-list\s+extended\s+(\S+)$/);
-    if (m) return { next: { mode: 'config-acl-ext', context: m[1] }, output: [] };
-    // aaa group
-    m = lower.match(/^aaa group\s+(\S.*)$/);
-    if (m) return { next: { mode: 'config-aaa', context: m[1] }, output: [] };
-    // key chain X
-    m = lower.match(/^key chain\s+(\S+)$/);
-    if (m) return { next: { mode: 'config-keychain', context: m[1] }, output: [] };
-    // radius server X
-    m = lower.match(/^radius server\s+(\S+)$/);
-    if (m) return { next: { mode: 'config-radius', context: m[1] }, output: [] };
-    // tacacs server X
-    m = lower.match(/^tacacs server\s+(\S+)$/);
-    if (m) return { next: { mode: 'config-tacacs', context: m[1] }, output: [] };
+    const next = enterSubMode(lower);
+    if (next) return { next, output: [] };
     // snmp-server view など → snmp
     return { next: state, output: [] };
   }
@@ -159,16 +171,12 @@ export function applyCommand(
     if (m) return { next: { mode: 'config-keychain-key', context: m[1] }, output: [] };
   }
 
-  // どのサブモードでも `interface` を入力すると config-if に直接遷移する（IOSの実挙動）
+  // サブモードにいても、親（グローバル設定）のサブモード移行コマンドは直接打てる。
+  // 実機の IOS パーサは認識できないコマンドを親モードで解釈するため（例: config-if から
+  // interface / vlan / ip access-list をそのまま入力できる）、同じ判定を再利用する。
   if (state.mode.startsWith('config')) {
-    let m = lower.match(/^interface\s+(\S.*)$/);
-    if (m) return { next: { mode: 'config-if', context: m[1] }, output: [] };
-    m = lower.match(/^line\s+(\S.*)$/);
-    if (m) return { next: { mode: 'config-line', context: m[1] }, output: [] };
-    m = lower.match(/^router\s+(\S.*)$/);
-    if (m) return { next: { mode: 'config-router', context: m[1] }, output: [] };
-    m = lower.match(/^vlan\s+(\d+)$/);
-    if (m) return { next: { mode: 'config-vlan', context: m[1] }, output: [] };
+    const next = enterSubMode(lower);
+    if (next) return { next, output: [] };
   }
 
   // それ以外のコマンドは状態変化なし（採点用に記録するだけ）

@@ -249,6 +249,15 @@ button.small {
 .practice-answer__labCmds li.ok .practice-answer__labMark {
   color: #16a34a;
 }
+/* 実機では省略可能で採点対象外の行（exit など） */
+.practice-answer__labCmds li.opt {
+  background: rgba(107, 114, 128, 0.08);
+  color: #6b7280;
+}
+.practice-answer__labCmds li.opt .practice-answer__labMark {
+  color: #9ca3af;
+}
+
 .practice-answer__labCmds li.ng .practice-answer__labMark {
   color: #dc2626;
 }
