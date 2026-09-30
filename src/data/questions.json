@@ -46980,7 +46980,7 @@
       "tasks": [
         {
           "name": "SW-2: Eth0/0 トランク + Po23 (LACP passive)",
-          "description": "Eth0/0 トランク + access vlan 10 / native vlan 11、Eth0/2,Eth0/3 LACP passive、Po23 トランク",
+          "description": "Eth0/0 トランクで許可VLAN 10 のみ / native vlan 11、Eth0/2,Eth0/3 LACP passive、Po23 トランク",
           "device": "SW-2",
           "expected_commands": [
             "enable",
@@ -46988,7 +46988,7 @@
             "interface ethernet0/0",
             "switchport mode trunk",
             "switchport trunk encapsulation dot1q",
-            "switchport access vlan 10",
+            "switchport trunk allowed vlan 10",
             "switchport trunk native vlan 11",
             "interface ethernet0/2",
             "switchport mode trunk",
@@ -47007,7 +47007,7 @@
         },
         {
           "name": "SW-3: Eth0/0 トランク + Po23 (LACP active)",
-          "description": "Eth0/0 トランク + access vlan 10 / native vlan 11、Eth0/2,Eth0/3 LACP active、Po23 トランク",
+          "description": "Eth0/0 トランクで許可VLAN 10 のみ / native vlan 11、Eth0/2,Eth0/3 LACP active、Po23 トランク",
           "device": "SW-3",
           "expected_commands": [
             "enable",
@@ -47015,7 +47015,7 @@
             "interface ethernet0/0",
             "switchport mode trunk",
             "switchport trunk encapsulation dot1q",
-            "switchport access vlan 10",
+            "switchport trunk allowed vlan 10",
             "switchport trunk native vlan 11",
             "interface ethernet0/2",
             "switchport mode trunk",
