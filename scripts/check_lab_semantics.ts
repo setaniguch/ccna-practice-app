@@ -173,13 +173,12 @@ function checkFacts(facts: FactMap): string[] {
         attrs.has('trunk-allowed-vlan') ||
         attrs.has('trunk-native-vlan') ||
         attrs.has('ip-address');
+      // なお switchport mode の有無は見ない。問題文が「ポートはトランクとして
+      // 事前設定済み」としている場合、Po は最初のメンバーポートから設定を継承するため
+      // 公式解答でも mode を明示しないことがある（Q808 の模範解答がその例）。
       if (!configured) {
         problems.push(
           `${ifName}: channel-group で新規作成されているが、Port-Channel 側にトランク／アクセス設定が無い`,
-        );
-      } else if (!attrs.has('switchport-mode') && !attrs.has('ip-address')) {
-        problems.push(
-          `${ifName}: Port-Channel に switchport mode (trunk/access) が設定されていない`,
         );
       }
     }
