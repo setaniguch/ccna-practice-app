@@ -89,23 +89,86 @@ function vlanSetValue(set: Set<number>): string {
   return [...set].sort((a, b) => a - b).join(',');
 }
 
-/** ACL でよく使うポート名を番号に寄せる（eq telnet と eq 23 を同一視する） */
-const PORT_ALIASES: Record<string, string> = {
-  ftp: '21',
+/**
+ * ACL のポート名を番号へ寄せる表（eq telnet と eq 23 を同一視するため）。
+ * Cisco IOS の ACL が受け付けるキーワードに加え、学習者が打ちがちな別名
+ * （https / http / ssh / dhcp など）も番号へ寄せて、どちらの表記でも正解にする。
+ */
+export const PORT_ALIASES: Record<string, string> = {
+  // --- TCP ---
+  echo: '7',
+  discard: '9',
+  daytime: '13',
+  chargen: '19',
   'ftp-data': '20',
+  ftp: '21',
   ssh: '22',
   telnet: '23',
   smtp: '25',
+  time: '37',
+  whois: '43',
+  tacacs: '49',
   domain: '53',
-  bootps: '67',
-  bootpc: '68',
-  tftp: '69',
+  gopher: '70',
+  finger: '79',
   www: '80',
   http: '80',
+  hostname: '101',
+  pop2: '109',
   pop3: '110',
-  snmp: '161',
+  sunrpc: '111',
+  ident: '113',
+  nntp: '119',
+  msrpc: '135',
+  irc: '194',
   https: '443',
+  'pim-auto-rp': '496',
+  exec: '512',
+  login: '513',
+  cmd: '514',
+  syslog: '514',
+  lpd: '515',
+  talk: '517',
+  uucp: '540',
+  klogin: '543',
+  kshell: '544',
+  bgp: '179',
+  // --- UDP ---
+  bootps: '67',
+  dhcp: '67',
+  bootp: '67',
+  bootpc: '68',
+  tftp: '69',
+  ntp: '123',
+  'netbios-ns': '137',
+  'netbios-dgm': '138',
+  'netbios-ss': '139',
+  snmp: '161',
+  snmptrap: '162',
+  xdmcp: '177',
+  dnsix: '195',
+  'mobile-ip': '434',
+  isakmp: '500',
+  rip: '520',
+  biff: '512',
+  who: '513',
+  nameserver: '42',
+  'non500-isakmp': '4500',
 };
+
+/** Cisco IOS の ACL が実際に受け付けるポートキーワード（点検スクリプト用） */
+export const IOS_PORT_KEYWORDS = new Set<string>([
+  // TCP
+  'bgp', 'chargen', 'cmd', 'daytime', 'discard', 'domain', 'echo', 'exec',
+  'finger', 'ftp', 'ftp-data', 'gopher', 'hostname', 'ident', 'irc', 'klogin',
+  'kshell', 'login', 'lpd', 'msrpc', 'nntp', 'pim-auto-rp', 'pop2', 'pop3',
+  'smtp', 'sunrpc', 'syslog', 'tacacs', 'talk', 'telnet', 'time', 'uucp',
+  'whois', 'www',
+  // UDP
+  'biff', 'bootpc', 'bootps', 'dnsix', 'isakmp', 'mobile-ip', 'nameserver',
+  'netbios-dgm', 'netbios-ns', 'netbios-ss', 'non500-isakmp', 'ntp', 'rip',
+  'snmp', 'snmptrap', 'tftp', 'who', 'xdmcp',
+]);
 
 /**
  * ACE（ACL の 1 行）を比較用に正規化する。
@@ -114,8 +177,17 @@ const PORT_ALIASES: Record<string, string> = {
  */
 function normalizeAce(ace: string, isStandard: boolean): string {
   let s = ace.replace(/\bhost\s+(\S+)/g, '$1 0.0.0.0');
-  s = s.replace(/\b(eq|neq|gt|lt)\s+([a-z][a-z0-9-]*)\b/g, (whole, op, name) =>
-    PORT_ALIASES[name] ? `${op} ${PORT_ALIASES[name]}` : whole,
+  // eq / neq / gt / lt / range の後に続くポート指定を番号へ寄せる。
+  // 表に無い語（any, log, established 等）はそのまま残す。
+  s = s.replace(
+    /\b(eq|neq|gt|lt|range)((?:\s+[a-z0-9][a-z0-9-]*)+)/g,
+    (_whole, op: string, args: string) => {
+      const mapped = args
+        .trim()
+        .split(/\s+/)
+        .map((tok) => PORT_ALIASES[tok] ?? tok);
+      return `${op} ${mapped.join(' ')}`;
+    },
   );
   s = s.replace(/\s+/g, ' ').trim();
   if (isStandard) {

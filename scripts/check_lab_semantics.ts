@@ -18,7 +18,12 @@
  */
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
-import { interpretCommands, type FactMap } from '../src/utils/iosConfigState';
+import {
+  interpretCommands,
+  IOS_PORT_KEYWORDS,
+  PORT_ALIASES,
+  type FactMap,
+} from '../src/utils/iosConfigState';
 
 const JSON_PATH = resolve(process.cwd(), 'src/data/questions.json');
 
@@ -33,6 +38,72 @@ function interfaceAttrs(facts: FactMap): Map<string, Map<string, string>> {
     out.get(ifName)!.set(attr, value);
   }
   return out;
+}
+
+/**
+ * コマンドの並び順そのものを検査する。
+ * 実機ではカプセル化が Auto のポートを先に trunk モードにできないため、
+ * `switchport trunk encapsulation` → `switchport mode trunk` の順でなければならない。
+ */
+function checkOrder(commands: string[]): string[] {
+  const problems: string[] = [];
+  for (let i = 0; i + 1 < commands.length; i++) {
+    const a = commands[i].trim();
+    const b = commands[i + 1].trim();
+    if (/^switchport mode trunk$/i.test(a) && /^switchport trunk encapsulation /i.test(b)) {
+      problems.push(
+        `[${i}] "${a}" が "${b}" より前にある（実機はカプセル化を先に設定しないと trunk モードに移れない）`,
+      );
+    }
+  }
+  return problems;
+}
+
+/** BOOTP / DHCP / TFTP など、UDP でしか使わないポート（tcp と組み合わせると誤り） */
+const UDP_ONLY_PORTS = new Set([
+  '67', '68', '69', '123', '137', '138', '161', '162', '500', '520', '4500',
+]);
+
+/**
+ * ACL の ACE を検査する。
+ * - IOS が受け付けないポートキーワード（https / bootp など）を使っていないか
+ * - UDP 専用ポートを tcp で指定していないか
+ */
+function checkAces(commands: string[]): string[] {
+  const problems: string[] = [];
+  for (const raw of commands) {
+    const ace = raw.trim();
+    if (!/^(permit|deny)\b/i.test(ace) && !/^access-list \d+ (permit|deny)\b/i.test(ace)) continue;
+
+    // ポートキーワードの妥当性
+    const kw = ace.match(/\b(?:eq|neq|gt|lt|range)\s+([a-z][a-z0-9-]*)/gi);
+    if (kw) {
+      for (const hit of kw) {
+        const name = hit.split(/\s+/)[1].toLowerCase();
+        if (!IOS_PORT_KEYWORDS.has(name)) {
+          const num = PORT_ALIASES[name];
+          problems.push(
+            `"${ace}": IOS の ACL は "${name}" というポートキーワードを受け付けない` +
+              (num ? `（ポート番号 ${num} で書く）` : ''),
+          );
+        }
+      }
+    }
+
+    // プロトコルとポートの食い違い
+    const proto = ace.match(/\b(permit|deny)\s+(tcp|udp)\b/i);
+    if (proto) {
+      const portTokens = ace.match(/\b(?:eq|neq|range)\s+([a-z0-9][a-z0-9-]*)/gi) ?? [];
+      for (const hit of portTokens) {
+        const tok = hit.split(/\s+/)[1].toLowerCase();
+        const num = PORT_ALIASES[tok] ?? tok;
+        if (proto[2].toLowerCase() === 'tcp' && UDP_ONLY_PORTS.has(num)) {
+          problems.push(`"${ace}": ポート ${num} は UDP で使うものなので tcp 指定は誤り`);
+        }
+      }
+    }
+  }
+  return problems;
 }
 
 /** トランク専用の属性（access モードのポートにあると矛盾） */
@@ -80,6 +151,36 @@ function checkFacts(facts: FactMap): string[] {
             `${ifName}: switchport mode access なのに ${a}=${attrs.get(a)} が設定されている`,
           );
         }
+      }
+    }
+
+    // encapsulation を設定しているのに trunk にしていない
+    // （switchport mode trunk が無いとトランクにならず encapsulation だけでは効かない）
+    if (attrs.has('trunk-encapsulation') && mode !== 'trunk') {
+      problems.push(
+        `${ifName}: switchport trunk encapsulation を設定しているが switchport mode trunk が無い` +
+          (mode ? `（現在 mode=${mode}）` : ''),
+      );
+    }
+
+    // channel-group で新規作成された Port-Channel にトランク／アクセス設定が無い。
+    // 物理ポートがトランク事前設定済みでも Po は新規作成なので設定を引き継がない。
+    if (/^port-channel/.test(ifName) && attrs.get('exists') === 'true') {
+      const configured =
+        attrs.has('switchport-mode') ||
+        attrs.has('trunk-encapsulation') ||
+        attrs.has('access-vlan') ||
+        attrs.has('trunk-allowed-vlan') ||
+        attrs.has('trunk-native-vlan') ||
+        attrs.has('ip-address');
+      if (!configured) {
+        problems.push(
+          `${ifName}: channel-group で新規作成されているが、Port-Channel 側にトランク／アクセス設定が無い`,
+        );
+      } else if (!attrs.has('switchport-mode') && !attrs.has('ip-address')) {
+        problems.push(
+          `${ifName}: Port-Channel に switchport mode (trunk/access) が設定されていない`,
+        );
       }
     }
 
@@ -148,7 +249,11 @@ for (const q of labs) {
   for (const t of q.lab!.tasks) {
     taskCount++;
     const { facts } = interpretCommands(t.expected_commands);
-    const problems = checkFacts(facts);
+    const problems = [
+      ...checkFacts(facts),
+      ...checkAces(t.expected_commands),
+      ...checkOrder(t.expected_commands),
+    ];
     if (problems.length === 0) continue;
     problemCount += problems.length;
     report.push(`Q${q.number} [${t.device}] ${t.name}\n  ` + problems.join('\n  '));
