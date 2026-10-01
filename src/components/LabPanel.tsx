@@ -7,6 +7,11 @@ import {
   generateHelpCandidates,
   NO_CANDIDATES_MESSAGE,
 } from '../utils/iosHelp';
+import {
+  buildCaretLine,
+  INVALID_INPUT_MESSAGE,
+  validateCommand,
+} from '../utils/iosValidate';
 import { parseLabSections } from '../utils/labSections';
 import { resolveImageUrl } from '../utils/imagePath';
 import './LabPanel.css';
@@ -97,11 +102,27 @@ export default function LabPanel({
     setInput('');
     setStates((prev) => {
       const cur = prev[activeDevice];
-      const promptLine = `${buildPrompt(activeDevice, cur.cli)}${cmd}`;
+      const prompt = buildPrompt(activeDevice, cur.cli);
+      const promptLine = `${prompt}${cmd}`;
       const newLines = [...cur.lines, promptLine];
       let nextCli = cur.cli;
       let newHistory = cur.history;
       if (cmd) {
+        // 実機同様、そのモードで解釈できない入力はその場で拒否する。
+        // 設定は反映されず、採点対象の履歴にも残さない。
+        const check = validateCommand(cmd, cur.cli.mode);
+        if (!check.valid) {
+          newLines.push(buildCaretLine(prompt.length, check.caretIndex));
+          newLines.push(INVALID_INPUT_MESSAGE);
+          return {
+            ...prev,
+            [activeDevice]: {
+              ...cur,
+              lines: newLines,
+              historyCursor: cur.history.length,
+            },
+          };
+        }
         const r = applyCommand(cur.cli, cmd);
         nextCli = r.next;
         for (const o of r.output) newLines.push(o);

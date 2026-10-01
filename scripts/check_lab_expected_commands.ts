@@ -25,54 +25,13 @@
  */
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
-import { applyCommand, INITIAL_STATE, type CliMode, type CliState } from '../src/utils/iosCli';
+import { applyCommand, INITIAL_STATE, type CliState } from '../src/utils/iosCli';
 import { normalizeCommand } from '../src/utils/iosCommand';
-import { commandsForMode } from '../src/utils/iosHelp';
+// ターミナルの入力検証とまったく同じ判定を使う（二重実装を避ける）
+import { isAvailableInMode } from '../src/utils/iosValidate';
 
 const JSON_PATH = resolve(process.cwd(), 'src/data/questions.json');
 const SAVE_NORM = 'copy running-config startup-config';
-
-/**
- * 正規化済みコマンドが、そのモードで入力可能かを判定する。
- *
- * モード語彙には `?` のトップレベル一覧用に 1 語だけの項目（'ip' など）と、
- * ドリルダウン用の複数語フレーズ（'ip route' など）が混在している。
- * 1 語項目だけで判定すると 'ip address'（インターフェース専用）が config でも
- * 通ってしまうため、同じ先頭語を持つ複数語フレーズがある場合はそちらとの
- * 前方一致を要求する。
- */
-function isAvailableInMode(norm: string, mode: CliMode): boolean {
-  const tokens = norm.split(' ');
-  const head = tokens[0];
-
-  // config-if から続けて別の interface を選ぶ形は実機・running-config でも一般的な書き方。
-  // モード語彙（実機の `?` 相当）には出てこないが、模範解答としては正しいので許容する。
-  if (mode === 'config-if' && head === 'interface') return true;
-
-  const phrases = commandsForMode(mode)
-    .map((p) => p.split(/\s+/))
-    .filter((pw) => pw[0].toLowerCase() === head);
-
-  if (phrases.length === 0) return false;
-
-  const multi = phrases.filter((pw) => pw.length > 1);
-  // 複数語フレーズのいずれかがコマンドの先頭に一致すれば OK。
-  // 語彙側はインターフェース種別までしか持たない（'interface ethernet'）ため、
-  // フレーズ最終語だけは前方一致で 'ethernet0/1' のような実引数を許容する。
-  for (const pw of multi) {
-    if (pw.length > tokens.length) continue;
-    const matched = pw.every((w, i) => {
-      const lw = w.toLowerCase();
-      return i === pw.length - 1 ? tokens[i].startsWith(lw) : tokens[i] === lw;
-    });
-    if (matched) return true;
-  }
-  // 1 語だけのコマンド（exit / end / permit など）
-  if (tokens.length === 1) return true;
-  // 複数語フレーズが登録されていない先頭語（'name SALES' の name 等）は判定不能なので許容
-  if (multi.length === 0) return true;
-  return false;
-}
 
 interface Problem {
   kind: string;
