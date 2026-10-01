@@ -49051,14 +49051,15 @@
       "tasks": [
         {
           "name": "Sw101: e0/0 第2サブネットの最初の利用可能 IP + IPv6",
-          "description": "10.30.64.1/20 + IPv6 2001:db8::20::1/68",
+          "description": "10.30.64.0/19 を 64 サイト分（6ビット借用）で /25 にサブネット化。2番目のサブネット 10.30.64.128/25 の最初の使用可能アドレス 10.30.64.129 + 2番目の IPv6 サブネット",
           "device": "Sw101",
           "expected_commands": [
             "enable",
             "configure terminal",
             "interface ethernet0/0",
-            "ip address 10.30.64.1 255.255.240.0",
-            "ipv6 address 2001:db8::20::1/68",
+            "no switchport",
+            "ip address 10.30.64.129 255.255.255.128",
+            "ipv6 address 2001:db8:0:4::/64 eui-64",
             "no shutdown",
             "end",
             "write memory"
@@ -49072,8 +49073,9 @@
             "enable",
             "configure terminal",
             "interface ethernet0/0",
-            "ip address 10.30.64.254 255.255.240.0",
-            "ipv6 address 2001:db8::27:fffe/68",
+            "no switchport",
+            "ip address 10.30.64.254 255.255.255.128",
+            "ipv6 address 2001:db8:0:4::/64 eui-64",
             "no shutdown",
             "end",
             "write memory"
