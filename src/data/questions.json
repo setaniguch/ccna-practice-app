@@ -49656,7 +49656,7 @@
       ],
       "tasks": [
         {
-          "name": "SW-1: e0/0,e0/1 trunk vlan 1,12,22 + e0/2 trunk vlan 12,22 + LACP Po1",
+          "name": "SW-1: e0/0,e0/1 trunk vlan 1,12,22 + e0/2 trunk vlan 12,22 + LACP Po12",
           "device": "SW-1",
           "expected_commands": [
             "enable",
@@ -49684,7 +49684,7 @@
           ]
         },
         {
-          "name": "SW-2: e0/0,e0/1 trunk vlan 1,12,22 + LACP Po1",
+          "name": "SW-2: e0/0,e0/1 trunk vlan 1,12,22 + LACP Po12",
           "device": "SW-2",
           "expected_commands": [
             "enable",
@@ -50769,7 +50769,7 @@
       ],
       "tasks": [
         {
-          "name": "Sw1: e0/0,e0/1 trunk vlan 110,99 native 99 + LACP Po1",
+          "name": "Sw1: e0/0,e0/1 trunk vlan 110,99 native 99 + LACP Po20",
           "device": "Sw1",
           "expected_commands": [
             "enable",
@@ -50797,7 +50797,7 @@
           ]
         },
         {
-          "name": "Sw2: e0/0,e0/1 trunk vlan 110,99 native 99 + LACP Po1",
+          "name": "Sw2: e0/0,e0/1 trunk vlan 110,99 native 99 + LACP Po20",
           "device": "Sw2",
           "expected_commands": [
             "enable",
