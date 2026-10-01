@@ -51031,7 +51031,7 @@
             "ip ospf 33 area 0",
             "ip ospf priority 255",
             "interface ethernet0/2",
-            "ip address 10.0.33.1 255.255.255.252",
+            "ip address 10.0.33.1 255.255.255.248",
             "ip ospf 33 area 0",
             "ip ospf priority 255",
             "interface ethernet0/0",
